@@ -1,0 +1,76 @@
+[project]
+name = "cython-blas"
+version = "0.1.0"
+
+requires-python = ">=3.11"
+dependencies = ["numpy >= 2.0", "cython >= 3.0"]
+
+[project.optional-dependencies]
+dev = [
+    # Linting
+    "deptry",
+    "runn",
+    "isort",
+    "cython-lint",
+    # Build environment
+    "cython >=3.0.5",
+    "meson-python >=0.17.0",
+    "meson >=1.7.0",
+    "ninja >=1.11",
+    "build",
+    "spin",
+    "click",
+]
+
+
+[tool.meson-python.args]
+setup = ["--vsenv"]
+
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+exclude = [
+    "examples/*", # Patterns are glob expressions
+]
+lint.select = ["ALL"]
+lint.ignore = [
+    "FBT",     # Boolean traps
+    "PLR2004", # constant value
+    "T201",    # Allow print
+    "TD002",   # No author on TODO
+    "TD003",   # No ticket on TODO
+    "FIX",     # All fixme types (aka, you can have TODOs and FIXMEs in your code.
+    # https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules
+    "COM812", # missing-trailing-comma
+    "ISC001", # single-line-implicit-string-concatenation
+]
+
+lint.unfixable = [
+    "B007",    # Don't modify unused loop control variable
+    "F401",    # Don't delete unused imports
+    "F841",    # Don't delete unused variables
+    "ERA001",  # Don't delete commented out code
+    "PERF102", # Don't auto-convert .items() to .values()
+]
+
+
+[tool.spin]
+package = "cyhon_blas"
+
+[tool.spin.commands]
+"Dev" = [
+    ".spin.cmds.py:in_place",
+    ".spin.cmds.py:setup_in_place",
+    ".spin.cmds.py:cython_lint",
+    ".spin.cmds.py:cython_stringfix",
+]
+
+[build-system]
+requires = [
+    "meson-python >= 0.17.0",
+    "ninja >= 1.11",
+    "cython >= 3.0.5",
+    "numpy >= 2.0",           # need to call numpy.get_include() during build
+]
+build-backend = "mesonpy"

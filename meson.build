@@ -1,0 +1,19 @@
+project(
+  'cython_blas', 'cython', 'cpp',
+  license: 'Apache-2.0 or LGPL-2.1-or-later',
+  meson_version: '>= 1.7.0',
+  default_options:[
+    'warning_level=2',
+  ]
+)
+
+py = import('python').find_installation()
+
+py_dep = py.dependency()
+openmp_dep = dependency('openmp', required: false)
+np_dep = declare_dependency(
+  dependencies:[dependency('numpy', method:'config-tool', required:true)],
+  compile_args:'-DNPY_NO_DEPRECATED_API=NPY_1_25_API_VERSION',
+)
+
+subdir('cython_blas')
