@@ -3,13 +3,15 @@ name = "cython-blas"
 version = "0.1.0"
 
 requires-python = ">=3.11"
-dependencies = ["numpy >= 2.0", "cython >= 3.0"]
+dependencies = ["numpy >= 2.0", "scipy"]
 
 [project.optional-dependencies]
 dev = [
+    # Unit tests
+    "pytest",
     # Linting
     "deptry",
-    "runn",
+    "ruff",
     "isort",
     "cython-lint",
     # Build environment
@@ -21,6 +23,17 @@ dev = [
     "spin",
     "click",
 ]
+
+
+[tool.cython-lint]
+max-line-length = 120
+
+
+[tool.isort]
+atomic = true
+skip_glob = ["*.py"] # isort is only used for Cython files
+line_length = 120
+py_version = 311
 
 
 [tool.meson-python.args]
@@ -54,16 +67,28 @@ lint.unfixable = [
     "PERF102", # Don't auto-convert .items() to .values()
 ]
 
+[tool.ruff.lint.extend-per-file-ignores]
+"**/tests/**/*.py" = [
+    "ANN201", # Allow no return types in tests
+    "S101",   # Allow asserts in tests
+]
+"**/tests/**/__init__.py"=[
+    "D104", # Don't require docstrings in test packages.
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"  # Accepts: "google", "numpy" or "pep257".
+
 
 [tool.spin]
 package = "cyhon_blas"
 
 [tool.spin.commands]
 "Dev" = [
-    ".spin.cmds.py:in_place",
-    ".spin.cmds.py:setup_in_place",
-    ".spin.cmds.py:cython_lint",
-    ".spin.cmds.py:cython_stringfix",
+    ".spin/cmds.py:in_place",
+    ".spin/cmds.py:setup_in_place",
+    ".spin/cmds.py:cython_lint",
+    ".spin/cmds.py:cython_stringfix",
 ]
 
 [build-system]

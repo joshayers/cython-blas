@@ -1,13 +1,20 @@
 
 __pycache__
-build
-dist
-*.egg-info
+
 *.pyc
-*.pyd
 .venv
 
-.vscode
-.vs
+# Coverage files
+.coverage
+coverage.xml
+report.xml
+test-reports
+public/
 
+# Compiled modules
+build/
 dist/
+cython_blas/**/*.c
+cython_blas/**/*.cpp
+cython_blas/**/*.pyd
+cython_blas/**/*.so

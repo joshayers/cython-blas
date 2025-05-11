@@ -16,4 +16,10 @@ np_dep = declare_dependency(
   compile_args:'-DNPY_NO_DEPRECATED_API=NPY_1_25_API_VERSION',
 )
 
+if get_option('coverage')
+  add_project_arguments('-X', 'linetrace=True', language:'cython')
+  add_project_arguments('-DCYTHON_TRACE=1', language:'cpp')
+  add_project_arguments('-DCYTHON_TRACE_NOGIL=1', language:'cpp')
+endif
+
 subdir('cython_blas')

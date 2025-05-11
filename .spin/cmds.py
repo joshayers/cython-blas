@@ -137,9 +137,8 @@ def docs() -> None:
 
 @click.command
 @click.option("-c", "--coverage", is_flag=True, help="Enable line tracing to allow Cython coverage analysis.")
-@click.option("--vecreport", is_flag=True, help="Enable the compiler's auto-vectorization report.")
 @click.option("-w", "--warn", type=click.Choice(["0", "1", "2", "3", "4"]), default="2")
-def setup_in_place(coverage: bool, vecreport: bool, warn: str) -> None:
+def setup_in_place(coverage: bool, warn: str) -> None:
     """Run 'meson setup --reconfigure' to reconfigure the build."""
     meson_path = (
         root_dir / ".venv" / "Scripts" / "meson"
@@ -147,7 +146,6 @@ def setup_in_place(coverage: bool, vecreport: bool, warn: str) -> None:
         else root_dir / ".venv" / "bin" / "meson"
     )
     coverage_cmd = "-Dcoverage=true" if coverage else "-Dcoverage=false"
-    vecreport_cmd = "-Dvectorization-report=true" if vecreport else "-Dvectorization-report=false"
     warnlevel = {"0": "0", "1": "1", "2": "2", "3": "3", "4": "everything"}[warn]
     warnlevel_cmd = f"--warnlevel={warnlevel}"
     cmd = [
@@ -158,7 +156,6 @@ def setup_in_place(coverage: bool, vecreport: bool, warn: str) -> None:
         "release",
         "--reconfigure",
         warnlevel_cmd,
-        vecreport_cmd,
         coverage_cmd,
     ]
     print(f"Running the following command:\n{' '.join(cmd)}\n")
