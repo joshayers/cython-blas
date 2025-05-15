@@ -1,16 +1,18 @@
 """Matrix multiplication."""
 
-from scipy.linalg.cython_blas cimport dgemm, sgemm
+from numpy cimport complex128_t
+from scipy.linalg.cython_blas cimport dgemm, sgemm, zgemm
 
 
 cpdef enum BLAS_Order:
-    RowMajor  # C contiguous
-    ColMajor  # Fortran contiguous
+    RowMajor = 1  # C contiguous
+    ColMajor = 2 # Fortran contiguous
 
 
 cpdef enum BLAS_Trans:
-    NoTrans = 110  # correspond to 'n'
-    Trans = 116    # correspond to 't'
+    NoTrans = 110   # correspond to 'n'
+    Trans = 116     # correspond to 't'
+    ConjTrans = 99  # corresponds to 'c'
 
 ctypedef fused floating:
     float
@@ -65,3 +67,21 @@ cpdef gemm_memview(BLAS_Trans ta, BLAS_Trans tb, floating alpha,
 
     _gemm(order, ta, tb, m, n, k, alpha, &A[0, 0],
           lda, &B[0, 0], ldb, beta, &C[0, 0], ldc)
+
+
+def dgemm_raw(BLAS_Trans ta, BLAS_Trans tb, double alpha,
+              const double[:, :] A, const double[:, :] B, double beta,
+              double[:, :] C, int m, int n, int k, int lda, int ldb, int ldc):
+    cdef char ta_ = ta
+    cdef char tb_ = tb
+    dgemm(&ta_, &tb_, &m, &n, &k, &alpha, <double*> &A[0, 0],
+          &lda, <double*> &B[0, 0], &ldb, &beta, &C[0, 0], &ldc)
+
+
+def zgemm_raw(BLAS_Trans ta, BLAS_Trans tb, complex128_t alpha,
+              const complex128_t[:, :] A, const complex128_t[:, :] B, complex128_t beta,
+              complex128_t[:, :] C, int m, int n, int k, int lda, int ldb, int ldc):
+    cdef char ta_ = ta
+    cdef char tb_ = tb
+    zgemm(&ta_, &tb_, &m, &n, &k, &alpha, <complex128_t*> &A[0, 0],
+          &lda, <complex128_t*> &B[0, 0], &ldb, &beta, &C[0, 0], &ldc)

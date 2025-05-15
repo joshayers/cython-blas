@@ -37,5 +37,11 @@
             "command": "${workspaceFolder}/.venv/Scripts/isort ${fileRelative}",
             "runIn": "backend",
         }
-    ]
+    ],
+    //
+    // Meson extension
+    "mesonbuild.formatting.enabled": true,
+    "mesonbuild.linting.enabled": true,
+    "mesonbuild.downloadLanguageServer": true,
+    "mesonbuild.configureOnOpen": false,
 }
