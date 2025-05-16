@@ -3,7 +3,7 @@ name = "cython-blas"
 version = "0.1.0"
 
 requires-python = ">=3.11"
-dependencies = ["numpy >= 2.0", "scipy"]
+dependencies = ["numpy >= 2.0"]
 
 [project.optional-dependencies]
 dev = [
@@ -15,6 +15,7 @@ dev = [
     "isort",
     "cython-lint",
     # Build environment
+    "scipy-openblas64",
     "cython >=3.0.5",
     "meson-python >=0.17.0",
     "meson >=1.7.0",
@@ -72,12 +73,12 @@ lint.unfixable = [
     "ANN201", # Allow no return types in tests
     "S101",   # Allow asserts in tests
 ]
-"**/tests/**/__init__.py"=[
+"**/tests/**/__init__.py" = [
     "D104", # Don't require docstrings in test packages.
 ]
 
 [tool.ruff.lint.pydocstyle]
-convention = "google"  # Accepts: "google", "numpy" or "pep257".
+convention = "google" # Accepts: "google", "numpy" or "pep257".
 
 
 [tool.spin]
@@ -97,5 +98,6 @@ requires = [
     "ninja >= 1.11",
     "cython >= 3.0.5",
     "numpy >= 2.0",           # need to call numpy.get_include() during build
+    "scipy-openblas64",
 ]
 build-backend = "mesonpy"

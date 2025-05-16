@@ -1,5 +1,6 @@
 
 __pycache__
+_init_local.py
 
 *.pyc
 .venv

@@ -15,6 +15,7 @@ np_dep = declare_dependency(
   dependencies: [dependency('numpy', method: 'config-tool', required: true)],
   compile_args: '-DNPY_NO_DEPRECATED_API=NPY_1_25_API_VERSION',
 )
+openblas_dep = dependency('scipy-openblas', method: 'pkg-config', required: true)
 
 if get_option('coverage')
   add_project_arguments('-X', 'linetrace=True', language: 'cython')

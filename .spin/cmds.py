@@ -119,6 +119,38 @@ def copy_compiled_files() -> None:
         shutil.copy(pyd_src, pyd_dest)
 
 
+def _scipy_openblas_dll_path() -> None:
+    """Write a file that will add the scipy-openblas library directory to the DLL search path."""
+    if platform.system() != "Windows":
+        return
+    import scipy_openblas64
+
+    lib_dir = scipy_openblas64.get_lib_dir()
+    string = (
+        """def _scipy_openblas_dll_path() -> None:\n"""
+        """    import os\n"""
+        """\n"""
+        f"""    lib_dir = "{lib_dir}"\n"""
+        """    return os.add_dll_directory(lib_dir)\n"""
+        """\n"""
+        """\n"""
+        """_addl_dll_dir = _scipy_openblas_dll_path()\n"""
+    )
+    path = root_dir / "cython_blas" / "_init_local.py"
+    with path.open("wt") as fobj:
+        fobj.write(string)
+
+
+def _scipy_openblas_pkg_config() -> Path:
+    """Write the scipy-openblas.pc pkg-config file and return the path to its parent directory."""
+    import scipy_openblas64
+
+    path = root_dir / "scipy-openblas.pc"
+    with path.open("wt") as fobj:
+        fobj.write(scipy_openblas64.get_pkg_config())
+    return path.parent
+
+
 @click.command
 def build() -> None:
     """Run 'python -m build .' to build a source distribution and (optionally) a wheel."""
@@ -148,6 +180,7 @@ def setup_in_place(coverage: bool, warn: str) -> None:
     coverage_cmd = "-Dcoverage=true" if coverage else "-Dcoverage=false"
     warnlevel = {"0": "0", "1": "1", "2": "2", "3": "3", "4": "everything"}[warn]
     warnlevel_cmd = f"--warnlevel={warnlevel}"
+    pkg_config_path_cmd = f"--pkg-config-path={_scipy_openblas_pkg_config()!s}"
     cmd = [
         str(meson_path),
         "setup",
@@ -155,8 +188,9 @@ def setup_in_place(coverage: bool, warn: str) -> None:
         "--buildtype",
         "release",
         "--reconfigure",
-        warnlevel_cmd,
         coverage_cmd,
+        warnlevel_cmd,
+        pkg_config_path_cmd,
     ]
     print(f"Running the following command:\n{' '.join(cmd)}\n")
     subprocess.run(  # noqa: S603
@@ -164,6 +198,7 @@ def setup_in_place(coverage: bool, warn: str) -> None:
         check=True,
         cwd=root_dir,
     )
+    _scipy_openblas_dll_path()
 
 
 @click.command

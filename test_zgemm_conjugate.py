@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from cython_blas import matmul
+from cython_blas import openblas_matmul as matmul
 
 
 def random(rng: np.random.Generator, size: tuple, dtype: str, order: str) -> np.ndarray:
@@ -22,7 +22,7 @@ def main() -> None:  # noqa: PLR0915
     mat_b = random(rng, size=(3, 5), dtype="c16", order="F")
     mat_c = np.zeros((4, 5), "c16", order="F")
     alpha, beta = 1.0 + 1.0j, 0.0 + 0.0j
-    ta, tb = matmul.BLAS_Trans.ConjTrans, matmul.BLAS_Trans.NoTrans
+    order, ta, tb = matmul.BLAS_Order.ColMajor, matmul.BLAS_Trans.ConjTrans, matmul.BLAS_Trans.NoTrans
     m, n, k = mat_a.shape[0], mat_b.shape[1], mat_a.shape[1]
     itemsize = mat_a.dtype.itemsize
     lda, ldb, ldc = mat_a.strides[0] // itemsize, mat_b.strides[1] // itemsize, mat_c.strides[1] // itemsize
@@ -30,7 +30,7 @@ def main() -> None:  # noqa: PLR0915
     assert ldb == k  # noqa: S101
     assert ldc == m  # noqa: S101
     mat_c_orig = mat_c.copy()
-    matmul.zgemm_raw(ta, tb, alpha, mat_a, mat_b, beta, mat_c, m, n, k, lda, ldb, ldc)
+    matmul.zgemm_raw(order, ta, tb, alpha, mat_a, mat_b, beta, mat_c, m, n, k, lda, ldb, ldc)
     np.testing.assert_allclose(mat_c, alpha * np.conjugate(mat_a) @ mat_b + beta * mat_c_orig)
 
     # C(cw) = alpha * conjugate(A(rw)) * B(rw)
@@ -38,7 +38,7 @@ def main() -> None:  # noqa: PLR0915
     mat_b = random(rng, size=(3, 5), dtype="c16", order="C")
     mat_c = np.zeros((4, 5), "c16", order="F")
     alpha, beta = 1.0 + 1.0j, 0.0 + 0.0j
-    ta, tb = matmul.BLAS_Trans.ConjTrans, matmul.BLAS_Trans.Trans
+    order, ta, tb = matmul.BLAS_Order.ColMajor, matmul.BLAS_Trans.ConjTrans, matmul.BLAS_Trans.Trans
     m, n, k = mat_a.shape[0], mat_b.shape[1], mat_a.shape[1]
     itemsize = mat_a.dtype.itemsize
     lda, ldb, ldc = mat_a.strides[0] // itemsize, mat_b.strides[0] // itemsize, mat_c.strides[1] // itemsize
@@ -46,15 +46,31 @@ def main() -> None:  # noqa: PLR0915
     assert ldb == n  # noqa: S101
     assert ldc == m  # noqa: S101
     mat_c_orig = mat_c.copy()
-    matmul.zgemm_raw(ta, tb, alpha, mat_a, mat_b, beta, mat_c, m, n, k, lda, ldb, ldc)
+    matmul.zgemm_raw(order, ta, tb, alpha, mat_a, mat_b, beta, mat_c, m, n, k, lda, ldb, ldc)
     np.testing.assert_allclose(mat_c, alpha * np.conjugate(mat_a) @ mat_b + beta * mat_c_orig)
 
-    # C(cw) = alpha * A(cw) * conjugate(B(rw))
+    # C(cw) = alpha * conjugate(A(cw)) * B(cw)
+    mat_a = random(rng, size=(4, 3), dtype="c16", order="F")
+    mat_b = random(rng, size=(3, 5), dtype="c16", order="F")
+    mat_c = np.zeros((4, 5), "c16", order="F")
+    alpha, beta = 1.0 + 1.0j, 0.0 + 0.0j
+    order, ta, tb = matmul.BLAS_Order.ColMajor, matmul.BLAS_Trans.ConjNoTrans, matmul.BLAS_Trans.NoTrans
+    m, n, k = mat_a.shape[0], mat_b.shape[1], mat_a.shape[1]
+    itemsize = mat_a.dtype.itemsize
+    lda, ldb, ldc = mat_a.strides[1] // itemsize, mat_b.strides[1] // itemsize, mat_c.strides[1] // itemsize
+    assert lda == m  # noqa: S101
+    assert ldb == k  # noqa: S101
+    assert ldc == m  # noqa: S101
+    mat_c_orig = mat_c.copy()
+    matmul.zgemm_raw(order, ta, tb, alpha, mat_a, mat_b, beta, mat_c, m, n, k, lda, ldb, ldc)
+    np.testing.assert_allclose(mat_c, alpha * np.conjugate(mat_a) @ mat_b + beta * mat_c_orig)
+
+    # C(cw) = alpha * conjugate(A(cw)) * B(rw)
     mat_a = random(rng, size=(4, 3), dtype="c16", order="F")
     mat_b = random(rng, size=(3, 5), dtype="c16", order="C")
     mat_c = np.zeros((4, 5), "c16", order="F")
     alpha, beta = 1.0 + 1.0j, 0.0 + 0.0j
-    ta, tb = matmul.BLAS_Trans.NoTrans, matmul.BLAS_Trans.ConjTrans
+    order, ta, tb = matmul.BLAS_Order.ColMajor, matmul.BLAS_Trans.ConjNoTrans, matmul.BLAS_Trans.Trans
     m, n, k = mat_a.shape[0], mat_b.shape[1], mat_a.shape[1]
     itemsize = mat_a.dtype.itemsize
     lda, ldb, ldc = mat_a.strides[1] // itemsize, mat_b.strides[0] // itemsize, mat_c.strides[1] // itemsize
@@ -62,7 +78,23 @@ def main() -> None:  # noqa: PLR0915
     assert ldb == n  # noqa: S101
     assert ldc == m  # noqa: S101
     mat_c_orig = mat_c.copy()
-    matmul.zgemm_raw(ta, tb, alpha, mat_a, mat_b, beta, mat_c, m, n, k, lda, ldb, ldc)
+    matmul.zgemm_raw(order, ta, tb, alpha, mat_a, mat_b, beta, mat_c, m, n, k, lda, ldb, ldc)
+    np.testing.assert_allclose(mat_c, alpha * np.conjugate(mat_a) @ mat_b + beta * mat_c_orig)
+
+    # C(cw) = alpha * A(cw) * conjugate(B(rw))
+    mat_a = random(rng, size=(4, 3), dtype="c16", order="F")
+    mat_b = random(rng, size=(3, 5), dtype="c16", order="C")
+    mat_c = np.zeros((4, 5), "c16", order="F")
+    alpha, beta = 1.0 + 1.0j, 0.0 + 0.0j
+    order, ta, tb = matmul.BLAS_Order.ColMajor, matmul.BLAS_Trans.NoTrans, matmul.BLAS_Trans.ConjTrans
+    m, n, k = mat_a.shape[0], mat_b.shape[1], mat_a.shape[1]
+    itemsize = mat_a.dtype.itemsize
+    lda, ldb, ldc = mat_a.strides[1] // itemsize, mat_b.strides[0] // itemsize, mat_c.strides[1] // itemsize
+    assert lda == m  # noqa: S101
+    assert ldb == n  # noqa: S101
+    assert ldc == m  # noqa: S101
+    mat_c_orig = mat_c.copy()
+    matmul.zgemm_raw(order, ta, tb, alpha, mat_a, mat_b, beta, mat_c, m, n, k, lda, ldb, ldc)
     np.testing.assert_allclose(mat_c, alpha * mat_a @ np.conjugate(mat_b) + beta * mat_c_orig)
 
     # C(cw) = alpha * A(rw) * conjugate(B(rw))
@@ -70,7 +102,7 @@ def main() -> None:  # noqa: PLR0915
     mat_b = random(rng, size=(3, 5), dtype="c16", order="C")
     mat_c = np.zeros((4, 5), "c16", order="F")
     alpha, beta = 1.0 + 1.0j, 0.0 + 0.0j
-    ta, tb = matmul.BLAS_Trans.Trans, matmul.BLAS_Trans.ConjTrans
+    order, ta, tb = matmul.BLAS_Order.ColMajor, matmul.BLAS_Trans.Trans, matmul.BLAS_Trans.ConjTrans
     m, n, k = mat_a.shape[0], mat_b.shape[1], mat_a.shape[1]
     itemsize = mat_a.dtype.itemsize
     lda, ldb, ldc = mat_a.strides[0] // itemsize, mat_b.strides[0] // itemsize, mat_c.strides[1] // itemsize
@@ -78,7 +110,7 @@ def main() -> None:  # noqa: PLR0915
     assert ldb == n  # noqa: S101
     assert ldc == m  # noqa: S101
     mat_c_orig = mat_c.copy()
-    matmul.zgemm_raw(ta, tb, alpha, mat_a, mat_b, beta, mat_c, m, n, k, lda, ldb, ldc)
+    matmul.zgemm_raw(order, ta, tb, alpha, mat_a, mat_b, beta, mat_c, m, n, k, lda, ldb, ldc)
     np.testing.assert_allclose(mat_c, alpha * mat_a @ np.conjugate(mat_b) + beta * mat_c_orig)
 
     # C(cw) = alpha * conjugate(A(rw)) * conjugate(B(rw))
@@ -86,7 +118,7 @@ def main() -> None:  # noqa: PLR0915
     mat_b = random(rng, size=(3, 5), dtype="c16", order="C")
     mat_c = np.zeros((4, 5), "c16", order="F")
     alpha, beta = 1.0 + 1.0j, 0.0 + 0.0j
-    ta, tb = matmul.BLAS_Trans.ConjTrans, matmul.BLAS_Trans.ConjTrans
+    order, ta, tb = matmul.BLAS_Order.ColMajor, matmul.BLAS_Trans.ConjTrans, matmul.BLAS_Trans.ConjTrans
     m, n, k = mat_a.shape[0], mat_b.shape[1], mat_a.shape[1]
     itemsize = mat_a.dtype.itemsize
     lda, ldb, ldc = mat_a.strides[0] // itemsize, mat_b.strides[0] // itemsize, mat_c.strides[1] // itemsize
@@ -94,7 +126,7 @@ def main() -> None:  # noqa: PLR0915
     assert ldb == n  # noqa: S101
     assert ldc == m  # noqa: S101
     mat_c_orig = mat_c.copy()
-    matmul.zgemm_raw(ta, tb, alpha, mat_a, mat_b, beta, mat_c, m, n, k, lda, ldb, ldc)
+    matmul.zgemm_raw(order, ta, tb, alpha, mat_a, mat_b, beta, mat_c, m, n, k, lda, ldb, ldc)
     np.testing.assert_allclose(mat_c, alpha * np.conjugate(mat_a) @ np.conjugate(mat_b) + beta * mat_c_orig)
 
     # C(rw) = alpha * conjugate(A(cw)) * B(rw)
@@ -102,7 +134,7 @@ def main() -> None:  # noqa: PLR0915
     mat_b = random(rng, size=(3, 5), dtype="c16", order="C")
     mat_c = np.zeros((4, 5), "c16", order="C")
     alpha, beta = 1.0 + 1.0j, 0.0 + 0.0j
-    ta, tb = matmul.BLAS_Trans.ConjTrans, matmul.BLAS_Trans.NoTrans
+    order, ta, tb = matmul.BLAS_Order.RowMajor, matmul.BLAS_Trans.ConjTrans, matmul.BLAS_Trans.NoTrans
     m, n, k = mat_a.shape[0], mat_b.shape[1], mat_a.shape[1]
     itemsize = mat_a.dtype.itemsize
     lda, ldb, ldc = mat_a.strides[1] // itemsize, mat_b.strides[0] // itemsize, mat_c.strides[0] // itemsize
@@ -110,7 +142,7 @@ def main() -> None:  # noqa: PLR0915
     assert ldb == n  # noqa: S101
     assert ldc == n  # noqa: S101
     mat_c_orig = mat_c.copy()
-    matmul.zgemm_raw(tb, ta, alpha, mat_b, mat_a, beta, mat_c, n, m, k, ldb, lda, ldc)
+    matmul.zgemm_raw(order, ta, tb, alpha, mat_a, mat_b, beta, mat_c, m, n, k, lda, ldb, ldc)
     np.testing.assert_allclose(mat_c, alpha * np.conjugate(mat_a) @ mat_b + beta * mat_c_orig)
 
 
