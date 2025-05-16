@@ -1,10 +1,13 @@
 subdir_path = 'cython_blas'
 
 pyx_files = [
-    'openblas_matmul',
+    'level3',
+    'utility',
 ]
 
-pxd_files = []
+pxd_files = [
+    '_cblas.pxd',
+]
 
 foreach pyx_file : pyx_files
     py.extension_module(
