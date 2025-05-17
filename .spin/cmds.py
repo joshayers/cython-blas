@@ -205,6 +205,7 @@ def setup_in_place(coverage: bool, warn: str) -> None:
         "--buildtype",
         "release",
         "--reconfigure",
+        "--vsenv",
         coverage_cmd,
         warnlevel_cmd,
         pkg_config_path_cmd,

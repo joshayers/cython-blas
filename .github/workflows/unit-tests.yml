@@ -47,9 +47,6 @@ jobs:
           python -m venv $POETRY_HOME --upgrade-deps
           $POETRY_HOME/Scripts/pip install -q poetry
           $POETRY_HOME/Scripts/poetry --version
-          echo ""
-          echo $PATH
-          echo ""
           ln $POETRY_HOME/Scripts/poetry /usr/bin/poetry
           poetry --version
           poetry config virtualenvs.in-project true
