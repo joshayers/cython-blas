@@ -153,8 +153,10 @@ def _scipy_openblas_pkg_config() -> Path:
 
 @click.command
 def build() -> None:
-    """Run 'python -m build .' to build a source distribution and (optionally) a wheel."""
-    cmd = ["python", "-m", "build", "."]
+    """Run 'python -m build .' to build a source distribution and a wheel."""
+    path = str(_scipy_openblas_pkg_config()).replace("\\", "/")
+    pkg_config_path_cmd = f"-Csetup-args=--pkg-config-path={path}"
+    cmd = ["python", "-m", "build", pkg_config_path_cmd, "."]
     print(f"Running the following command: \n{' '.join(cmd)}")
     subprocess.run(cmd, check=True, cwd=root_dir, shell=True)  # noqa: S602
 

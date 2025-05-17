@@ -85,12 +85,14 @@ convention = "google" # Accepts: "google", "numpy" or "pep257".
 package = "cyhon_blas"
 
 [tool.spin.commands]
+"Build" = [".spin/cmds.py:build"]
 "Dev" = [
     ".spin/cmds.py:in_place",
     ".spin/cmds.py:setup_in_place",
     ".spin/cmds.py:cython_lint",
     ".spin/cmds.py:cython_stringfix",
 ]
+
 
 [build-system]
 requires = [

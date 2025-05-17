@@ -3,6 +3,9 @@ cdef extern from "cblas.h" nogil:
 
     void scipy_openblas_set_num_threads64_(int num_threads)
     int scipy_openblas_get_num_threads64_()
+
+    char* scipy_openblas_get_config64_()
+    char* scipy_openblas_get_corename64_()
     int scipy_openblas_get_parallel64_()
 
     cdef enum CBLAS_ORDER:
