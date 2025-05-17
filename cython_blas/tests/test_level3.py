@@ -20,12 +20,7 @@ def create_array(rng: np.random.Generator, size: tuple[int, int], dtype: str, or
     return array
 
 
-def conjugate_if(array: npt.NDArray, conjugate: bool) -> npt.NDArray:
-    """Return the complex conjugate if conjugate is True."""
-    return np.conjugate(array) if conjugate else array
-
-
-@pytest.mark.parametrize(
+_real_params = (
     ("alpha", "beta", "m", "n", "k", "a_order", "b_order", "c_order"),
     [
         (alpha, beta, 8, 9, 10, a_order, b_order, c_order)
@@ -34,6 +29,9 @@ def conjugate_if(array: npt.NDArray, conjugate: bool) -> npt.NDArray:
         )
     ],
 )
+
+
+@pytest.mark.parametrize(*_real_params)
 def test_sgemm(  # noqa: PLR0913
     alpha: float,
     beta: float,
@@ -54,15 +52,7 @@ def test_sgemm(  # noqa: PLR0913
     np.testing.assert_allclose(mat_c, alpha * mat_a @ mat_b + beta * mat_c_orig, atol=5e-7, rtol=5e-7)
 
 
-@pytest.mark.parametrize(
-    ("alpha", "beta", "m", "n", "k", "a_order", "b_order", "c_order"),
-    [
-        (alpha, beta, 8, 9, 10, a_order, b_order, c_order)
-        for alpha, beta, a_order, b_order, c_order in itertools.product(
-            [0.0, 1.0, 2.1], [0.0, 1.0, 2.1], ["C", "F"], ["C", "F"], ["C", "F"]
-        )
-    ],
-)
+@pytest.mark.parametrize(*_real_params)
 def test_dgemm(  # noqa: PLR0913
     alpha: float,
     beta: float,
@@ -80,10 +70,15 @@ def test_dgemm(  # noqa: PLR0913
     mat_c = create_array(rng, (m, n), "f8", c_order)
     mat_c_orig = mat_c.copy()
     level3.dgemm(alpha, mat_a, mat_b, beta, mat_c)
-    np.testing.assert_allclose(mat_c, alpha * mat_a @ mat_b + beta * mat_c_orig, atol=1e-7, rtol=1e-7)
+    np.testing.assert_allclose(mat_c, alpha * mat_a @ mat_b + beta * mat_c_orig, atol=1e-8, rtol=1e-8)
 
 
-@pytest.mark.parametrize(
+def conjugate_if(array: npt.NDArray, conjugate: bool) -> npt.NDArray:
+    """Return the complex conjugate if conjugate is True."""
+    return np.conjugate(array) if conjugate else array
+
+
+_complex_params = (
     ("alpha", "conjugate_a", "beta", "conjugate_b", "m", "n", "k", "a_order", "b_order", "c_order"),
     [
         (alpha, conjugate_a, beta, conjugate_b, 8, 9, 10, a_order, b_order, c_order)
@@ -98,6 +93,9 @@ def test_dgemm(  # noqa: PLR0913
         )
     ],
 )
+
+
+@pytest.mark.parametrize(*_complex_params)
 def test_cgemm(  # noqa: PLR0913
     alpha: complex,
     conjugate_a: bool,
@@ -121,21 +119,31 @@ def test_cgemm(  # noqa: PLR0913
     np.testing.assert_allclose(mat_c, expected, atol=5e-7, rtol=5e-7)
 
 
-@pytest.mark.parametrize(
-    ("alpha", "conjugate_a", "beta", "conjugate_b", "m", "n", "k", "a_order", "b_order", "c_order"),
-    [
-        (alpha, conjugate_a, beta, conjugate_b, 8, 9, 10, a_order, b_order, c_order)
-        for alpha, conjugate_a, beta, conjugate_b, a_order, b_order, c_order in itertools.product(
-            [0.0 + 0.0j, 1.0 + 1.2j, 2.1 + 1.0j],
-            [True, False],
-            [0.0 + 0.0j, 1.0 + 1.2j, 2.1 + 1.0j],
-            [True, False],
-            ["C", "F"],
-            ["C", "F"],
-            ["C", "F"],
-        )
-    ],
-)
+@pytest.mark.parametrize(*_complex_params)
+def test_cgemm3m(  # noqa: PLR0913
+    alpha: complex,
+    conjugate_a: bool,
+    beta: complex,
+    conjugate_b: bool,
+    m: int,
+    n: int,
+    k: int,
+    a_order: str,
+    b_order: str,
+    c_order: str,
+):
+    """Test the cgemm function."""
+    rng = np.random.default_rng(seed=1)
+    mat_a = create_array(rng, (m, k), "c8", a_order)
+    mat_b = create_array(rng, (k, n), "c8", b_order)
+    mat_c = create_array(rng, (m, n), "c8", c_order)
+    mat_c_orig = mat_c.copy()
+    level3.cgemm3m(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
+    expected = alpha * conjugate_if(mat_a, conjugate_a) @ conjugate_if(mat_b, conjugate_b) + beta * mat_c_orig
+    np.testing.assert_allclose(mat_c, expected, atol=5e-7, rtol=5e-7)
+
+
+@pytest.mark.parametrize(*_complex_params)
 def test_zgemm(  # noqa: PLR0913
     alpha: complex,
     conjugate_a: bool,
@@ -156,4 +164,28 @@ def test_zgemm(  # noqa: PLR0913
     mat_c_orig = mat_c.copy()
     level3.zgemm(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
     expected = alpha * conjugate_if(mat_a, conjugate_a) @ conjugate_if(mat_b, conjugate_b) + beta * mat_c_orig
-    np.testing.assert_allclose(mat_c, expected, atol=1e-7, rtol=1e-7)
+    np.testing.assert_allclose(mat_c, expected, atol=1e-8, rtol=1e-8)
+
+
+@pytest.mark.parametrize(*_complex_params)
+def test_zgemm3m(  # noqa: PLR0913
+    alpha: complex,
+    conjugate_a: bool,
+    beta: complex,
+    conjugate_b: bool,
+    m: int,
+    n: int,
+    k: int,
+    a_order: str,
+    b_order: str,
+    c_order: str,
+):
+    """Test the zgemm3m function."""
+    rng = np.random.default_rng(seed=1)
+    mat_a = create_array(rng, (m, k), "c16", a_order)
+    mat_b = create_array(rng, (k, n), "c16", b_order)
+    mat_c = create_array(rng, (m, n), "c16", c_order)
+    mat_c_orig = mat_c.copy()
+    level3.zgemm3m(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
+    expected = alpha * conjugate_if(mat_a, conjugate_a) @ conjugate_if(mat_b, conjugate_b) + beta * mat_c_orig
+    np.testing.assert_allclose(mat_c, expected, atol=1e-8, rtol=1e-8)
