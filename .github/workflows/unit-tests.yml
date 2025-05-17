@@ -43,7 +43,7 @@ jobs:
           $POETRY_HOME/bin/poetry --version
           ln $POETRY_HOME/bin/poetry /usr/local/bin/poetry
           poetry --version
-          poetry install
+          poetry install --extras=dev
           source .venv/bin/activate
           spin setup-in-place
           spin in-place

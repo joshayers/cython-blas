@@ -687,4 +687,4 @@ dev = ["build", "click", "cython", "cython-lint", "delvewheel", "deptry", "isort
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11"
-content-hash = "1ed3048ff8f88be25e1fea786b642a92b2b279d125ea9e0c7c6fe29ab496e7db"
+content-hash = "800fde7a436458be34be124a937f9a9adcca7e96ff2f719cee7cc55ba3bcb3fa"
