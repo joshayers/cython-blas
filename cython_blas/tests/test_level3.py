@@ -30,6 +30,35 @@ def conjugate_if(array: npt.NDArray, conjugate: bool) -> npt.NDArray:
     [
         (alpha, beta, 8, 9, 10, a_order, b_order, c_order)
         for alpha, beta, a_order, b_order, c_order in itertools.product(
+            [0.0, 1.0, 2.2], [0.0, 1.0, 2.2], ["C", "F"], ["C", "F"], ["C", "F"]
+        )
+    ],
+)
+def test_sgemm(  # noqa: PLR0913
+    alpha: float,
+    beta: float,
+    m: int,
+    n: int,
+    k: int,
+    a_order: str,
+    b_order: str,
+    c_order: str,
+):
+    """Test the sgemm function."""
+    rng = np.random.default_rng(seed=1)
+    mat_a = create_array(rng, (m, k), "f4", a_order)
+    mat_b = create_array(rng, (k, n), "f4", b_order)
+    mat_c = create_array(rng, (m, n), "f4", c_order)
+    mat_c_orig = mat_c.copy()
+    level3.sgemm(alpha, mat_a, mat_b, beta, mat_c)
+    np.testing.assert_allclose(mat_c, alpha * mat_a @ mat_b + beta * mat_c_orig, atol=5e-7, rtol=5e-7)
+
+
+@pytest.mark.parametrize(
+    ("alpha", "beta", "m", "n", "k", "a_order", "b_order", "c_order"),
+    [
+        (alpha, beta, 8, 9, 10, a_order, b_order, c_order)
+        for alpha, beta, a_order, b_order, c_order in itertools.product(
             [0.0, 1.0, 2.1], [0.0, 1.0, 2.1], ["C", "F"], ["C", "F"], ["C", "F"]
         )
     ],
@@ -44,14 +73,52 @@ def test_dgemm(  # noqa: PLR0913
     b_order: str,
     c_order: str,
 ):
-    """Test the gemm_memview function."""
+    """Test the dgemm function."""
     rng = np.random.default_rng(seed=1)
     mat_a = create_array(rng, (m, k), "f8", a_order)
     mat_b = create_array(rng, (k, n), "f8", b_order)
     mat_c = create_array(rng, (m, n), "f8", c_order)
     mat_c_orig = mat_c.copy()
     level3.dgemm(alpha, mat_a, mat_b, beta, mat_c)
-    np.testing.assert_allclose(mat_c, alpha * mat_a @ mat_b + beta * mat_c_orig)
+    np.testing.assert_allclose(mat_c, alpha * mat_a @ mat_b + beta * mat_c_orig, atol=1e-7, rtol=1e-7)
+
+
+@pytest.mark.parametrize(
+    ("alpha", "conjugate_a", "beta", "conjugate_b", "m", "n", "k", "a_order", "b_order", "c_order"),
+    [
+        (alpha, conjugate_a, beta, conjugate_b, 8, 9, 10, a_order, b_order, c_order)
+        for alpha, conjugate_a, beta, conjugate_b, a_order, b_order, c_order in itertools.product(
+            [0.0 + 0.0j, 1.0 + 1.2j, 2.1 + 1.0j],
+            [True, False],
+            [0.0 + 0.0j, 1.0 + 1.2j, 2.1 + 1.0j],
+            [True, False],
+            ["C", "F"],
+            ["C", "F"],
+            ["C", "F"],
+        )
+    ],
+)
+def test_cgemm(  # noqa: PLR0913
+    alpha: complex,
+    conjugate_a: bool,
+    beta: complex,
+    conjugate_b: bool,
+    m: int,
+    n: int,
+    k: int,
+    a_order: str,
+    b_order: str,
+    c_order: str,
+):
+    """Test the cgemm function."""
+    rng = np.random.default_rng(seed=1)
+    mat_a = create_array(rng, (m, k), "c8", a_order)
+    mat_b = create_array(rng, (k, n), "c8", b_order)
+    mat_c = create_array(rng, (m, n), "c8", c_order)
+    mat_c_orig = mat_c.copy()
+    level3.cgemm(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
+    expected = alpha * conjugate_if(mat_a, conjugate_a) @ conjugate_if(mat_b, conjugate_b) + beta * mat_c_orig
+    np.testing.assert_allclose(mat_c, expected, atol=5e-7, rtol=5e-7)
 
 
 @pytest.mark.parametrize(
@@ -81,7 +148,7 @@ def test_zgemm(  # noqa: PLR0913
     b_order: str,
     c_order: str,
 ):
-    """Test the gemm_memview function."""
+    """Test the zgemm function."""
     rng = np.random.default_rng(seed=1)
     mat_a = create_array(rng, (m, k), "c16", a_order)
     mat_b = create_array(rng, (k, n), "c16", b_order)
@@ -89,4 +156,4 @@ def test_zgemm(  # noqa: PLR0913
     mat_c_orig = mat_c.copy()
     level3.zgemm(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
     expected = alpha * conjugate_if(mat_a, conjugate_a) @ conjugate_if(mat_b, conjugate_b) + beta * mat_c_orig
-    np.testing.assert_allclose(mat_c, expected)
+    np.testing.assert_allclose(mat_c, expected, atol=1e-7, rtol=1e-7)

@@ -20,6 +20,13 @@ cdef extern from "cblas.h" nogil:
 
     ctypedef int blasint
 
+    cdef void scipy_cblas_sgemm64_(
+        CBLAS_ORDER Order, CBLAS_TRANSPOSE TransA, CBLAS_TRANSPOSE TransB,
+        blasint M, blasint N, blasint K,
+		float alpha, const float *A, blasint lda, const float *B, blasint ldb,
+        float beta, float *C, blasint ldc
+    )
+
     cdef void scipy_cblas_dgemm64_(
         CBLAS_ORDER Order, CBLAS_TRANSPOSE TransA, CBLAS_TRANSPOSE TransB,
         blasint M, blasint N, blasint K,
@@ -27,8 +34,16 @@ cdef extern from "cblas.h" nogil:
         double beta, double *C, blasint ldc
     )
 
+    cdef void scipy_cblas_cgemm64_(
+        CBLAS_ORDER Order, CBLAS_TRANSPOSE TransA, CBLAS_TRANSPOSE TransB,
+        blasint M, blasint N, blasint K,
+		const void *alpha, const void *A, blasint lda, const void *B, blasint ldb,
+        const void *beta, void *C, blasint ldc
+    )
+
     cdef void scipy_cblas_zgemm64_(
          CBLAS_ORDER Order, CBLAS_TRANSPOSE TransA, CBLAS_TRANSPOSE TransB,
          blasint M, blasint N, blasint K,
 		 const void *alpha, const void *A, blasint lda, const void *B, blasint ldb,
-         const void *beta, void *C, blasint ldc);
+         const void *beta, void *C, blasint ldc
+    )
