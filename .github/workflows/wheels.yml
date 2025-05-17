@@ -46,7 +46,6 @@ jobs:
           export POETRY_HOME=`mktemp -d`
           python -m venv $POETRY_HOME --upgrade-deps
           $POETRY_HOME/Scripts/pip install -q poetry
-          $POETRY_HOME/Scripts/poetry --version
           ln $POETRY_HOME/Scripts/poetry /usr/bin/poetry
           poetry --version
           poetry config virtualenvs.in-project true
@@ -57,7 +56,6 @@ jobs:
           export POETRY_HOME=`mktemp -d`
           python -m venv $POETRY_HOME --upgrade-deps
           $POETRY_HOME/bin/pip install -q poetry
-          $POETRY_HOME/bin/poetry --version
           ln $POETRY_HOME/bin/poetry /usr/local/bin/poetry
           poetry --version
           poetry config virtualenvs.in-project true
