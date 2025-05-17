@@ -12,6 +12,8 @@ current_dir = Path(__file__).resolve().parent
 root_dir = (current_dir / "..").resolve()
 build_dir = root_dir / "build"
 build_ninja_path = build_dir / "build.ninja"
+dist_dir = root_dir / "dist"
+wheel_dir = root_dir / "wheelhouse"
 
 
 def fix_paths(paths: list[str]) -> list[str]:
@@ -153,10 +155,23 @@ def _scipy_openblas_pkg_config() -> Path:
 
 @click.command
 def build() -> None:
-    """Run 'python -m build .' to build a source distribution and a wheel."""
-    path = str(_scipy_openblas_pkg_config()).replace("\\", "/")
-    pkg_config_path_cmd = f"-Csetup-args=--pkg-config-path={path}"
-    cmd = ["python", "-m", "build", pkg_config_path_cmd, "."]
+    """Build a source distribution and a wheel using build, then repair it with delvewheel."""
+    pkg_config_path = str(_scipy_openblas_pkg_config()).replace("\\", "/")
+    pkg_config_path_cmd = f"-Csetup-args=--pkg-config-path={pkg_config_path}"
+    outdir_cmd = f"--outdir={dist_dir!s}"
+    cmd = ["python", "-m", "build", pkg_config_path_cmd, outdir_cmd, "."]
+    print(f"Running the following command: \n{' '.join(cmd)}")
+    subprocess.run(cmd, check=True, cwd=root_dir, shell=True)  # noqa: S602
+
+    import scipy_openblas64
+
+    lib_dir = scipy_openblas64.get_lib_dir()
+    filenames = list(dist_dir.glob("cython_blas*.whl"))
+    if len(filenames) != 1:
+        msg = f"Expected one .whl file, found {len(filenames)}, file names are: {filenames}"
+        raise ValueError(msg)
+    target = filenames[0]
+    cmd = ["delvewheel", "repair", f"--add-path={lib_dir!s}", f"{target!s}"]
     print(f"Running the following command: \n{' '.join(cmd)}")
     subprocess.run(cmd, check=True, cwd=root_dir, shell=True)  # noqa: S602
 

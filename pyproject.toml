@@ -3,7 +3,7 @@ name = "cython-blas"
 version = "0.1.0"
 
 requires-python = ">=3.11"
-dependencies = ["numpy >= 2.0"]
+dependencies = ["numpy >=2.0"]
 
 [project.optional-dependencies]
 dev = [
@@ -15,12 +15,13 @@ dev = [
     "isort",
     "cython-lint",
     # Build environment
-    "scipy-openblas64",
+    "scipy-openblas64 >=0.3.29",
     "cython >=3.0.5",
     "meson-python >=0.17.0",
     "meson >=1.7.0",
     "ninja >=1.11",
     "build",
+    "delvewheel >=1.10.1",
     "spin",
     "click",
 ]
@@ -96,10 +97,10 @@ package = "cyhon_blas"
 
 [build-system]
 requires = [
-    "meson-python >= 0.17.0",
-    "ninja >= 1.11",
-    "cython >= 3.0.5",
-    "numpy >= 2.0",           # need to call numpy.get_include() during build
-    "scipy-openblas64",
+    "meson-python >=0.17.0",
+    "ninja >=1.11",
+    "cython >=3.0.5",
+    "numpy >=2.0",               # need to call numpy.get_include() during build
+    "scipy-openblas64 >=0.3.29",
 ]
 build-backend = "mesonpy"
