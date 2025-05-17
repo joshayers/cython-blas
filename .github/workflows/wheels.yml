@@ -22,7 +22,7 @@ jobs:
     strategy:
       matrix:
         os:
-          - "ubuntu-24.04"
+          # - "ubuntu-24.04"
           - "windows-2022"
         python-version:
           - "3.11"
@@ -68,7 +68,7 @@ jobs:
           poetry run spin build
       - uses: actions/upload-artifact@v4
         with:
-          name: wheels-${{ matrix.os }}
+          name: wheels-${{ matrix.os }}-${{ matrix.python-version }}
           path: |
             ./wheelhouse/*
             ./dist/*
