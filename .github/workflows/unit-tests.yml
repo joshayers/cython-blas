@@ -38,7 +38,7 @@ jobs:
       - name: Install pkg-config
         if: ${{ runner.os == 'Windows' }}
         run: |
-          chock install pkgconfiglite
+          choco install pkgconfiglite
       - name: Install Poetry, Windows
         if: ${{ runner.os == 'Windows' }}
         shell: bash
