@@ -46,7 +46,7 @@ jobs:
           echo ""
           echo $PATH
           echo ""
-          ln $POETRY_HOME/Scripts/poetry /usr/local/bin/poetry
+          ln $POETRY_HOME/Scripts/poetry /usr/bin/poetry
           poetry --version
           poetry config virtualenvs.in-project true
       - name: Install Poetry, not Windows
