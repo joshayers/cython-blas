@@ -1,0 +1,74 @@
+name: Build wheels
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "docs/**"
+      - "MANIFEST.in"
+      - "README.rst"
+      - "THANKS.rst"
+      - "COPYING.txt"
+      - ".gitignore"
+      - ".gitattributes"
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  tests:
+    continue-on-error: false
+    strategy:
+      matrix:
+        os:
+          - "ubuntu-24.04"
+          - "windows-2022"
+        python-version:
+          - "3.11"
+          - "3.13"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install pkg-config
+        if: ${{ runner.os == 'Windows' }}
+        run: |
+          choco install pkgconfiglite
+      - name: Install Poetry, Windows
+        if: ${{ runner.os == 'Windows' }}
+        shell: bash
+        run: |
+          export POETRY_HOME=`mktemp -d`
+          python -m venv $POETRY_HOME --upgrade-deps
+          $POETRY_HOME/Scripts/pip install -q poetry
+          $POETRY_HOME/Scripts/poetry --version
+          ln $POETRY_HOME/Scripts/poetry /usr/bin/poetry
+          poetry --version
+          poetry config virtualenvs.in-project true
+      - name: Install Poetry, not Windows
+        if: ${{ runner.os != 'Windows' }}
+        shell: bash
+        run: |
+          export POETRY_HOME=`mktemp -d`
+          python -m venv $POETRY_HOME --upgrade-deps
+          $POETRY_HOME/bin/pip install -q poetry
+          $POETRY_HOME/bin/poetry --version
+          ln $POETRY_HOME/bin/poetry /usr/local/bin/poetry
+          poetry --version
+          poetry config virtualenvs.in-project true
+      - name: Build wheel
+        shell: bash
+        run: |
+          poetry install --extras=dev
+          poetry run spin build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wheels-${{ matrix.os }}
+          path: |
+            ./wheelhouse/*
+            ./dist/*
