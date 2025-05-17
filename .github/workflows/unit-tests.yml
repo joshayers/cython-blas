@@ -44,10 +44,8 @@ jobs:
           ln $POETRY_HOME/bin/poetry /usr/local/bin/poetry
           poetry --version
           poetry install --extras=dev
-          source .venv/bin/activate
-          spin setup-in-place
-          spin in-place
+          poetry run spin setup-in-place
+          poetry run spin in-place
       - name: Test with pytest
         run: |
-          source .venv/bin/activate
-          python -m pytest cython_blas
+          poetry run python -m pytest cython_blas
