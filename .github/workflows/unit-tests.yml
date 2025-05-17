@@ -43,6 +43,7 @@ jobs:
           $POETRY_HOME/bin/poetry --version
           ln $POETRY_HOME/bin/poetry /usr/local/bin/poetry
           poetry --version
+          poetry config virtualenvs.in-project true
           poetry install --extras=dev
           poetry run spin setup-in-place
           poetry run spin in-place
