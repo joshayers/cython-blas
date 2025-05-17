@@ -1,0 +1,70 @@
+name: Run unit tests
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "docs/**"
+      - "MANIFEST.in"
+      - "README.rst"
+      - "THANKS.rst"
+      - "COPYING.txt"
+      - ".gitignore"
+      - ".gitattributes"
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  tests:
+    continue-on-error: false
+    strategy:
+      matrix:
+        os:
+          - "ubuntu-24.04"
+        python-version:
+          - "3.11"
+          - "3.13"
+        extra-doctest-ignore:
+          - ""
+        # The OrderedDict __str__ method changed in Python 3.12 so doctests in the ytools.py module will fail
+        # on older versions of Python.
+        include:
+          - os: "ubuntu-24.04"
+            python-version: "3.10"
+            extra-doctest-ignore: "--ignore=pyyeti/ytools.py"
+          - os: "windows-2022"
+            python-version: "3.10"
+            extra-doctest-ignore: "--ignore=pyyeti/ytools.py"
+          - os: "ubuntu-24.04"
+            python-version: "3.11"
+            extra-doctest-ignore: "--ignore=pyyeti/ytools.py"
+          - os: "windows-2022"
+            python-version: "3.11"
+            extra-doctest-ignore: "--ignore=pyyeti/ytools.py"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Python dependencies
+        shell: bash
+        run: |
+          export $POETRY_HOME=`mktemp -d`
+          python -m venv $POETRY_HOME --upgrade-deps
+          $POETRY_HOME/bin/pip install -q poetry
+          $POETRY_HOME/bin/poetry --version
+          ln $POETRY_HOME/bin/poetry /usr/local/bin/poetry
+          poetry --version
+          poetry install
+          source .venv/bin/activate
+          spin setup-in-place
+          spin in-place
+      - name: Test with pytest
+        run: |
+          source .venv/bin/activate
+          python -m pytest cython_blas
