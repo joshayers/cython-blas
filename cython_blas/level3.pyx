@@ -340,7 +340,7 @@ cpdef dsymm_ab(
             f"({A.shape[0]}, {A.shape[1]}) @ ({B.shape[0], B.shape[1]}) = ({C.shape[0]}, {C.shape[1]})"
         )
         raise ValueError(msg)
-    if order_a != order_c:
+    if order_b != order_c:
         msg = "memory order not compatible, matrices B and C must have the same memory layout"
         raise ValueError(msg)
     cdef blasint lda = (A.strides[1] / sizeof(double)
