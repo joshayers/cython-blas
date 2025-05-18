@@ -18,6 +18,18 @@ cdef extern from "cblas.h" nogil:
         CblasConjTrans
         CblasConjNoTrans
 
+    cdef enum CBLAS_UPLO:
+        CblasUpper
+        CblasLower
+
+    cdef enum CBLAS_DIAG:
+        CblasNonUnit
+        CblasUnit
+
+    cdef enum CBLAS_SIDE:
+        CblasLeft
+        CblasRight
+
     ctypedef int blasint
 
     cdef void scipy_cblas_sgemm64_(
@@ -59,4 +71,11 @@ cdef extern from "cblas.h" nogil:
         CBLAS_ORDER Order, CBLAS_TRANSPOSE TransA, CBLAS_TRANSPOSE TransB,
         blasint M, blasint N, blasint K,
 		const void *alpha, const void *A, blasint lda, const void *B, blasint ldb,
-        const void *beta, void *C, blasint ldc);
+        const void *beta, void *C, blasint ldc
+    )
+
+    cdef void scipy_cblas_dsymm64_(
+        CBLAS_ORDER Order, CBLAS_SIDE Side, CBLAS_UPLO Uplo,
+        blasint M, blasint N,
+        double alpha, const double *A, blasint lda, const double *B, blasint ldb,
+        double beta, double *C, blasint ldc);
