@@ -338,5 +338,5 @@ def test_dsymm_ab(  # noqa: PLR0913
     mat_c = create_array(rng, (m, n), "f8", bc_order)
     mat_c_orig = mat_c.copy()
     assert not np.any(np.isnan(mat_c))
-    level3.dsymm(alpha, upper_lower, mat_a, mat_b, beta, mat_c)
+    level3.dsymm_ab(alpha, upper_lower, mat_a, mat_b, beta, mat_c)
     np.testing.assert_allclose(mat_c, alpha * mat_a_full @ mat_b + beta * mat_c_orig, atol=1e-8, rtol=1e-8)
