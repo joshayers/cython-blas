@@ -27,6 +27,25 @@ dev = [
 ]
 
 
+[tool.cibuildwheel]
+build-frontend = "build"
+archs = ["auto64"]
+skip = [
+    "pp*",   # PyPy
+    "musl*", # musllinux
+]
+
+[tool.cibuildwheel.linux]
+environment = { "PKG_CONFIG_PATH" = "$(mktemp -d)" }
+before-build = [
+    "python -c 'import scipy_openblas32; print(scipy_openblas32.get_pkg_config())' > $PKG_CONFIG_PATH/scipy-openblas.pc",
+]
+
+
+[tool.cibuildwheel.windows]
+before-all = ["pip install delvewheel"]
+repair-wheel-command = ["delvewheel repair -w {dest_dir} {wheel}"]
+
 [tool.cython-lint]
 max-line-length = 120
 
