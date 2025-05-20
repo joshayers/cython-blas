@@ -35,7 +35,7 @@ skip = [
 ]
 
 [tool.cibuildwheel.linux]
-environment = { "PKG_CONFIG_PATH" = "$(mktemp -d)" }
+environment = { "PKG_CONFIG_PATH" = "$PKG_CONFIG_PATH:$(mktemp -d)" }
 before-build = [
     "pip install -q scipy_openblas64>=0.3.29",
     "python tools/before_build.py",
@@ -43,7 +43,7 @@ before-build = [
 
 
 [tool.cibuildwheel.windows]
-environment = { "PKG_CONFIG_PATH" = "$(python -c 'import tempfile; print(tempfile.mkdtemp())')" }
+environment = { "PKG_CONFIG_PATH" = "$PKG_CONFIG_PATH;$(python -c 'import tempfile; print(tempfile.mkdtemp())')" }
 before-all = ["pip install -q delvewheel"]
 before-build = [
     "pip install -q scipy_openblas64>=0.3.29",

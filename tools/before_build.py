@@ -8,7 +8,8 @@ import scipy_openblas64
 
 def main() -> None:
     """Main."""
-    path = Path(os.environ["PKG_CONFIG_PATH"]) / "scipy-openblas.pc"
+    dir_path = os.environ["PKG_CONFIG_PATH"].split(os.pathsep)[-1]
+    path = Path(dir_path) / "scipy-openblas.pc"
     print(f"Writing file: {path!s}")
     with path.open("wt") as fobj:
         fobj.write(scipy_openblas64.get_pkg_config())
