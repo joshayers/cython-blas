@@ -53,7 +53,7 @@ before-build = [
     """python -c "import scipy_openblas64; import os; path=os.path.join(os.environ['PKG_CONFIG_PATH'],'scipy-openblas.pc'); f=open(path,'wt'); f.write(scipy_openblas64.get_pkg_config()); f.close()" """,
 ]
 repair-wheel-command = [
-    """python -c "import scipy_openblas64; lib_dir=scipy_openblas64.get_lib_dir(); cmd=['delvewheel', 'repair', f'--add_path={lib_dir!s}' ,'--wheel-dir={dest_dir}', '{wheel}']; import subprocess; subprocess.run(cmd, check=True, cwd=root_dir, shell=True)" """,
+    """python -c "import scipy_openblas64; lib_dir=scipy_openblas64.get_lib_dir(); dest=r'{dest_dir}'; whl=r'{wheel}'; cmd=['delvewheel', 'repair', f'--add_path={lib_dir!s}' ,f'--wheel-dir={dest!s}', f'{whl!s}']; import subprocess; subprocess.run(cmd, check=True, cwd=root_dir, shell=True)" """,
 ]
 
 [tool.cython-lint]
