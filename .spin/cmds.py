@@ -160,20 +160,9 @@ def build() -> None:
     pkg_config_path_cmd = f"-Csetup-args=--pkg-config-path={pkg_config_path}"
     outdir_cmd = f"--outdir={dist_dir!s}"
     cmd = ["python", "-m", "build", pkg_config_path_cmd, outdir_cmd, "."]
+    shell = platform.system() == "Windows"
     print(f"Running the following command: \n{' '.join(cmd)}")
-    subprocess.run(cmd, check=True, cwd=root_dir, shell=True)  # noqa: S602
-
-    import scipy_openblas64
-
-    lib_dir = scipy_openblas64.get_lib_dir()
-    filenames = list(dist_dir.glob("cython_blas*.whl"))
-    if len(filenames) != 1:
-        msg = f"Expected one .whl file, found {len(filenames)}, file names are: {filenames}"
-        raise ValueError(msg)
-    target = filenames[0]
-    cmd = ["delvewheel", "repair", f"--add-path={lib_dir!s}", f"{target!s}"]
-    print(f"Running the following command: \n{' '.join(cmd)}")
-    subprocess.run(cmd, check=True, cwd=root_dir, shell=True)  # noqa: S602
+    subprocess.run(cmd, check=True, cwd=root_dir, shell=shell)  # noqa: S603
 
 
 @click.command
