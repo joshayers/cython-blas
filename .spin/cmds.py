@@ -154,13 +154,16 @@ def _scipy_openblas_pkg_config() -> Path:
 
 
 @click.command
-def build() -> None:
-    """Build a source distribution and a wheel using build, then repair it with delvewheel."""
+@click.option("-w", "--wheel", is_flag=True, help="If set, build a wheel and sdist. Otherwise just build a sdist.")
+def build(wheel: bool) -> None:
+    """Build a source distribution and/or a wheel using build."""
     pkg_config_path = str(_scipy_openblas_pkg_config()).replace("\\", "/")
     pkg_config_path_cmd = f"-Csetup-args=--pkg-config-path={pkg_config_path}"
     outdir_cmd = f"--outdir={dist_dir!s}"
-    cmd = ["python", "-m", "build", pkg_config_path_cmd, outdir_cmd, "."]
+    sdist_cmd = "-s" if not wheel else None
+    cmd = ["python", "-m", "build", pkg_config_path_cmd, outdir_cmd, sdist_cmd, "."]
     shell = platform.system() == "Windows"
+    cmd = [c for c in cmd if c is not None]
     print(f"Running the following command: \n{' '.join(cmd)}")
     subprocess.run(cmd, check=True, cwd=root_dir, shell=shell)  # noqa: S603
 

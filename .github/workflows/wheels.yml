@@ -1,4 +1,4 @@
-name: Build wheels
+name: Build wheels and sdist
 
 on:
   push:
@@ -17,7 +17,7 @@ on:
       - main
 
 jobs:
-  tests:
+  build_wheels:
     continue-on-error: true
     strategy:
       matrix:
@@ -37,7 +37,61 @@ jobs:
         run: |
           choco install pkgconfiglite
       - uses: pypa/cibuildwheel@v2.23.3
-      - uses: actions/upload-artifact@v4
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
         with:
           name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
-          path: ./wheelhouse/*.whl
+          path: wheelhouse/*.whl
+
+  build_sdist:
+    runs-on: "ubuntu-24.04"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install Poetry, not Windows
+        shell: bash
+        run: |
+          export POETRY_HOME=`mktemp -d`
+          python -m venv $POETRY_HOME --upgrade-deps
+          $POETRY_HOME/bin/pip install -q poetry
+          ln $POETRY_HOME/bin/poetry /usr/local/bin/poetry
+          poetry --version
+          poetry config virtualenvs.in-project true
+      - name: Install Python dependencies
+        shell: bash
+        run: |
+          poetry install --extras=dev
+      - name: Build sdist
+        run: |
+          poetry run spin build
+      - name: Upload sdist
+        uses: actions/upload-artifact@v4
+        with:
+          name: sdist
+          path: dist/*
+
+  upload_all:
+    runs-on: "ubuntu-24.04"
+    needs: [build_sdist, build_wheels]
+    steps:
+      - name: Download wheels
+        uses: actions/download-artifact@v4
+        with:
+          pattern: cibw-wheels-*
+          merge-multiple: true
+          path: dist/
+      - name: Download sdist
+        uses: actions/download-artifact@v4
+        with:
+          pattern: sdist*
+          merge-multiple: true
+          path: dist/
+      - name: Upload wheels and sdist
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels-and-sdist
+          path: dist/
