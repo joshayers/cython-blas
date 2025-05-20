@@ -40,17 +40,16 @@ environment = { "PKG_CONFIG_PATH" = "$(mktemp -d)" }
 before-build = [
     "echo $PKG_CONFIG_PATH",
     "pip install -q scipy_openblas64",
-    "python -c 'import scipy_openblas64; print(scipy_openblas64.get_pkg_config())' > {project}/scipy-openblas.pc",
+    "python -c 'import scipy_openblas64; print(scipy_openblas64.get_pkg_config())' > $PKG_CONFIG_PATH/scipy-openblas.pc",
 ]
 
 
 [tool.cibuildwheel.windows]
 environment = { "PKG_CONFIG_PATH" = "$(python -c 'import tempfile; print(tempfile.mkdtemp())')" }
 before-all = [
-    "echo $Env:PKG_CONFIG_PATH",
     "echo %PKG_CONFIG_PATH%",
     "pip install -q delvewheel scipy_openblas64",
-    "python -c 'import scipy_openblas64; print(scipy_openblas64.get_pkg_config())' > %PKG_CONFIG_PATH%/scipy-openblas.pc",
+    """python -c "import scipy_openblas64; import os; path=os.path.join(os.environ['PKG_CONFIG_PATH'],'scipy-openblas.pc'); f=open(path,'wt'); f.write(scipy_openblas64.get_pkg_config()); f.close()" """,
 ]
 repair-wheel-command = ["delvewheel repair -w {dest_dir} {wheel}"]
 
