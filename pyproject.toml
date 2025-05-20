@@ -54,7 +54,7 @@ before-build = [
     # """python -c "import scipy_openblas64; import os; path=os.path.join(os.environ['PKG_CONFIG_PATH'],'scipy-openblas.pc'); f=open(path,'wt'); f.write(scipy_openblas64.get_pkg_config()); f.close()" """,
 ]
 repair-wheel-command = [
-    "python tools/repair_wheel.py {dest_dir} {wheel}",
+    "python tools/repair_wheel_windows.py {dest_dir} {wheel}",
     # """python -c "import scipy_openblas64; lib_dir=scipy_openblas64.get_lib_dir(); dest=r'{dest_dir}'; whl=r'{wheel}'; cmd=['delvewheel', 'repair', f'--add-path={lib_dir!s}' ,f'--wheel-dir={dest!s}', f'{whl!s}']; import subprocess; subprocess.run(cmd, check=True, shell=True)" """,
 ]
 
