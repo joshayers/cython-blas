@@ -21,7 +21,6 @@ dev = [
     "meson >=1.7.0",
     "ninja >=1.11",
     "build",
-    "delvewheel >=1.10.1",
     "spin",
     "click",
 ]
@@ -38,10 +37,8 @@ skip = [
 [tool.cibuildwheel.linux]
 environment = { "PKG_CONFIG_PATH" = "$(mktemp -d)" }
 before-build = [
-    "echo $PKG_CONFIG_PATH",
-    "pip install -q scipy_openblas64",
+    "pip install -q scipy_openblas64>=0.3.29",
     "python tools/before_build.py",
-    # "python -c 'import scipy_openblas64; print(scipy_openblas64.get_pkg_config())' > $PKG_CONFIG_PATH/scipy-openblas.pc",
 ]
 
 
@@ -49,13 +46,11 @@ before-build = [
 environment = { "PKG_CONFIG_PATH" = "$(python -c 'import tempfile; print(tempfile.mkdtemp())')" }
 before-all = ["pip install -q delvewheel"]
 before-build = [
-    "pip install -q scipy_openblas64",
+    "pip install -q scipy_openblas64>=0.3.29",
     "python tools/before_build.py",
-    # """python -c "import scipy_openblas64; import os; path=os.path.join(os.environ['PKG_CONFIG_PATH'],'scipy-openblas.pc'); f=open(path,'wt'); f.write(scipy_openblas64.get_pkg_config()); f.close()" """,
 ]
 repair-wheel-command = [
     "python tools/repair_wheel_windows.py {dest_dir} {wheel}",
-    # """python -c "import scipy_openblas64; lib_dir=scipy_openblas64.get_lib_dir(); dest=r'{dest_dir}'; whl=r'{wheel}'; cmd=['delvewheel', 'repair', f'--add-path={lib_dir!s}' ,f'--wheel-dir={dest!s}', f'{whl!s}']; import subprocess; subprocess.run(cmd, check=True, shell=True)" """,
 ]
 
 [tool.cython-lint]
@@ -131,7 +126,6 @@ requires = [
     "meson-python >=0.17.0",
     "ninja >=1.11",
     "cython >=3.0.5",
-    "numpy >=2.0",               # need to call numpy.get_include() during build
-    "scipy-openblas64 >=0.3.29",
+    "numpy >=2.0",           # need to call numpy.get_include() during build
 ]
 build-backend = "mesonpy"
