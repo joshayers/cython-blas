@@ -38,7 +38,8 @@ skip = [
 [tool.cibuildwheel.linux]
 environment = { "PKG_CONFIG_PATH" = "$(mktemp -d)" }
 before-build = [
-    "python -c 'import scipy_openblas32; print(scipy_openblas32.get_pkg_config())' > $PKG_CONFIG_PATH/scipy-openblas.pc",
+    "pip install -q scipy_openblas64",
+    "python -c 'import scipy_openblas64; print(scipy_openblas64.get_pkg_config())' > $PKG_CONFIG_PATH/scipy-openblas.pc",
 ]
 
 
