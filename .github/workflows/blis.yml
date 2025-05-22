@@ -14,17 +14,18 @@ jobs:
         with:
           repository: flame/blis
           path: blis_repo
+          fetch-depth: 0
       - name: Install make in MSYS2 environment
         uses: msys2/setup-msys2@v2
         id: msys2
         with:
           msystem: msys
           install: make
-      - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v2
-        with:
-          version: "18.1.8"
-          arch: x64
+      # - name: Install LLVM and Clang
+      #   uses: KyleMayes/install-llvm-action@v2
+      #   with:
+      #     version: "18.1.8"
+      #     arch: x64
       - name: Build
         shell: cmd
         env:
@@ -40,10 +41,8 @@ jobs:
           bash -c "which make"
           bash -c "which bash"
           bash -c "which clang"
+          bash -c "which gfortran"
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
-          bash -c "which make"
-          bash -c "which bash"
-          bash -c "which clang"
           cd blis_repo
           bash -c "./configure --prefix=/c/blis_install/ --disable-static --enable-shared auto"
           bash -c "make -j2 V=1"
