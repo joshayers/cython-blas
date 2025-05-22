@@ -45,6 +45,7 @@ jobs:
           bash -c "which clang"
           bash -c "which gfortran"
           bash -c "rm -rf /c/mingw64/bin"
+          bash -c "rm -rf /c/Strawberry/c/bin"
           bash -c "which gfortran"
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
           cd blis_repo
