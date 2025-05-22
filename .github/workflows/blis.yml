@@ -49,7 +49,7 @@ jobs:
           bash -c "which gfortran"
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
           cd blis_repo
-          bash -c "./configure --prefix=/c/blis_install/ --disable-static --enable-shared auto"
+          bash -c "./configure --prefix=/c/blis_install/ --disable-static --enable-shared generic"
           echo "configure done"
           bash -c "make -j2 V=1"
           echo "make done"
