@@ -52,6 +52,6 @@ jobs:
         shell: bash
         run: |
           cd blis_repo
-          ./configure --prefix=/opt/blis/ --disable-static --enable-shared --enable-arg-max-hack auto"
+          ./configure --prefix=/opt/blis/ --disable-static --enable-shared --enable-arg-max-hack auto
           make -j2 V=1
           make install
