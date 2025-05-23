@@ -1,5 +1,5 @@
 image:
-  - Visual Studio 2022
+  - Visual Studio 2019
 
 environment:
   matrix:
@@ -22,7 +22,7 @@ install:
   - if [%CC%]==[clang] set "PATH=C:\Program Files\LLVM\bin;%PATH%"
   - if [%CC%]==[clang] set "AR=llvm-ar"
   - if [%CC%]==[clang] set "AS=llvm-as"
-  - if [%CC%]==[clang] call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64
+  - if [%CC%]==[clang] call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64
 
 build_script:
   - if [%LIB_TYPE%]==[shared] set "CONFIGURE_OPTS=%CONFIGURE_OPTS% --enable-shared --disable-static"
