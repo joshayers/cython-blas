@@ -1,3 +1,6 @@
+image:
+  - Visual Studio 2022
+
 environment:
   matrix:
     - LIB_TYPE: shared
@@ -19,7 +22,7 @@ install:
   - if [%CC%]==[clang] set "PATH=C:\Program Files\LLVM\bin;%PATH%"
   - if [%CC%]==[clang] set "AR=llvm-ar"
   - if [%CC%]==[clang] set "AS=llvm-as"
-  - if [%CC%]==[clang] call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
+  - if [%CC%]==[clang] call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64
 
 build_script:
   - if [%LIB_TYPE%]==[shared] set "CONFIGURE_OPTS=%CONFIGURE_OPTS% --enable-shared --disable-static"
@@ -32,6 +35,5 @@ build_script:
   - bash -lc "cd /c/projects/cython-blas/blis && ./configure %CONFIGURE_OPTS% --enable-threading=%THREADING% --enable-arg-max-hack --prefix=/c/blis %CONFIG%"
   - bash -lc "cd /c/projects/cython-blas/blis && mingw32-make -j4 V=1"
   - bash -lc "cd /c/projects/cython-blas/blis && mingw32-make install"
-  - set "ZIPFILE=blis_%CONFIG%.zip"
   - 7z a "C:\blis_%CONFIG%.zip" C:\blis
-  - ps: Push-AppveyorArtifact "C:\blis_$Env:ZIPFILE.zip"
+  - ps: Push-AppveyorArtifact "C:\blis_$Env:CONFIG.zip"
