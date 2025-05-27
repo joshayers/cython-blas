@@ -103,6 +103,7 @@ cpdef dgemm(
         alpha, &A[0, 0], lda, &B[0, 0], ldb, beta, &C[0, 0], ldc
     )
 
+
 @cython.cdivision(True)
 @cython.embedsignature(True)
 @cython.wraparound(False)
@@ -155,6 +156,7 @@ cpdef cgemm(
         m, n, k,
         &alpha, &A[0, 0], lda, &B[0, 0], ldb, &beta, &C[0, 0], ldc
     )
+
 
 @cython.cdivision(True)
 @cython.embedsignature(True)
@@ -265,6 +267,7 @@ cpdef zgemm(
         &alpha, &A[0, 0], lda, &B[0, 0], ldb, &beta, &C[0, 0], ldc
     )
 
+
 @cython.cdivision(True)
 @cython.embedsignature(True)
 @cython.wraparound(False)
@@ -359,9 +362,15 @@ cpdef dsymm_ab(
         alpha, &A[0, 0], lda, &B[0, 0], ldb, beta, &C[0, 0], ldc)
 
 
-def dsymm_raw(Order order, Side side, UpperLower upper_lower, m, n, alpha, double [:, :] A, lda,
-    double [:, :] B, ldb, beta, double [:, :] C, ldc):
+def dsymm_raw(
+    Order order, Side side, UpperLower upper_lower,
+    m, n,
+    alpha, double [:, :] A, lda,
+    double [:, :] B, ldb,
+    beta, double [:, :] C, ldc
+):
     _cblas.scipy_cblas_dsymm64_(
         <_cblas.CBLAS_ORDER> order, <_cblas.CBLAS_SIDE> side, <_cblas.CBLAS_UPLO> upper_lower,
         m, n,
-        alpha, &A[0, 0], lda, &B[0, 0], ldb, beta, &C[0, 0], ldc)
+        alpha, &A[0, 0], lda, &B[0, 0], ldb, beta, &C[0, 0], ldc
+    )
