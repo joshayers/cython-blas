@@ -22,13 +22,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          repository: flame/blis
-          path: blis_repo
       - name: Build
         shell: bash
         run: |
-          cd blis_repo
+          git submodule update --init --recursive
+          cd vendor/blis
           [ ${{ matrix.LIB_TYPE }} == "shared" ] && export CONFIGURE_OPTS="$CONFIGURE_OPTS --enable-shared --disable-static"
           [ ${{ matrix.LIB_TYPE }} == "static" ] && export CONFIGURE_OPTS="$CONFIGURE_OPTS --disable-shared --enable-static"
           [ ${{ matrix.CBLAS }} == "yes" ] && export CONFIGURE_OPTS="$CONFIGURE_OPTS --enable-cblas"
@@ -36,3 +34,8 @@ jobs:
           ./configure --prefix=/opt/blis $CONFIGURE_OPTS --enable-arg-max-hack ${{ matrix.config }}
           make -j2 V=1
           make install
+      - name: Upload compiled library
+        uses: actions/upload-artifact@v4
+        with:
+          name: blis-${{ matrix.LIB_TYPE }}
+          path: opt/blis
