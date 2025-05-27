@@ -10,9 +10,15 @@ jobs:
     runs-on: "ubuntu-latest"
     strategy:
       matrix:
-        config:
-          - x86_64
-          - haswell
+        include:
+          - LIB_TYPE: shared
+            CONFIG: x86_64
+            THREADING: openmp
+            CBLAS: no
+          - LIB_TYPE: static
+            CONFIG: x86_64
+            THREADING: openmp
+            CBLAS: no
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -23,6 +29,10 @@ jobs:
         shell: bash
         run: |
           cd blis_repo
-          ./configure --prefix=/opt/blis/ --disable-static --enable-shared --enable-arg-max-hack ${{ matrix.config }}
+          [ ${{ matrix.LIB_TYPE }} == "shared" ] && export CONFIGURE_OPTS="$CONFIGURE_OPTS --enable-shared --disable-static"
+          [ ${{ matrix.LIB_TYPE }} == "static" ] && export CONFIGURE_OPTS="$CONFIGURE_OPTS --disable-shared --enable-static"
+          [ ${{ matrix.CBLAS }} == "yes" ] && export CONFIGURE_OPTS="$CONFIGURE_OPTS --enable-cblas"
+          export CONFIGURE_OPTS="$CONFIGURE_OPTS --enable-threading=${{ matrix.THREADING }}"
+          ./configure --prefix=/opt/blis $CONFIGURE_OPTS --enable-arg-max-hack ${{ matrix.config }}
           make -j2 V=1
           make install
