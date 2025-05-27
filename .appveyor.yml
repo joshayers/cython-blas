@@ -9,8 +9,8 @@ environment:
       THREADING: openmp
       CBLAS: no
 
-    - LIB_TYPE: shared
-      CONFIG: haswell
+    - LIB_TYPE: static
+      CONFIG: x86_64
       CC: clang
       THREADING: openmp
       CBLAS: no
