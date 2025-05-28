@@ -29,18 +29,18 @@ def _blis_get_pkg_config() -> str:
 
 
 def main() -> None:
-    """Main."""
+    """Write pkg-config files for OpenBLAS and BLIS."""
     pkg_config_path = os.environ["PKG_CONFIG_PATH"].split(os.pathsep)[-1]
     # scipy-openblas
     path = Path(pkg_config_path) / "scipy-openblas.pc"
     print(f"Writing file: {path!s}")
     with path.open("wt") as fobj:
         fobj.write(scipy_openblas64.get_pkg_config())
-    # # blis
-    # path = Path(pkg_config_path) / "blis.pc"  # noqa: ERA001
-    # print(f"Writing file: {path!s}") # noqa: ERA001
-    # with path.open("wt") as fobj:
-    #     fobj.write(_blis_get_pkg_config()) # noqa: ERA001
+    # blis
+    path = Path(pkg_config_path) / "blis.pc"
+    print(f"Writing file: {path!s}")
+    with path.open("wt") as fobj:
+        fobj.write(_blis_get_pkg_config())
 
 
 if __name__ == "__main__":

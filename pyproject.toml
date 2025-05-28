@@ -34,16 +34,21 @@ skip = [
     "*musl*", # musllinux
 ]
 
+[tool.cibuildwheel.linux.environment]
+PKG_CONFIG_PATH = "$PKG_CONFIG_PATH:$(mktemp -d)"
+
 [tool.cibuildwheel.linux]
-environment = { "PKG_CONFIG_PATH" = "$PKG_CONFIG_PATH:$(mktemp -d)" }
 before-build = [
     "pip install -q scipy_openblas64>=0.3.29",
     "python tools/before_build.py",
 ]
 
+[tool.cibuildwheel.windows.environment]
+PKG_CONFIG_PATH = "$PKG_CONFIG_PATH;$(python -c 'import tempfile; print(tempfile.mkdtemp())')"
+CC = "clang"
+CXX = "clang++"
 
 [tool.cibuildwheel.windows]
-environment = { "PKG_CONFIG_PATH" = "$PKG_CONFIG_PATH;$(python -c 'import tempfile; print(tempfile.mkdtemp())')" }
 before-all = ["pip install -q delvewheel"]
 before-build = [
     "pip install -q scipy_openblas64>=0.3.29",

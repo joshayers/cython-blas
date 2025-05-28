@@ -133,15 +133,15 @@ def _add_dll_paths() -> None:
     import scipy_openblas64
 
     openblas_lib_dir = scipy_openblas64.get_lib_dir()
-    # blis_lib_dir = str((current_dir / ".." / "lib" / "win" / "blis" / "lib").resolve()).replace("\\", "/")  # noqa: ERA001, E501
+    blis_lib_dir = str((current_dir / ".." / "lib" / "win" / "blis" / "lib").resolve()).replace("\\", "/")
     string = (
         """def _dll_paths() -> None:\n"""
         """    import os\n"""
         """\n"""
         f"""    openblas_lib_dir = "{openblas_lib_dir}"\n"""
-        # f"""    blis_lib_dir = "{blis_lib_dir}"\n"""  # noqa: ERA001
+        f"""    blis_lib_dir = "{blis_lib_dir}"\n"""
         """    openblas_dll_dir = os.add_dll_directory(openblas_lib_dir)\n"""
-        # """    blis_dll_dir = os.add_dll_directory(blis_lib_dir)\n"""  # noqa: ERA001
+        """    blis_dll_dir = os.add_dll_directory(blis_lib_dir)\n"""
         """    blis_dll_dir = None\n"""
         """    return (openblas_dll_dir, blis_dll_dir)"""
         """\n"""
@@ -154,20 +154,18 @@ def _add_dll_paths() -> None:
         fobj.write(string)
 
 
-def _scipy_openblas_pkg_config() -> Path:
-    """Write the scipy-openblas.pc pkg-config file and return the path to its parent directory."""
-    import scipy_openblas64
+def _add_cc_cxx(env: dict) -> dict:
+    """Add CC and CXX to the existing environment variables and return as a dictionary."""
+    if platform.platform() != "Windows":
+        return env
+    env["CC"] = "clang"
+    env["CXX"] = "clang++"
+    return env
 
-    path = root_dir / "scipy-openblas.pc"
-    with path.open("wt") as fobj:
-        fobj.write(scipy_openblas64.get_pkg_config())
-    return path.parent
 
-
-def _set_pkg_config_path() -> dict:
+def _add_pkg_config_path(env: dict) -> dict:
     """Add PKG_CONFIG_PATH to the existing environment variables and return as a dictionary."""
     pkg_config_path = str(root_dir).replace("\\", "/")
-    env = os.environ
     env["PKG_CONFIG_PATH"] = os.pathsep.join([env.get("PKG_CONFIG_PATH", ""), pkg_config_path])
     return env
 
@@ -176,7 +174,9 @@ def _set_pkg_config_path() -> dict:
 @click.option("-w", "--wheel", is_flag=True, help="If set, build a wheel and sdist. Otherwise just build a sdist.")
 def build(wheel: bool) -> None:
     """Build a source distribution and/or a wheel using build."""
-    env = _set_pkg_config_path()
+    env = os.environ
+    env = _add_cc_cxx(env)
+    env = _add_pkg_config_path(env)
     cmd = [python_exec_path, "tools/before_build.py"]
     print(f"Running the following command:\n{' '.join(cmd)}\n")
     subprocess.run(  # noqa: S603
@@ -216,7 +216,9 @@ def setup_in_place(coverage: bool, warn: str) -> None:
     coverage_cmd = "-Dcoverage=true" if coverage else "-Dcoverage=false"
     warnlevel = {"0": "0", "1": "1", "2": "2", "3": "3", "4": "everything"}[warn]
     warnlevel_cmd = f"--warnlevel={warnlevel}"
-    env = _set_pkg_config_path()
+    env = os.environ
+    env = _add_cc_cxx(env)
+    env = _add_pkg_config_path(env)
     cmd = [python_exec_path, "tools/before_build.py"]
     print(f"Running the following command:\n{' '.join(cmd)}\n")
     subprocess.run(  # noqa: S603
@@ -232,7 +234,6 @@ def setup_in_place(coverage: bool, warn: str) -> None:
         "--buildtype",
         "release",
         "--reconfigure",
-        "--vsenv",
         coverage_cmd,
         warnlevel_cmd,
     ]

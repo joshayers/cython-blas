@@ -1,10 +1,10 @@
 subdir_path = 'cython_blas/tests'
 
-pyx_files = []
+openblas_pyx_files = []
 
 pxd_files = []
 
-foreach pyx_file : pyx_files
+foreach pyx_file : openblas_pyx_files
     py.extension_module(
         pyx_file,
         pyx_file + '.pyx',
