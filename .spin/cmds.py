@@ -188,14 +188,12 @@ def build(wheel: bool) -> None:
     outdir_cmd = f"--outdir={dist_dir!s}"
     sdist_cmd = "-s" if not wheel else None
     cmd = [python_exec_path, "-m", "build", outdir_cmd, sdist_cmd, "."]
-    shell = platform.system() == "Windows"
     cmd = [c for c in cmd if c is not None]
     print(f"Running the following command: \n{' '.join(cmd)}")
     subprocess.run(  # noqa: S603
         cmd,
         check=True,
         cwd=root_dir,
-        shell=shell,
         env=env,
     )
 
@@ -205,7 +203,7 @@ def docs() -> None:
     """Run 'python -m docs.build' to build the html documentation."""
     cmd = [python_exec_path, "-m", "docs.build"]
     print(f"Running the following command: \n{' '.join(cmd)}")
-    subprocess.run(cmd, check=True, cwd=root_dir, shell=True)  # noqa: S602
+    subprocess.run(cmd, check=True, cwd=root_dir)  # noqa: S603
 
 
 @click.command

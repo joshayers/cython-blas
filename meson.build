@@ -10,7 +10,7 @@ py = import('python').find_installation()
 py_dep = py.dependency()
 blis_dep = declare_dependency(
   dependencies: [dependency('blis', method: 'pkg-config', required: true)],
-  compile_args: 'BLIS_DISABLE_BLAS_DEFS',
+  compile_args: '-DBLIS_DISABLE_BLAS_DEFS',
 )
 np_dep = declare_dependency(
   dependencies: [dependency('numpy', method: 'config-tool', required: true)],

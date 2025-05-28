@@ -69,10 +69,6 @@ line_length = 120
 py_version = 311
 
 
-[tool.meson-python.args]
-setup = ["--vsenv"]
-
-
 [tool.ruff]
 line-length = 120
 target-version = "py311"
