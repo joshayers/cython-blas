@@ -33,7 +33,7 @@ foreach pyx_file : blis_pyx_files
             openmp_dep,
         ],
         override_options: ['cython_language=cpp'],
-        c_args: [],
+        cpp_args: ['-Wno-unused-parameter'], # suppress warnings from blis.h
         install: true,
         subdir: subdir_path,
     )

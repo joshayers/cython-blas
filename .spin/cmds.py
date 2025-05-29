@@ -133,17 +133,13 @@ def _add_dll_paths() -> None:
     import scipy_openblas64
 
     openblas_lib_dir = scipy_openblas64.get_lib_dir()
-    blis_lib_dir = str((current_dir / ".." / "lib" / "win" / "blis" / "lib").resolve()).replace("\\", "/")
     string = (
         """def _dll_paths() -> None:\n"""
         """    import os\n"""
         """\n"""
         f"""    openblas_lib_dir = "{openblas_lib_dir}"\n"""
-        f"""    blis_lib_dir = "{blis_lib_dir}"\n"""
         """    openblas_dll_dir = os.add_dll_directory(openblas_lib_dir)\n"""
-        """    blis_dll_dir = os.add_dll_directory(blis_lib_dir)\n"""
-        """    blis_dll_dir = None\n"""
-        """    return (openblas_dll_dir, blis_dll_dir)"""
+        """    return (openblas_dll_dir, )"""
         """\n"""
         """\n"""
         """_addl_dll_dirs = _dll_paths()\n"""

@@ -34,5 +34,5 @@ build_script:
   - bash -lc "cd /c/projects/cython-blas/vendor/blis && ./configure %CONFIGURE_OPTS% --enable-threading=%THREADING% --enable-arg-max-hack --prefix=/c/blis %CONFIG%"
   - bash -lc "cd /c/projects/cython-blas/vendor/blis && mingw32-make -j4 V=1"
   - bash -lc "cd /c/projects/cython-blas/vendor/blis && mingw32-make install"
-  - 7z a "C:\blis_%CONFIG%.zip" C:\blis
-  - ps: Push-AppveyorArtifact "C:\blis_$Env:CONFIG.zip"
+  - 7z a "C:\blis_%LIB_TYPE%.zip" C:\blis
+  - ps: Push-AppveyorArtifact "C:\blis_$Env:LIB_TYPE.zip"

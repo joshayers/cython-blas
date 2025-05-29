@@ -3,6 +3,7 @@ project(
   'cython',
   'cpp',
   meson_version: '>= 1.7.0',
+  default_options: ['cpp_std=c++17'],
 )
 
 py = import('python').find_installation()
