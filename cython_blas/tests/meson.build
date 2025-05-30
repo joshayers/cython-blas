@@ -23,7 +23,8 @@ py.install_sources(
 
 python_sources = [
     '__init__.py',
-    'test_level3.py',
+    'test_blis.py',
+    'test_openblas.py',
 ]
 
 py.install_sources(

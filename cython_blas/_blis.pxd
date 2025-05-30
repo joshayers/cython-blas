@@ -35,6 +35,9 @@ cdef extern from "blis.h" nogil:
     arch_t bli_arch_query_id()
     const char* bli_arch_string(arch_t id)
 
+    void bli_thread_set_num_threads(dim_t n_threads)
+    dim_t bli_thread_get_num_threads()
+
     void bli_obj_create_with_attached_buffer(
         num_t   dt,  # type
         dim_t   m,   # number of rows
@@ -50,6 +53,8 @@ cdef extern from "blis.h" nogil:
         void*   p,   # buffer
         obj_t*  obj, # matrix object initialized
     )
+
+    void bli_obj_set_conj(conj_t conj, obj_t* obj)
 
     void bli_gemm(
         const obj_t*  alpha,

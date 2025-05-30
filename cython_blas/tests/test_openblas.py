@@ -1,51 +1,12 @@
-"""Tests of the level3 module."""
+"""Tests of the openblas module."""
 
 import itertools
 
 import numpy as np
-import numpy.typing as npt
 import pytest
 
-from cython_blas import level3
-
-
-def create_array(rng: np.random.Generator, size: tuple[int, int], dtype: str, order: str) -> npt.NDArray:
-    """Create an array with the specified size, dtype, and memory order."""
-    array = np.empty(size, dtype=dtype, order=order)
-    if np.isrealobj(array):
-        array[:] = rng.uniform(size=size)
-    else:
-        array.real = rng.uniform(size=size)
-        array.imag = rng.uniform(size=size)
-    return array
-
-
-def create_symmetric_array(
-    rng: np.random.Generator, upper: True, size: int, dtype: str, order: str
-) -> tuple[npt.NDArray, npt.NDArray]:
-    """Create a symmetric array with the specified size, dtype, and memory order."""
-    mat_a = np.empty((size, size), dtype=dtype, order=order)
-    mat_a_full = np.empty((size, size), dtype=dtype, order=order)
-    if upper:
-        for i in range(size):
-            for j in range(i, size):
-                mat_a[i, j] = rng.random(size=1, dtype=dtype)[0]
-                mat_a_full[i, j] = mat_a[i, j]
-        for i in range(size):
-            for j in range(i):
-                mat_a[i, j] = np.nan
-                mat_a_full[i, j] = mat_a[j, i]
-    else:
-        for i in range(size):
-            for j in range(i + 1):
-                mat_a[i, j] = rng.random(size=1, dtype=dtype)[0]
-                mat_a_full[i, j] = mat_a[i, j]
-        for i in range(size):
-            for j in range(i + 1, size):
-                mat_a[i, j] = np.nan
-                mat_a_full[i, j] = mat_a[j, i]
-    return mat_a, mat_a_full
-
+from cython_blas import openblas
+from cython_blas.tests.utils import conjugate_if, create_array, create_symmetric_array
 
 _shape_error_params_gemm = (
     ("mat_a_shape", "mat_b_shape", "mat_c_shape", "match"),
@@ -93,7 +54,7 @@ def test_sgemm_shape_error(
     mat_b = np.zeros(mat_b_shape, dtype="f4", order="C")
     mat_c = np.zeros(mat_c_shape, dtype="f4", order="C")
     with pytest.raises(ValueError, match=match):
-        level3.sgemm(alpha, mat_a, mat_b, beta, mat_c)
+        openblas.sgemm(alpha, mat_a, mat_b, beta, mat_c)
 
 
 @pytest.mark.parametrize(*_real_params_gemm)
@@ -113,7 +74,7 @@ def test_sgemm(  # noqa: PLR0913
     mat_b = create_array(rng, (k, n), "f4", b_order)
     mat_c = create_array(rng, (m, n), "f4", c_order)
     mat_c_orig = mat_c.copy()
-    level3.sgemm(alpha, mat_a, mat_b, beta, mat_c)
+    openblas.sgemm(alpha, mat_a, mat_b, beta, mat_c)
     np.testing.assert_allclose(mat_c, alpha * mat_a @ mat_b + beta * mat_c_orig, atol=5e-7, rtol=5e-7)
 
 
@@ -127,7 +88,7 @@ def test_dgemm_shape_error(
     mat_b = np.zeros(mat_b_shape, dtype="f8", order="C")
     mat_c = np.zeros(mat_c_shape, dtype="f8", order="C")
     with pytest.raises(ValueError, match=match):
-        level3.dgemm(alpha, mat_a, mat_b, beta, mat_c)
+        openblas.dgemm(alpha, mat_a, mat_b, beta, mat_c)
 
 
 @pytest.mark.parametrize(*_real_params_gemm)
@@ -147,13 +108,8 @@ def test_dgemm(  # noqa: PLR0913
     mat_b = create_array(rng, (k, n), "f8", b_order)
     mat_c = create_array(rng, (m, n), "f8", c_order)
     mat_c_orig = mat_c.copy()
-    level3.dgemm(alpha, mat_a, mat_b, beta, mat_c)
+    openblas.dgemm(alpha, mat_a, mat_b, beta, mat_c)
     np.testing.assert_allclose(mat_c, alpha * mat_a @ mat_b + beta * mat_c_orig, atol=1e-8, rtol=1e-8)
-
-
-def conjugate_if(array: npt.NDArray, conjugate: bool) -> npt.NDArray:
-    """Return the complex conjugate if conjugate is True."""
-    return np.conjugate(array) if conjugate else array
 
 
 @pytest.mark.parametrize(*_shape_error_params_gemm)
@@ -167,7 +123,7 @@ def test_cgemm_shape_error(
     mat_b = np.zeros(mat_b_shape, dtype="c8", order="C")
     mat_c = np.zeros(mat_c_shape, dtype="c8", order="C")
     with pytest.raises(ValueError, match=match):
-        level3.cgemm(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
+        openblas.cgemm(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
 
 
 @pytest.mark.parametrize(*_complex_params_gemm)
@@ -189,7 +145,7 @@ def test_cgemm(  # noqa: PLR0913
     mat_b = create_array(rng, (k, n), "c8", b_order)
     mat_c = create_array(rng, (m, n), "c8", c_order)
     mat_c_orig = mat_c.copy()
-    level3.cgemm(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
+    openblas.cgemm(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
     expected = alpha * conjugate_if(mat_a, conjugate_a) @ conjugate_if(mat_b, conjugate_b) + beta * mat_c_orig
     np.testing.assert_allclose(mat_c, expected, atol=5e-7, rtol=5e-7)
 
@@ -205,7 +161,7 @@ def test_cgemm3m_shape_error(
     mat_b = np.zeros(mat_b_shape, dtype="c8", order="C")
     mat_c = np.zeros(mat_c_shape, dtype="c8", order="C")
     with pytest.raises(ValueError, match=match):
-        level3.cgemm3m(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
+        openblas.cgemm3m(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
 
 
 @pytest.mark.parametrize(*_complex_params_gemm)
@@ -227,7 +183,7 @@ def test_cgemm3m(  # noqa: PLR0913
     mat_b = create_array(rng, (k, n), "c8", b_order)
     mat_c = create_array(rng, (m, n), "c8", c_order)
     mat_c_orig = mat_c.copy()
-    level3.cgemm3m(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
+    openblas.cgemm3m(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
     expected = alpha * conjugate_if(mat_a, conjugate_a) @ conjugate_if(mat_b, conjugate_b) + beta * mat_c_orig
     np.testing.assert_allclose(mat_c, expected, atol=5e-7, rtol=5e-7)
 
@@ -243,7 +199,7 @@ def test_zgemm_shape_error(
     mat_b = np.zeros(mat_b_shape, dtype="c16", order="C")
     mat_c = np.zeros(mat_c_shape, dtype="c16", order="C")
     with pytest.raises(ValueError, match=match):
-        level3.zgemm(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
+        openblas.zgemm(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
 
 
 @pytest.mark.parametrize(*_complex_params_gemm)
@@ -265,7 +221,7 @@ def test_zgemm(  # noqa: PLR0913
     mat_b = create_array(rng, (k, n), "c16", b_order)
     mat_c = create_array(rng, (m, n), "c16", c_order)
     mat_c_orig = mat_c.copy()
-    level3.zgemm(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
+    openblas.zgemm(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
     expected = alpha * conjugate_if(mat_a, conjugate_a) @ conjugate_if(mat_b, conjugate_b) + beta * mat_c_orig
     np.testing.assert_allclose(mat_c, expected, atol=1e-8, rtol=1e-8)
 
@@ -281,7 +237,7 @@ def test_zgemm3m_shape_error(
     mat_b = np.zeros(mat_b_shape, dtype="c16", order="C")
     mat_c = np.zeros(mat_c_shape, dtype="c16", order="C")
     with pytest.raises(ValueError, match=match):
-        level3.zgemm3m(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
+        openblas.zgemm3m(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
 
 
 @pytest.mark.parametrize(*_complex_params_gemm)
@@ -303,7 +259,7 @@ def test_zgemm3m(  # noqa: PLR0913
     mat_b = create_array(rng, (k, n), "c16", b_order)
     mat_c = create_array(rng, (m, n), "c16", c_order)
     mat_c_orig = mat_c.copy()
-    level3.zgemm3m(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
+    openblas.zgemm3m(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
     expected = alpha * conjugate_if(mat_a, conjugate_a) @ conjugate_if(mat_b, conjugate_b) + beta * mat_c_orig
     np.testing.assert_allclose(mat_c, expected, atol=1e-8, rtol=1e-8)
 
@@ -331,12 +287,12 @@ def test_dsymm_ab(  # noqa: PLR0913
 ):
     """Test the dsymm_ab function."""
     rng = np.random.default_rng(seed=1)
-    upper_lower = level3.UpperLower.Upper if upper else level3.UpperLower.Lower
+    upper_lower = openblas.UpperLower.Upper if upper else openblas.UpperLower.Lower
     mat_a, mat_a_full = create_symmetric_array(rng, upper, m, "f8", a_order)
     assert np.any(np.isnan(mat_a))
     mat_b = create_array(rng, (m, n), "f8", bc_order)
     mat_c = create_array(rng, (m, n), "f8", bc_order)
     mat_c_orig = mat_c.copy()
     assert not np.any(np.isnan(mat_c))
-    level3.dsymm_ab(alpha, upper_lower, mat_a, mat_b, beta, mat_c)
+    openblas.dsymm_ab(alpha, upper_lower, mat_a, mat_b, beta, mat_c)
     np.testing.assert_allclose(mat_c, alpha * mat_a_full @ mat_b + beta * mat_c_orig, atol=1e-8, rtol=1e-8)
