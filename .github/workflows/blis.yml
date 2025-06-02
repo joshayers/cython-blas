@@ -1,4 +1,4 @@
-name: Build BLIS
+name: Build BLIS, Linux
 
 on:
   push:

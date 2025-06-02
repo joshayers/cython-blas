@@ -49,6 +49,11 @@ cpdef dgemm(
     double beta,
     double [:, :] C
 ):
+    r"""Matrix multiplication of double precision matrices.
+
+    .. math::
+        C = \alpha A B + \beta C
+    """
     cdef dim_t m = A.shape[0], n = B.shape[1], k = A.shape[1]
     if B.shape[0] != k or C.shape[0] != m or C.shape[1] != n:
         msg = (

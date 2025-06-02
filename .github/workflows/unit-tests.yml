@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - blis
     paths-ignore:
       - "docs/**"
       - "MANIFEST.in"
@@ -59,7 +60,7 @@ jobs:
           ln $POETRY_HOME/bin/poetry /usr/local/bin/poetry
           poetry --version
           poetry config virtualenvs.in-project true
-      - name: Install Python dependencies
+      - name: Install Python dependencies and build package
         shell: bash
         run: |
           poetry install --extras=dev

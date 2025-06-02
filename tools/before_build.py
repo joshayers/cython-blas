@@ -11,21 +11,29 @@ current_dir = Path(__file__).resolve().parent
 
 def _blis_get_pkg_config() -> str:
     if platform.system() == "Windows":
-        root_dir = str((current_dir / ".." / "lib" / "win" / "blis").resolve()).replace("\\", "/")
+        root_dir = str((current_dir / ".." / "lib" / "blis" / "win-x86_64").resolve()).replace("\\", "/")
+        src_path = (current_dir / ".." / "lib" / "blis" / "win-x86_64" / "share" / "pkgconfig" / "blis.pc").resolve()
     else:
-        raise ValueError
-    return (
-        f"""prefix={root_dir!s}\n"""
-        f"""exec_prefix={root_dir!s}\n"""
-        f"""libdir={root_dir!s}/lib\n"""
-        f"""includedir={root_dir!s}/include\n"""
-        """Name: BLIS\n"""
-        """Description: BLAS-like Library Instantiation Software Framework\n"""
-        """Version: 3.0-dev\n"""
-        """Libs: -L${libdir} -lblis\n"""
-        """Libs.private:    -fopenmp\n"""
-        """Cflags: -I${includedir}/blis\n"""
-    )
+        root_dir = str((current_dir / ".." / "lib" / "blis" / "linux-x86_64").resolve()).replace("\\", "/")
+        src_path = (current_dir / ".." / "lib" / "blis" / "linux-x86_64" / "share" / "pkgconfig" / "blis.pc").resolve()
+    with src_path.open("rt") as fobj:
+        lines = fobj.read().splitlines()
+    output = []
+    for line in lines:
+        if line.startswith("prefix="):
+            output.append(f"""prefix={root_dir!s}\n""")
+            continue
+        if line.startswith("exec_prefix="):
+            output.append(f"""exec_prefix={root_dir!s}\n""")
+            continue
+        if line.startswith("libdir="):
+            output.append(f"""libdir={root_dir!s}/lib\n""")
+            continue
+        if line.startswith("includedir="):
+            output.append(f"""includedir={root_dir!s}/include\n""")
+            continue
+        output.append(f"{line}\n")
+    return "".join(output)
 
 
 def main() -> None:
