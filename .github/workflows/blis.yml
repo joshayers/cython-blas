@@ -3,7 +3,10 @@ name: Build BLIS, Linux
 on:
   push:
     branches:
-      - blis
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   linux:

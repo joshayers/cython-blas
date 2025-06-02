@@ -26,9 +26,8 @@ cdef extern from "blis.h" nogil:
         BLIS_NO_CONJUGTE
         BLIS_CONJUGATE
 
-    ctypedef struct obj_t: # matrix object
+    ctypedef struct obj_t:  # matrix object
         pass
-
 
     const char* bli_info_get_int_type_size_str()
     const char* bli_info_get_version_str()
@@ -39,27 +38,27 @@ cdef extern from "blis.h" nogil:
     dim_t bli_thread_get_num_threads()
 
     void bli_obj_create_with_attached_buffer(
-        num_t   dt,  # type
-        dim_t   m,   # number of rows
-        dim_t   n,   # number of columns
-        void*   p,   # buffer
-        inc_t   rs,  # row stride
-        inc_t   cs,  # column stride
-        obj_t*  obj  # matrix object initialized
+        num_t dt,   # type
+        dim_t m,    # number of rows
+        dim_t n,    # number of columns
+        void* p,    # buffer
+        inc_t rs,   # row stride
+        inc_t cs,   # column stride
+        obj_t* obj  # matrix object initialized
     )
 
     void bli_obj_create_1x1_with_attached_buffer(
-        num_t   dt,  # type
-        void*   p,   # buffer
-        obj_t*  obj, # matrix object initialized
+        num_t dt,    # type
+        void* p,     # buffer
+        obj_t* obj,  # matrix object initialized
     )
 
     void bli_obj_set_conj(conj_t conj, obj_t* obj)
 
     void bli_gemm(
-        const obj_t*  alpha,
-        const obj_t*  a,
-        const obj_t*  b,
-        const obj_t*  beta,
-        obj_t*  c,
+        const obj_t* alpha,
+        const obj_t* a,
+        const obj_t* b,
+        const obj_t* beta,
+        obj_t* c,
     )

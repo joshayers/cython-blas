@@ -4,15 +4,6 @@ on:
   push:
     branches:
       - main
-      - blis
-    paths-ignore:
-      - "docs/**"
-      - "MANIFEST.in"
-      - "README.rst"
-      - "THANKS.rst"
-      - "COPYING.txt"
-      - ".gitignore"
-      - ".gitattributes"
   pull_request:
     branches:
       - main
