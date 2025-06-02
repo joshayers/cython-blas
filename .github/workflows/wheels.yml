@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - blis
     paths-ignore:
       - "docs/**"
       - "MANIFEST.in"
@@ -15,7 +16,6 @@ on:
   pull_request:
     branches:
       - main
-      - blis
 
 jobs:
   build_wheels:
