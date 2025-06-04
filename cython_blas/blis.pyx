@@ -6,6 +6,11 @@ from numpy cimport ndarray
 from cython_blas cimport _blis
 from cython_blas._blis cimport dim_t, obj_t
 
+np.import_array()
+
+cdef extern from * nogil:
+    cdef void static_assert(bint)
+
 
 @cython.cdivision(True)
 @cython.embedsignature(True)
@@ -41,8 +46,8 @@ cpdef dgemm(
         m,
         k,
         <void*> &A[0, 0],
-        A.strides[0] // sizeof(double),
-        A.strides[1] // sizeof(double),
+        A.strides[0] / sizeof(double),
+        A.strides[1] / sizeof(double),
         &bli_a,
     )
     _blis.bli_obj_create_with_attached_buffer(
@@ -50,8 +55,8 @@ cpdef dgemm(
         k,
         n,
         <void*> &B[0, 0],
-        B.strides[0] // sizeof(double),
-        B.strides[1] // sizeof(double),
+        B.strides[0] / sizeof(double),
+        B.strides[1] / sizeof(double),
         &bli_b,
     )
     _blis.bli_obj_create_1x1_with_attached_buffer(
@@ -64,8 +69,8 @@ cpdef dgemm(
         m,
         n,
         <void*> &C[0, 0],
-        C.strides[0] // sizeof(double),
-        C.strides[1] // sizeof(double),
+        C.strides[0] / sizeof(double),
+        C.strides[1] / sizeof(double),
         &bli_c,
     )
 
@@ -111,8 +116,8 @@ cpdef zgemm(
         m,
         k,
         <void*> &A[0, 0],
-        A.strides[0] // sizeof(double complex),
-        A.strides[1] // sizeof(double complex),
+        A.strides[0] / sizeof(double complex),
+        A.strides[1] / sizeof(double complex),
         &bli_a,
     )
     if conjugate_a:
@@ -122,8 +127,8 @@ cpdef zgemm(
         k,
         n,
         <void*> &B[0, 0],
-        B.strides[0] // sizeof(double complex),
-        B.strides[1] // sizeof(double complex),
+        B.strides[0] / sizeof(double complex),
+        B.strides[1] / sizeof(double complex),
         &bli_b,
     )
     if conjugate_b:
@@ -138,21 +143,64 @@ cpdef zgemm(
         m,
         n,
         <void*> &C[0, 0],
-        C.strides[0] // sizeof(double complex),
-        C.strides[1] // sizeof(double complex),
+        C.strides[0] / sizeof(double complex),
+        C.strides[1] / sizeof(double complex),
         &bli_c,
     )
 
     _blis.bli_gemm(&bli_alpha, &bli_a, &bli_b, &bli_beta, &bli_c)
 
 
+static_assert(_blis.BLIS_FLOAT != -99)
+static_assert(_blis.BLIS_DOUBLE != -99)
+static_assert(_blis.BLIS_SCOMPLEX != -99)
+static_assert(_blis.BLIS_DCOMPLEX != -99)
+
+
+cdef int _convert_type(ndarray arr) except -99:
+    """Convert from NumPy type to BLIS type."""
+    cdef int npy_type = np.PyArray_TYPE(arr)
+    if npy_type == np.NPY_FLOAT32:
+        return _blis.BLIS_FLOAT
+    if npy_type == np.NPY_FLOAT64:
+        return _blis.BLIS_DOUBLE
+    if npy_type == np.NPY_COMPLEX64:
+        return _blis.BLIS_SCOMPLEX
+    if npy_type == np.NPY_COMPLEX128:
+        return _blis.BLIS_DCOMPLEX
+    msg = 'unsupported type'
+    raise ValueError(msg)
+
+
+static_assert(_blis.BLIS_DOUBLE_PREC != -99)
+static_assert(_blis.BLIS_SINGLE_PREC != -99)
+
+
+cpdef enum Precision:
+    DefaultPrecision = -99
+    DoublePrecision = _blis.BLIS_DOUBLE_PREC
+    SinglePrecision = _blis.BLIS_SINGLE_PREC
+
+
+@cython.cdivision(True)
 def gemm(
     double alpha,
+    bint conjugate_a,
     ndarray A,
+    bint conjugate_b,
     ndarray B,
-    double beta,
+    double complex beta,
     ndarray C,
+    Precision precision = Precision.DefaultPrecision,
 ):
+    r"""Matrix multiplication of matrices, any precision and domain.
+
+    .. math::
+        C = \alpha A B + \beta C
+
+    If `conjugate_a` is True, then matrix :math:`A` is implicitly conjugated before performing
+    the multiplication. Similarly for `conjugate_b`.
+    """
     if np.PyArray_NDIM(A) != 2 or np.PyArray_NDIM(B) != 2 or np.PyArray_NDIM(C) != 2:
         msg = 'matrices A, B, and C must be two-dimensional'
         raise ValueError(msg)
@@ -173,37 +221,43 @@ def gemm(
         &bli_alpha,
     )
     _blis.bli_obj_create_with_attached_buffer(
-        _blis.BLIS_DOUBLE,
+        <_blis.num_t> _convert_type(A),
         m,
         k,
         np.PyArray_DATA(A),
-        np.PyArray_STRIDE(A, 0) // np.PyArray_ITEMSIZE(A),
-        np.PyArray_STRIDE(A, 1) // np.PyArray_ITEMSIZE(A),
+        np.PyArray_STRIDE(A, 0) / np.PyArray_ITEMSIZE(A),
+        np.PyArray_STRIDE(A, 1) / np.PyArray_ITEMSIZE(A),
         &bli_a,
     )
+    if conjugate_a:
+        _blis.bli_obj_set_conj(_blis.BLIS_CONJUGATE, &bli_a)
     _blis.bli_obj_create_with_attached_buffer(
-        _blis.BLIS_DCOMPLEX,
+        <_blis.num_t> _convert_type(B),
         k,
         n,
         np.PyArray_DATA(B),
-        np.PyArray_STRIDE(B, 0) // np.PyArray_ITEMSIZE(B),
-        np.PyArray_STRIDE(B, 1) // np.PyArray_ITEMSIZE(B),
+        np.PyArray_STRIDE(B, 0) / np.PyArray_ITEMSIZE(B),
+        np.PyArray_STRIDE(B, 1) / np.PyArray_ITEMSIZE(B),
         &bli_b,
     )
+    if conjugate_b:
+        _blis.bli_obj_set_conj(_blis.BLIS_CONJUGATE, &bli_b)
     _blis.bli_obj_create_1x1_with_attached_buffer(
-        _blis.BLIS_DOUBLE,
+        _blis.BLIS_DCOMPLEX,
         &beta,
         &bli_beta,
     )
     _blis.bli_obj_create_with_attached_buffer(
-        _blis.BLIS_DCOMPLEX,
+        <_blis.num_t> _convert_type(C),
         m,
         n,
         np.PyArray_DATA(C),
-        np.PyArray_STRIDE(C, 0) // np.PyArray_ITEMSIZE(C),
-        np.PyArray_STRIDE(C, 1) // np.PyArray_ITEMSIZE(C),
+        np.PyArray_STRIDE(C, 0) / np.PyArray_ITEMSIZE(C),
+        np.PyArray_STRIDE(C, 1) / np.PyArray_ITEMSIZE(C),
         &bli_c,
     )
+    if precision != Precision.DefaultPrecision:
+        _blis.bli_obj_set_comp_prec(<_blis.prec_t> precision, &bli_c)
 
     _blis.bli_gemm(&bli_alpha, &bli_a, &bli_b, &bli_beta, &bli_c)
 

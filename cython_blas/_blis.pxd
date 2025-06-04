@@ -4,27 +4,32 @@ cdef extern from "blis.h" nogil:
     ctypedef int dim_t  # dimension type
     ctypedef int inc_t  # increment/stride type
 
-    ctypedef int arch_t  # architecture ID type
+    ctypedef enum arch_t:  # architecture ID type
+        pass
 
-    cdef enum num_t:
-        BLIS_FLOAT
-        BLIS_DOUBLE
-        BLIS_SCOMPLEX
-        BLIS_DCOMPLEX
-
-    cdef enum dom_t:
-        BLIS_REAL
-        BLIS_COMPLEX
-
-    cdef enum trans_t:
+    ctypedef enum trans_t:
         BLIS_NO_TRANSPOSE
         BLIS_TRANSPOSE
         BLIS_CONJ_NO_TRANSPOSE
         BLIS_CONJ_TRANSPOSE
 
-    cdef enum conj_t:
+    ctypedef enum conj_t:
         BLIS_NO_CONJUGTE
         BLIS_CONJUGATE
+
+    ctypedef enum num_t:
+        BLIS_FLOAT
+        BLIS_DOUBLE
+        BLIS_SCOMPLEX
+        BLIS_DCOMPLEX
+
+    ctypedef enum dom_t:
+        BLIS_REAL
+        BLIS_COMPLEX
+
+    ctypedef enum prec_t:
+        BLIS_SINGLE_PREC
+        BLIS_DOUBLE_PREC
 
     ctypedef struct obj_t:  # matrix object
         pass
@@ -54,6 +59,8 @@ cdef extern from "blis.h" nogil:
     )
 
     void bli_obj_set_conj(conj_t conj, obj_t* obj)
+
+    void bli_obj_set_comp_prec(prec_t dt, obj_t* obj)
 
     void bli_gemm(
         const obj_t* alpha,

@@ -114,3 +114,75 @@ def test_zgemm(  # noqa: PLR0913
     blis.zgemm(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
     expected = alpha * conjugate_if(mat_a, conjugate_a) @ conjugate_if(mat_b, conjugate_b) + beta * mat_c_orig
     np.testing.assert_allclose(mat_c, expected, atol=1e-8, rtol=1e-8)
+
+
+@pytest.mark.parametrize(
+    (
+        "alpha",
+        "conjugate_a",
+        "beta",
+        "conjugate_b",
+        "m",
+        "n",
+        "k",
+        "a_dtype",
+        "b_dtype",
+        "c_dtype",
+        "a_order",
+        "b_order",
+        "c_order",
+    ),
+    [
+        (alpha, conjugate_a, beta, conjugate_b, 8, 9, 10, a_dtype, b_dtype, c_dtype, a_order, b_order, c_order)
+        for (
+            alpha,
+            conjugate_a,
+            beta,
+            conjugate_b,
+            a_dtype,
+            b_dtype,
+            c_dtype,
+            a_order,
+            b_order,
+            c_order,
+        ) in itertools.product(
+            [0.0, 1.0, 2.1],
+            [True, False],
+            [0.0 + 0.0j, 1.0 + 1.2j, 2.1 + 1.0j],
+            [True, False],
+            ["f4", "f8", "c8", "c16"],
+            ["f4", "f8", "c8", "c16"],
+            ["f4", "f8", "c8", "c16"],
+            ["C", "F"],
+            ["C", "F"],
+            ["C", "F"],
+        )
+    ],
+)
+def test_gemm(  # noqa: PLR0913
+    alpha: float,
+    conjugate_a: bool,
+    beta: complex,
+    conjugate_b: bool,
+    m: int,
+    n: int,
+    k: int,
+    a_dtype: str,
+    b_dtype: str,
+    c_dtype: str,
+    a_order: str,
+    b_order: str,
+    c_order: str,
+):
+    """Test the gemm function."""
+    rng = np.random.default_rng(seed=1)
+    mat_a = create_array(rng, (m, k), a_dtype, a_order)
+    mat_b = create_array(rng, (k, n), b_dtype, b_order)
+    mat_c = create_array(rng, (m, n), c_dtype, c_order)
+    mat_c_orig = mat_c.copy()
+    blis.gemm(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
+    expected = alpha * conjugate_if(mat_a, conjugate_a) @ conjugate_if(mat_b, conjugate_b) + beta * mat_c_orig
+    expected = expected.real if c_dtype in ("f4", "f8") else expected
+    atol = 5e-6 if c_dtype in ("f4", "c8") else 1e-6
+    rtol = 5e-6 if c_dtype in ("f4", "c8") else 1e-6
+    np.testing.assert_allclose(mat_c, expected, atol=atol, rtol=rtol)

@@ -42,6 +42,15 @@ cpdef sgemm(
 
     .. math::
         C = \alpha A B + \beta C
+
+    Args:
+        alpha: Scalar multiplier for A @ B
+        A: The A matrix.
+        B: The B matrix. The number of rows in this matrix must equal the number of columns
+            in `A`.
+        beta: Scalar multiplier for C
+        C: The C matrix. This matrix must have the same number of rows as `A` and the same
+            number of columns as `B`. The result will be written to this matrix.
     """
     cdef Order order_a = ColMajor if A.strides[0] == sizeof(float) else RowMajor
     cdef Order order_b = ColMajor if B.strides[0] == sizeof(float) else RowMajor
@@ -80,6 +89,15 @@ cpdef dgemm(
 
     .. math::
         C = \alpha A B + \beta C
+
+    Args:
+        alpha: Scalar multiplier for A @ B
+        A: The A matrix.
+        B: The B matrix. The number of rows in this matrix must equal the number of columns
+            in `A`.
+        beta: Scalar multiplier for C
+        C: The C matrix. This matrix must have the same number of rows as `A` and the same
+            number of columns as `B`. The result will be written to this matrix.
     """
     cdef Order order_a = ColMajor if A.strides[0] == sizeof(double) else RowMajor
     cdef Order order_b = ColMajor if B.strides[0] == sizeof(double) else RowMajor
@@ -123,6 +141,17 @@ cpdef cgemm(
 
     If `conjugate_a` is True, then matrix :math:`A` is implicitly conjugated before performing
     the multiplication. Similarly for `conjugate_b`.
+
+    Args:
+        alpha: Scalar multiplier for A @ B
+        conjugate_a: If True, matrix `A` will be conjugated.
+        A: The A matrix.
+        conjugate_b: If True, matrix `C` will be conjugated.
+        B: The B matrix. The number of rows in this matrix must equal the number of columns
+            in `A`.
+        beta: Scalar multiplier for C
+        C: The C matrix. This matrix must have the same number of rows as `A` and the same
+            number of columns as `B`. The result will be written to this matrix.
     """
     cdef Order order_a = ColMajor if A.strides[0] == sizeof(float complex) else RowMajor
     cdef Order order_b = ColMajor if B.strides[0] == sizeof(float complex) else RowMajor

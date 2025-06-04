@@ -10,6 +10,7 @@ on:
 
 jobs:
   build_wheels:
+    name: "Build wheels: ${{ matrix.os }}"
     continue-on-error: true
     strategy:
       matrix:
@@ -28,15 +29,18 @@ jobs:
         if: ${{ runner.os == 'Windows' }}
         run: |
           choco install pkgconfiglite
-      - uses: pypa/cibuildwheel@v2.23.3
-      - name: Upload artifacts
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.23.3
+      - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
           name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
           path: wheelhouse/*.whl
 
   build_sdist:
+    name: Build source dist and upload all
     runs-on: "ubuntu-24.04"
+    needs: [build_wheels]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -60,26 +64,10 @@ jobs:
       - name: Build sdist
         run: |
           poetry run spin build
-      - name: Upload sdist
-        uses: actions/upload-artifact@v4
-        with:
-          name: sdist
-          path: dist/*
-
-  upload_all:
-    runs-on: "ubuntu-24.04"
-    needs: [build_sdist, build_wheels]
-    steps:
       - name: Download wheels
         uses: actions/download-artifact@v4
         with:
           pattern: cibw-wheels-*
-          merge-multiple: true
-          path: dist/
-      - name: Download sdist
-        uses: actions/download-artifact@v4
-        with:
-          pattern: sdist*
           merge-multiple: true
           path: dist/
       - name: Upload wheels and sdist
