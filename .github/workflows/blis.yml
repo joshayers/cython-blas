@@ -1,0 +1,45 @@
+name: Build BLIS, Linux
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  linux:
+    name: Build BLIS on Linux
+    runs-on: "ubuntu-latest"
+    strategy:
+      matrix:
+        include:
+          - LIB_TYPE: static
+            CONFIG: x86_64
+            THREADING: openmp
+            BLAS: no
+            CBLAS: no
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Build
+        shell: bash
+        run: |
+          git submodule update --init --recursive
+          cd vendor/blis
+          [ ${{ matrix.LIB_TYPE }} == "shared" ] && export CONFIGURE_OPTS="$CONFIGURE_OPTS --enable-shared --disable-static"
+          [ ${{ matrix.LIB_TYPE }} == "static" ] && export CONFIGURE_OPTS="$CONFIGURE_OPTS --disable-shared --enable-static"
+          [ ${{ matrix.BLAS }} == "yes" ] && export CONFIGURE_OPTS="$CONFIGURE_OPTS --enable-blas"
+          [ ${{ matrix.BLAS }} == "no" ] && export CONFIGURE_OPTS="$CONFIGURE_OPTS --disable-blas"
+          [ ${{ matrix.CBLAS }} == "yes" ] && export CONFIGURE_OPTS="$CONFIGURE_OPTS --enable-cblas"
+          [ ${{ matrix.CBLAS }} == "no" ] && export CONFIGURE_OPTS="$CONFIGURE_OPTS --disable-cblas"
+          export CONFIGURE_OPTS="$CONFIGURE_OPTS --enable-threading=${{ matrix.THREADING }}"
+          ./configure --prefix=/opt/blis $CONFIGURE_OPTS --enable-arg-max-hack ${{ matrix.config }}
+          make -j2 V=1
+          make install
+      - name: Upload compiled library
+        uses: actions/upload-artifact@v4
+        with:
+          name: blis-${{ matrix.LIB_TYPE }}
+          path: /opt/blis

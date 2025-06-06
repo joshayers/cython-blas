@@ -4,25 +4,18 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - "docs/**"
-      - "MANIFEST.in"
-      - "README.rst"
-      - "THANKS.rst"
-      - "COPYING.txt"
-      - ".gitignore"
-      - ".gitattributes"
   pull_request:
     branches:
       - main
 
 jobs:
   tests:
+    name: Unit tests
     continue-on-error: false
     strategy:
       matrix:
         os:
-          - "ubuntu-24.04"
+          - "ubuntu-latest"
           - "windows-2022"
         python-version:
           - "3.11"
@@ -59,7 +52,17 @@ jobs:
           ln $POETRY_HOME/bin/poetry /usr/local/bin/poetry
           poetry --version
           poetry config virtualenvs.in-project true
-      - name: Install Python dependencies
+      - name: Install Python dependencies and build package, Windows
+        if: ${{ runner.os == 'Windows' }}
+        shell: bash
+        run: |
+          export CC=clang
+          export CXX=clang++
+          poetry install --extras=dev
+          poetry run spin setup-in-place
+          poetry run spin in-place
+      - name: Install Python dependencies and build package, not Windows
+        if: ${{ runner.os != 'Windows' }}
         shell: bash
         run: |
           poetry install --extras=dev

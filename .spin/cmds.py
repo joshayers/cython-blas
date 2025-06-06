@@ -1,8 +1,10 @@
 """Custom spin commands."""
 
+import os
 import platform
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import click
@@ -14,6 +16,9 @@ build_dir = root_dir / "build"
 build_ninja_path = build_dir / "build.ninja"
 dist_dir = root_dir / "dist"
 wheel_dir = root_dir / "wheelhouse"
+scripts_dir_path = root_dir / ".venv" / "Scripts" if platform.system() == "Windows" else root_dir / ".venv" / "bin"
+meson_exec_path = str(scripts_dir_path / "meson")
+python_exec_path = sys.executable
 
 
 def fix_paths(paths: list[str]) -> list[str]:
@@ -121,59 +126,80 @@ def copy_compiled_files() -> None:
         shutil.copy(pyd_src, pyd_dest)
 
 
-def _scipy_openblas_dll_path() -> None:
+def _add_dll_paths() -> None:
     """Write a file that will add the scipy-openblas library directory to the DLL search path."""
     if platform.system() != "Windows":
         return
     import scipy_openblas64
 
-    lib_dir = scipy_openblas64.get_lib_dir()
+    openblas_lib_dir = scipy_openblas64.get_lib_dir()
     string = (
-        """def _scipy_openblas_dll_path() -> None:\n"""
+        """def _dll_paths() -> None:\n"""
         """    import os\n"""
         """\n"""
-        f"""    lib_dir = "{lib_dir}"\n"""
-        """    return os.add_dll_directory(lib_dir)\n"""
+        f"""    openblas_lib_dir = "{openblas_lib_dir}"\n"""
+        """    openblas_dll_dir = os.add_dll_directory(openblas_lib_dir)\n"""
+        """    return (openblas_dll_dir, )"""
         """\n"""
         """\n"""
-        """_addl_dll_dir = _scipy_openblas_dll_path()\n"""
+        """_addl_dll_dirs = _dll_paths()\n"""
+        """del _dll_paths\n"""
     )
     path = root_dir / "cython_blas" / "_init_local.py"
     with path.open("wt") as fobj:
         fobj.write(string)
 
 
-def _scipy_openblas_pkg_config() -> Path:
-    """Write the scipy-openblas.pc pkg-config file and return the path to its parent directory."""
-    import scipy_openblas64
+def _add_cc_cxx(env: dict) -> dict:
+    """Add CC and CXX to the existing environment variables and return as a dictionary."""
+    if platform.platform() != "Windows":
+        return env
+    env["CC"] = "clang"
+    env["CXX"] = "clang++"
+    return env
 
-    path = root_dir / "scipy-openblas.pc"
-    with path.open("wt") as fobj:
-        fobj.write(scipy_openblas64.get_pkg_config())
-    return path.parent
+
+def _add_pkg_config_path(env: dict) -> dict:
+    """Add PKG_CONFIG_PATH to the existing environment variables and return as a dictionary."""
+    pkg_config_path = str(root_dir).replace("\\", "/")
+    env["PKG_CONFIG_PATH"] = os.pathsep.join([env.get("PKG_CONFIG_PATH", ""), pkg_config_path])
+    return env
 
 
 @click.command
 @click.option("-w", "--wheel", is_flag=True, help="If set, build a wheel and sdist. Otherwise just build a sdist.")
 def build(wheel: bool) -> None:
     """Build a source distribution and/or a wheel using build."""
-    pkg_config_path = str(_scipy_openblas_pkg_config()).replace("\\", "/")
-    pkg_config_path_cmd = f"-Csetup-args=--pkg-config-path={pkg_config_path}"
+    env = os.environ
+    env = _add_cc_cxx(env)
+    env = _add_pkg_config_path(env)
+    cmd = [python_exec_path, "tools/before_build.py"]
+    print(f"Running the following command:\n{' '.join(cmd)}\n")
+    subprocess.run(  # noqa: S603
+        cmd,
+        check=True,
+        cwd=root_dir,
+        env=env,
+    )
     outdir_cmd = f"--outdir={dist_dir!s}"
     sdist_cmd = "-s" if not wheel else None
-    cmd = ["python", "-m", "build", pkg_config_path_cmd, outdir_cmd, sdist_cmd, "."]
-    shell = platform.system() == "Windows"
+    cmd = [python_exec_path, "-m", "build", outdir_cmd, sdist_cmd, "."]
     cmd = [c for c in cmd if c is not None]
     print(f"Running the following command: \n{' '.join(cmd)}")
-    subprocess.run(cmd, check=True, cwd=root_dir, shell=shell)  # noqa: S603
+    subprocess.run(  # noqa: S603
+        cmd,
+        check=True,
+        cwd=root_dir,
+        env=env,
+    )
 
 
 @click.command
 def docs() -> None:
     """Run 'python -m docs.build' to build the html documentation."""
-    cmd = ["python", "-m", "docs.build"]
+    cmd = [python_exec_path, "-m", "docs.build"]
     print(f"Running the following command: \n{' '.join(cmd)}")
-    subprocess.run(cmd, check=True, cwd=root_dir, shell=True)  # noqa: S602
+    subprocess.run(cmd, check=True, cwd=root_dir)  # noqa: S603
 
 
 @click.command
@@ -181,34 +207,38 @@ def docs() -> None:
 @click.option("-w", "--warn", type=click.Choice(["0", "1", "2", "3", "4"]), default="2")
 def setup_in_place(coverage: bool, warn: str) -> None:
     """Run 'meson setup --reconfigure' to reconfigure the build."""
-    meson_path = (
-        root_dir / ".venv" / "Scripts" / "meson"
-        if platform.system() == "Windows"
-        else root_dir / ".venv" / "bin" / "meson"
-    )
     coverage_cmd = "-Dcoverage=true" if coverage else "-Dcoverage=false"
     warnlevel = {"0": "0", "1": "1", "2": "2", "3": "3", "4": "everything"}[warn]
     warnlevel_cmd = f"--warnlevel={warnlevel}"
-    pkg_config_path_cmd = f"--pkg-config-path={_scipy_openblas_pkg_config()!s}"
+    env = os.environ
+    env = _add_cc_cxx(env)
+    env = _add_pkg_config_path(env)
+    cmd = [python_exec_path, "tools/before_build.py"]
+    print(f"Running the following command:\n{' '.join(cmd)}\n")
+    subprocess.run(  # noqa: S603
+        cmd,
+        check=True,
+        cwd=root_dir,
+        env=env,
+    )
     cmd = [
-        str(meson_path),
+        meson_exec_path,
         "setup",
         f"{build_dir!s}",
         "--buildtype",
         "release",
         "--reconfigure",
-        "--vsenv",
         coverage_cmd,
         warnlevel_cmd,
-        pkg_config_path_cmd,
     ]
     print(f"Running the following command:\n{' '.join(cmd)}\n")
     subprocess.run(  # noqa: S603
         cmd,
         check=True,
         cwd=root_dir,
+        env=env,
     )
-    _scipy_openblas_dll_path()
+    _add_dll_paths()
 
 
 @click.command
@@ -219,13 +249,8 @@ def in_place() -> None:
 
     The resulting compiled files are then copied to the source directory.
     """
-    meson_path = (
-        root_dir / ".venv" / "Scripts" / "meson"
-        if platform.system() == "Windows"
-        else root_dir / ".venv" / "bin" / "meson"
-    )
     # Run 'meson compile'
-    cmd = [str(meson_path), "compile", f"-C{build_dir!s}"]
+    cmd = [meson_exec_path, "compile", f"-C{build_dir!s}"]
     print(f"Running the following command:\n{' '.join(cmd)}\n")
     subprocess.run(  # noqa: S603
         cmd,
@@ -242,11 +267,7 @@ def cython_lint() -> None:
     This command checks all Cython files for linting errors. It does not automatically fix
     them.
     """
-    cython_lint_path = (
-        root_dir / ".venv" / "Scripts" / "cython-lint"
-        if platform.system() == "Windows"
-        else root_dir / ".venv" / "bin" / "cython-lint"
-    )
+    cython_lint_path = scripts_dir_path / "cython-lint"
     cmd = [str(cython_lint_path), "."]
     print(f"Running the following command:\n{' '.join(cmd)}\n")
     subprocess.run(  # noqa: S603
@@ -262,11 +283,7 @@ def cython_stringfix() -> None:
 
     This command replaces all quotes with double quotes in Cython .pyx and .pxd files.
     """
-    string_fix_path = (
-        root_dir / ".venv" / "Scripts" / "double-quote-cython-strings"
-        if platform.system() == "Windows"
-        else root_dir / ".venv" / "bin" / "double-quote-cython-strings"
-    )
+    string_fix_path = scripts_dir_path / "double-quote-cython-strings"
     package_dir = root_dir / "rs_cla_model"
     pyx_files = [str(path.relative_to(root_dir)) for path in package_dir.rglob("*.pyx")]
     pxd_files = [str(path.relative_to(root_dir)) for path in package_dir.rglob("*.pxd")]

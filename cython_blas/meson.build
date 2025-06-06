@@ -1,24 +1,47 @@
 subdir_path = 'cython_blas'
 
-pyx_files = [
-    'level3',
-    'utility',
+openblas_pyx_files = [
+    'openblas',
 ]
-
-pxd_files = [
-    '_cblas.pxd',
-]
-
-foreach pyx_file : pyx_files
+foreach pyx_file : openblas_pyx_files
     py.extension_module(
         pyx_file,
         pyx_file + '.pyx',
-        dependencies: [py_dep, np_dep, openblas_dep],
+        dependencies: [
+            py_dep,
+            np_dep,
+            openblas_dep,
+        ],
         override_options: ['cython_language=cpp'],
         install: true,
         subdir: subdir_path,
     )
 endforeach
+
+blis_pyx_files = [
+    'blis',
+]
+foreach pyx_file : blis_pyx_files
+    py.extension_module(
+        pyx_file,
+        pyx_file + '.pyx',
+        dependencies: [
+            py_dep,
+            np_dep,
+            blis_dep,
+            openmp_dep,
+        ],
+        override_options: ['cython_language=cpp'],
+        cpp_args: ['-Wno-unused-parameter'], # suppress warnings from blis.h
+        install: true,
+        subdir: subdir_path,
+    )
+endforeach
+
+pxd_files = [
+    '_blis.pxd',
+    '_cblas.pxd',
+]
 
 py.install_sources(
     pxd_files,

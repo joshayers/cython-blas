@@ -34,16 +34,21 @@ skip = [
     "*musl*", # musllinux
 ]
 
+[tool.cibuildwheel.linux.environment]
+PKG_CONFIG_PATH = "$PKG_CONFIG_PATH:$(mktemp -d)"
+
 [tool.cibuildwheel.linux]
-environment = { "PKG_CONFIG_PATH" = "$PKG_CONFIG_PATH:$(mktemp -d)" }
 before-build = [
     "pip install -q scipy_openblas64>=0.3.29",
     "python tools/before_build.py",
 ]
 
+[tool.cibuildwheel.windows.environment]
+PKG_CONFIG_PATH = "$PKG_CONFIG_PATH;$(python -c 'import tempfile; print(tempfile.mkdtemp())')"
+CC = "clang"
+CXX = "clang++"
 
 [tool.cibuildwheel.windows]
-environment = { "PKG_CONFIG_PATH" = "$PKG_CONFIG_PATH;$(python -c 'import tempfile; print(tempfile.mkdtemp())')" }
 before-all = ["pip install -q delvewheel"]
 before-build = [
     "pip install -q scipy_openblas64>=0.3.29",
@@ -62,10 +67,6 @@ atomic = true
 skip_glob = ["*.py"] # isort is only used for Cython files
 line_length = 120
 py_version = 311
-
-
-[tool.meson-python.args]
-setup = ["--vsenv"]
 
 
 [tool.ruff]

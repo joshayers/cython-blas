@@ -35,42 +35,42 @@ cdef extern from "cblas.h" nogil:
     cdef void scipy_cblas_sgemm64_(
         CBLAS_ORDER Order, CBLAS_TRANSPOSE TransA, CBLAS_TRANSPOSE TransB,
         blasint M, blasint N, blasint K,
-		float alpha, const float *A, blasint lda, const float *B, blasint ldb,
+        float alpha, const float *A, blasint lda, const float *B, blasint ldb,
         float beta, float *C, blasint ldc
     )
 
     cdef void scipy_cblas_dgemm64_(
         CBLAS_ORDER Order, CBLAS_TRANSPOSE TransA, CBLAS_TRANSPOSE TransB,
         blasint M, blasint N, blasint K,
-		double alpha, const double *A, blasint lda, const double *B, blasint ldb,
+        double alpha, const double *A, blasint lda, const double *B, blasint ldb,
         double beta, double *C, blasint ldc
     )
 
     cdef void scipy_cblas_cgemm64_(
         CBLAS_ORDER Order, CBLAS_TRANSPOSE TransA, CBLAS_TRANSPOSE TransB,
         blasint M, blasint N, blasint K,
-		const void *alpha, const void *A, blasint lda, const void *B, blasint ldb,
+        const void *alpha, const void *A, blasint lda, const void *B, blasint ldb,
         const void *beta, void *C, blasint ldc
     )
 
     cdef void scipy_cblas_cgemm3m64_(
         CBLAS_ORDER Order, CBLAS_TRANSPOSE TransA, CBLAS_TRANSPOSE TransB,
         blasint M, blasint N, blasint K,
-		const void *alpha, const void *A, blasint lda, const void *B, blasint ldb,
+        const void *alpha, const void *A, blasint lda, const void *B, blasint ldb,
         const void *beta, void *C, blasint ldc
     )
 
     cdef void scipy_cblas_zgemm64_(
-         CBLAS_ORDER Order, CBLAS_TRANSPOSE TransA, CBLAS_TRANSPOSE TransB,
-         blasint M, blasint N, blasint K,
-		 const void *alpha, const void *A, blasint lda, const void *B, blasint ldb,
-         const void *beta, void *C, blasint ldc
+        CBLAS_ORDER Order, CBLAS_TRANSPOSE TransA, CBLAS_TRANSPOSE TransB,
+        blasint M, blasint N, blasint K,
+        const void *alpha, const void *A, blasint lda, const void *B, blasint ldb,
+        const void *beta, void *C, blasint ldc
     )
 
     cdef void scipy_cblas_zgemm3m64_(
         CBLAS_ORDER Order, CBLAS_TRANSPOSE TransA, CBLAS_TRANSPOSE TransB,
         blasint M, blasint N, blasint K,
-		const void *alpha, const void *A, blasint lda, const void *B, blasint ldb,
+        const void *alpha, const void *A, blasint lda, const void *B, blasint ldb,
         const void *beta, void *C, blasint ldc
     )
 
@@ -78,4 +78,5 @@ cdef extern from "cblas.h" nogil:
         CBLAS_ORDER Order, CBLAS_SIDE Side, CBLAS_UPLO Uplo,
         blasint M, blasint N,
         double alpha, const double *A, blasint lda, const double *B, blasint ldb,
-        double beta, double *C, blasint ldc);
+        double beta, double *C, blasint ldc
+    )

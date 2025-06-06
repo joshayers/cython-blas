@@ -1,10 +1,10 @@
 subdir_path = 'cython_blas/tests'
 
-pyx_files = []
+openblas_pyx_files = []
 
 pxd_files = []
 
-foreach pyx_file : pyx_files
+foreach pyx_file : openblas_pyx_files
     py.extension_module(
         pyx_file,
         pyx_file + '.pyx',
@@ -23,7 +23,8 @@ py.install_sources(
 
 python_sources = [
     '__init__.py',
-    'test_level3.py',
+    'test_blis.py',
+    'test_openblas.py',
 ]
 
 py.install_sources(
