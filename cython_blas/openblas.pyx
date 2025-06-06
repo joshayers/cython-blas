@@ -31,13 +31,13 @@ cpdef enum Side:
 @cython.cdivision(True)
 @cython.embedsignature(True)
 @cython.wraparound(False)
-cpdef sgemm(
+cpdef int sgemm(
     float alpha,
     const float [:, :] A,
     const float [:, :] B,
     float beta,
     float [:, :] C
-):
+) except -1:
     r"""Matrix multiplication of single precision matrices.
 
     .. math::
@@ -73,18 +73,19 @@ cpdef sgemm(
         m, n, k,
         alpha, &A[0, 0], lda, &B[0, 0], ldb, beta, &C[0, 0], ldc
     )
+    return 0
 
 
 @cython.cdivision(True)
 @cython.embedsignature(True)
 @cython.wraparound(False)
-cpdef dgemm(
+cpdef int dgemm(
     double alpha,
     const double [:, :] A,
     const double [:, :] B,
     double beta,
     double [:, :] C
-):
+) except -1:
     r"""Matrix multiplication of double precision matrices.
 
     .. math::
@@ -120,12 +121,13 @@ cpdef dgemm(
         m, n, k,
         alpha, &A[0, 0], lda, &B[0, 0], ldb, beta, &C[0, 0], ldc
     )
+    return 0
 
 
 @cython.cdivision(True)
 @cython.embedsignature(True)
 @cython.wraparound(False)
-cpdef cgemm(
+cpdef int cgemm(
     float complex alpha,
     bint conjugate_a,
     const float complex [:, :] A,
@@ -133,7 +135,7 @@ cpdef cgemm(
     const float complex [:, :] B,
     float complex beta,
     float complex [:, :] C,
-):
+) except -1:
     r"""Matrix multiplication of single precision complex matrices.
 
     .. math::
@@ -146,7 +148,7 @@ cpdef cgemm(
         alpha: Scalar multiplier for A @ B
         conjugate_a: If True, matrix `A` will be conjugated.
         A: The A matrix.
-        conjugate_b: If True, matrix `C` will be conjugated.
+        conjugate_b: If True, matrix `B` will be conjugated.
         B: The B matrix. The number of rows in this matrix must equal the number of columns
             in `A`.
         beta: Scalar multiplier for C
@@ -185,12 +187,13 @@ cpdef cgemm(
         m, n, k,
         &alpha, &A[0, 0], lda, &B[0, 0], ldb, &beta, &C[0, 0], ldc
     )
+    return 0
 
 
 @cython.cdivision(True)
 @cython.embedsignature(True)
 @cython.wraparound(False)
-cpdef cgemm3m(
+cpdef int cgemm3m(
     float complex alpha,
     bint conjugate_a,
     const float complex [:, :] A,
@@ -198,7 +201,7 @@ cpdef cgemm3m(
     const float complex [:, :] B,
     float complex beta,
     float complex [:, :] C,
-):
+) except -1:
     r"""Matrix multiplication of single precision complex matrices, using an approximate algorithm.
 
     This function is roughly 20% faster than `cgemm`, but is less accurate.
@@ -208,6 +211,17 @@ cpdef cgemm3m(
 
     If `conjugate_a` is True, then matrix :math:`A` is implicitly conjugated before performing
     the multiplication. Similarly for `conjugate_b`.
+
+    Args:
+        alpha: Scalar multiplier for A @ B
+        conjugate_a: If True, matrix `A` will be conjugated.
+        A: The A matrix.
+        conjugate_b: If True, matrix `B` will be conjugated.
+        B: The B matrix. The number of rows in this matrix must equal the number of columns
+            in `A`.
+        beta: Scalar multiplier for C
+        C: The C matrix. This matrix must have the same number of rows as `A` and the same
+            number of columns as `B`. The result will be written to this matrix.
     """
     cdef Order order_a = ColMajor if A.strides[0] == sizeof(float complex) else RowMajor
     cdef Order order_b = ColMajor if B.strides[0] == sizeof(float complex) else RowMajor
@@ -241,12 +255,13 @@ cpdef cgemm3m(
         m, n, k,
         &alpha, &A[0, 0], lda, &B[0, 0], ldb, &beta, &C[0, 0], ldc
     )
+    return 0
 
 
 @cython.cdivision(True)
 @cython.embedsignature(True)
 @cython.wraparound(False)
-cpdef zgemm(
+cpdef int zgemm(
     double complex alpha,
     bint conjugate_a,
     const double complex [:, :] A,
@@ -254,7 +269,7 @@ cpdef zgemm(
     const double complex [:, :] B,
     double complex beta,
     double complex [:, :] C,
-):
+) except -1:
     r"""Matrix multiplication of double precision complex matrices.
 
     .. math::
@@ -262,6 +277,17 @@ cpdef zgemm(
 
     If `conjugate_a` is True, then matrix :math:`A` is implicitly conjugated before performing
     the multiplication. Similarly for `conjugate_b`.
+
+    Args:
+        alpha: Scalar multiplier for A @ B
+        conjugate_a: If True, matrix `A` will be conjugated.
+        A: The A matrix.
+        conjugate_b: If True, matrix `B` will be conjugated.
+        B: The B matrix. The number of rows in this matrix must equal the number of columns
+            in `A`.
+        beta: Scalar multiplier for C
+        C: The C matrix. This matrix must have the same number of rows as `A` and the same
+            number of columns as `B`. The result will be written to this matrix.
     """
     cdef Order order_a = ColMajor if A.strides[0] == sizeof(double complex) else RowMajor
     cdef Order order_b = ColMajor if B.strides[0] == sizeof(double complex) else RowMajor
@@ -295,6 +321,7 @@ cpdef zgemm(
         m, n, k,
         &alpha, &A[0, 0], lda, &B[0, 0], ldb, &beta, &C[0, 0], ldc
     )
+    return 0
 
 
 @cython.cdivision(True)
@@ -318,6 +345,17 @@ cpdef int zgemm3m(
 
     If `conjugate_a` is True, then matrix :math:`A` is implicitly conjugated before performing
     the multiplication. Similarly for `conjugate_b`.
+
+    Args:
+        alpha: Scalar multiplier for A @ B
+        conjugate_a: If True, matrix `A` will be conjugated.
+        A: The A matrix.
+        conjugate_b: If True, matrix `B` will be conjugated.
+        B: The B matrix. The number of rows in this matrix must equal the number of columns
+            in `A`.
+        beta: Scalar multiplier for C
+        C: The C matrix. This matrix must have the same number of rows as `A` and the same
+            number of columns as `B`. The result will be written to this matrix.
     """
     cdef Order order_a = ColMajor if A.strides[0] == sizeof(double complex) else RowMajor
     cdef Order order_b = ColMajor if B.strides[0] == sizeof(double complex) else RowMajor
@@ -351,17 +389,18 @@ cpdef int zgemm3m(
         m, n, k,
         &alpha, &A[0, 0], lda, &B[0, 0], ldb, &beta, &C[0, 0], ldc
     )
+    return 0
 
 
 @cython.cdivision(True)
-cpdef dsymm_ab(
+cpdef int dsymm_ab(
     double alpha,
     UpperLower upper_lower,
     const double [:, :] A,
     const double [:, :] B,
     double beta,
     double [:, :] C
-):
+) except -1:
     cdef Order order_a = ColMajor if A.strides[0] == sizeof(double) else RowMajor
     cdef Order order_b = ColMajor if B.strides[0] == sizeof(double) else RowMajor
     cdef Order order_c = ColMajor if C.strides[0] == sizeof(double) else RowMajor
@@ -389,20 +428,7 @@ cpdef dsymm_ab(
         <_cblas.CBLAS_ORDER> order_c, <_cblas.CBLAS_SIDE> side, <_cblas.CBLAS_UPLO> upper_lower,
         m, n,
         alpha, &A[0, 0], lda, &B[0, 0], ldb, beta, &C[0, 0], ldc)
-
-
-def dsymm_raw(
-    Order order, Side side, UpperLower upper_lower,
-    m, n,
-    alpha, double [:, :] A, lda,
-    double [:, :] B, ldb,
-    beta, double [:, :] C, ldc
-):
-    _cblas.scipy_cblas_dsymm64_(
-        <_cblas.CBLAS_ORDER> order, <_cblas.CBLAS_SIDE> side, <_cblas.CBLAS_UPLO> upper_lower,
-        m, n,
-        alpha, &A[0, 0], lda, &B[0, 0], ldb, beta, &C[0, 0], ldc
-    )
+    return 0
 
 
 @cython.embedsignature(True)

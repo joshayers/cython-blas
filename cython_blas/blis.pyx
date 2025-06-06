@@ -15,17 +15,26 @@ cdef extern from * nogil:
 @cython.cdivision(True)
 @cython.embedsignature(True)
 @cython.wraparound(False)
-cpdef dgemm(
+cpdef int dgemm(
     double alpha,
     const double [:, :] A,
     const double [:, :] B,
     double beta,
     double [:, :] C
-):
+) except -1:
     r"""Matrix multiplication of double precision matrices.
 
     .. math::
         C = \alpha A B + \beta C
+
+    Args:
+        alpha: Scalar multiplier for A @ B
+        A: The A matrix.
+        B: The B matrix. The number of rows in this matrix must equal the number of columns
+            in `A`.
+        beta: Scalar multiplier for C
+        C: The C matrix. This matrix must have the same number of rows as `A` and the same
+            number of columns as `B`. The result will be written to this matrix.
     """
     cdef dim_t m = A.shape[0], n = B.shape[1], k = A.shape[1]
     if B.shape[0] != k or C.shape[0] != m or C.shape[1] != n:
@@ -75,12 +84,13 @@ cpdef dgemm(
     )
 
     _blis.bli_gemm(&bli_alpha, &bli_a, &bli_b, &bli_beta, &bli_c)
+    return 0
 
 
 @cython.cdivision(True)
 @cython.embedsignature(True)
 @cython.wraparound(False)
-cpdef zgemm(
+cpdef int zgemm(
     double complex alpha,
     bint conjugate_a,
     const double complex [:, :] A,
@@ -88,7 +98,7 @@ cpdef zgemm(
     const double complex [:, :] B,
     double complex beta,
     double complex [:, :] C,
-):
+) except -1:
     r"""Matrix multiplication of double precision complex matrices.
 
     .. math::
@@ -96,6 +106,17 @@ cpdef zgemm(
 
     If `conjugate_a` is True, then matrix :math:`A` is implicitly conjugated before performing
     the multiplication. Similarly for `conjugate_b`.
+
+    Args:
+        alpha: Scalar multiplier for A @ B
+        conjugate_a: If True, matrix `A` will be conjugated.
+        A: The A matrix.
+        conjugate_b: If True, matrix `B` will be conjugated.
+        B: The B matrix. The number of rows in this matrix must equal the number of columns
+            in `A`.
+        beta: Scalar multiplier for C
+        C: The C matrix. This matrix must have the same number of rows as `A` and the same
+            number of columns as `B`. The result will be written to this matrix.
     """
     cdef dim_t m = A.shape[0], n = B.shape[1], k = A.shape[1]
     if B.shape[0] != k or C.shape[0] != m or C.shape[1] != n:
@@ -149,8 +170,10 @@ cpdef zgemm(
     )
 
     _blis.bli_gemm(&bli_alpha, &bli_a, &bli_b, &bli_beta, &bli_c)
+    return 0
 
 
+# verify -99 is not used and is valid as an error flag
 static_assert(_blis.BLIS_FLOAT != -99)
 static_assert(_blis.BLIS_DOUBLE != -99)
 static_assert(_blis.BLIS_SCOMPLEX != -99)
@@ -172,6 +195,7 @@ cdef int _convert_type(ndarray arr) except -99:
     raise ValueError(msg)
 
 
+# verify -99 is not used and is valid for DefaultPrecision
 static_assert(_blis.BLIS_DOUBLE_PREC != -99)
 static_assert(_blis.BLIS_SINGLE_PREC != -99)
 
@@ -183,7 +207,7 @@ cpdef enum Precision:
 
 
 @cython.cdivision(True)
-def gemm(
+cpdef int gemm(
     double alpha,
     bint conjugate_a,
     ndarray A,
@@ -192,7 +216,7 @@ def gemm(
     double complex beta,
     ndarray C,
     Precision precision = Precision.DefaultPrecision,
-):
+) except -1:
     r"""Matrix multiplication of matrices, any precision and domain.
 
     .. math::
@@ -200,6 +224,19 @@ def gemm(
 
     If `conjugate_a` is True, then matrix :math:`A` is implicitly conjugated before performing
     the multiplication. Similarly for `conjugate_b`.
+
+    Args:
+        alpha: Scalar multiplier for A @ B
+        conjugate_a: If True, matrix `A` will be conjugated.
+        A: The A matrix.
+        conjugate_b: If True, matrix `B` will be conjugated.
+        B: The B matrix. The number of rows in this matrix must equal the number of columns
+            in `A`.
+        beta: Scalar multiplier for C
+        C: The C matrix. This matrix must have the same number of rows as `A` and the same
+            number of columns as `B`. The result will be written to this matrix.
+        precision: The precision to use in the calculation. This parameter is optional. If not
+            specified, it defaults to the precision of `C`.
     """
     if np.PyArray_NDIM(A) != 2 or np.PyArray_NDIM(B) != 2 or np.PyArray_NDIM(C) != 2:
         msg = 'matrices A, B, and C must be two-dimensional'
@@ -260,6 +297,7 @@ def gemm(
         _blis.bli_obj_set_comp_prec(<_blis.prec_t> precision, &bli_c)
 
     _blis.bli_gemm(&bli_alpha, &bli_a, &bli_b, &bli_beta, &bli_c)
+    return 0
 
 
 def get_int_type_size() -> str:

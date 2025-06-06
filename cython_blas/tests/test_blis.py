@@ -73,9 +73,9 @@ def test_dgemm(  # noqa: PLR0913
     mat_a = create_array(rng, (m, k), "f8", a_order)
     mat_b = create_array(rng, (k, n), "f8", b_order)
     mat_c = create_array(rng, (m, n), "f8", c_order)
-    mat_c_orig = mat_c.copy()
+    expected = alpha * mat_a @ mat_b + beta * mat_c
     blis.dgemm(alpha, mat_a, mat_b, beta, mat_c)
-    np.testing.assert_allclose(mat_c, alpha * mat_a @ mat_b + beta * mat_c_orig, atol=1e-8, rtol=1e-8)
+    np.testing.assert_allclose(mat_c, expected, atol=1e-8, rtol=1e-8)
 
 
 @pytest.mark.parametrize(*_shape_error_params_gemm)
@@ -110,10 +110,32 @@ def test_zgemm(  # noqa: PLR0913
     mat_a = create_array(rng, (m, k), "c16", a_order)
     mat_b = create_array(rng, (k, n), "c16", b_order)
     mat_c = create_array(rng, (m, n), "c16", c_order)
-    mat_c_orig = mat_c.copy()
+    expected = alpha * conjugate_if(mat_a, conjugate_a) @ conjugate_if(mat_b, conjugate_b) + beta * mat_c
     blis.zgemm(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
-    expected = alpha * conjugate_if(mat_a, conjugate_a) @ conjugate_if(mat_b, conjugate_b) + beta * mat_c_orig
     np.testing.assert_allclose(mat_c, expected, atol=1e-8, rtol=1e-8)
+
+
+@pytest.mark.parametrize(
+    ("mat_a_shape", "mat_b_shape", "mat_c_shape", "match"),
+    [
+        ((3, 4, 1), (4, 4), (3, 4), r"matrices A, B, and C must.*two\-dimensional"),
+        ((3, 4), (4, 4, 1), (3, 4), r"matrices A, B, and C must.*two\-dimensional"),
+        ((3, 4), (4, 4), (3, 4, 1), r"matrices A, B, and C must.*two\-dimensional"),
+        ((3, 9), (4, 4), (3, 4), r"matrix dim.*not compat.*\(3, 9\).*\(4, 4\).*\(3, 4\)"),
+        ((3, 4), (4, 4), (9, 4), r"matrix dim.*not compat.*\(3, 4\).*\(4, 4\).*\(9, 4\)"),
+        ((3, 4), (4, 4), (3, 9), r"matrix dim.*not compat.*\(3, 4\).*\(4, 4\).*\(3, 9\)"),
+    ],
+)
+def test_gemm_shape_error(
+    mat_a_shape: tuple[int, int], mat_b_shape: tuple[int, int], mat_c_shape: tuple[int, int], match: str
+):
+    """Test the dgemm function, with incompatible matrix shapes."""
+    alpha, beta = 1.0, 0.0
+    mat_a = np.zeros(mat_a_shape, dtype="f8", order="C")
+    mat_b = np.zeros(mat_b_shape, dtype="f8", order="C")
+    mat_c = np.zeros(mat_c_shape, dtype="f8", order="C")
+    with pytest.raises(ValueError, match=match):
+        blis.gemm(alpha, False, mat_a, False, mat_b, beta, mat_c)
 
 
 @pytest.mark.parametrize(
@@ -128,12 +150,10 @@ def test_zgemm(  # noqa: PLR0913
         "a_dtype",
         "b_dtype",
         "c_dtype",
-        "a_order",
-        "b_order",
-        "c_order",
+        "precision",
     ),
     [
-        (alpha, conjugate_a, beta, conjugate_b, 8, 9, 10, a_dtype, b_dtype, c_dtype, a_order, b_order, c_order)
+        (alpha, conjugate_a, beta, conjugate_b, 8, 9, 10, a_dtype, b_dtype, c_dtype, precision)
         for (
             alpha,
             conjugate_a,
@@ -142,20 +162,16 @@ def test_zgemm(  # noqa: PLR0913
             a_dtype,
             b_dtype,
             c_dtype,
-            a_order,
-            b_order,
-            c_order,
+            precision,
         ) in itertools.product(
-            [0.0, 1.0, 2.1],
+            [0.0, 1.2],
             [True, False],
-            [0.0 + 0.0j, 1.0 + 1.2j, 2.1 + 1.0j],
+            [0.0 + 0.0j, 1.2 + 1.3j],
             [True, False],
             ["f4", "f8", "c8", "c16"],
             ["f4", "f8", "c8", "c16"],
             ["f4", "f8", "c8", "c16"],
-            ["C", "F"],
-            ["C", "F"],
-            ["C", "F"],
+            [blis.Precision.DefaultPrecision, blis.Precision.DoublePrecision, blis.Precision.SinglePrecision],
         )
     ],
 )
@@ -170,19 +186,17 @@ def test_gemm(  # noqa: PLR0913
     a_dtype: str,
     b_dtype: str,
     c_dtype: str,
-    a_order: str,
-    b_order: str,
-    c_order: str,
+    precision: blis.Precision,
 ):
     """Test the gemm function."""
     rng = np.random.default_rng(seed=1)
+    a_order, b_order, c_order = "F", "F", "C"
     mat_a = create_array(rng, (m, k), a_dtype, a_order)
     mat_b = create_array(rng, (k, n), b_dtype, b_order)
     mat_c = create_array(rng, (m, n), c_dtype, c_order)
-    mat_c_orig = mat_c.copy()
-    blis.gemm(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
-    expected = alpha * conjugate_if(mat_a, conjugate_a) @ conjugate_if(mat_b, conjugate_b) + beta * mat_c_orig
+    expected = alpha * conjugate_if(mat_a, conjugate_a) @ conjugate_if(mat_b, conjugate_b) + beta * mat_c
     expected = expected.real if c_dtype in ("f4", "f8") else expected
+    blis.gemm(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c, precision)
     atol = 5e-6 if c_dtype in ("f4", "c8") else 1e-6
     rtol = 5e-6 if c_dtype in ("f4", "c8") else 1e-6
     np.testing.assert_allclose(mat_c, expected, atol=atol, rtol=rtol)

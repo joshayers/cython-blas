@@ -13,10 +13,10 @@ def create_array(rng: np.random.Generator, size: tuple[int, int], dtype: str, or
     """Create an array with the specified size, dtype, and memory order."""
     array = np.empty(size, dtype=dtype, order=order)
     if np.isrealobj(array):
-        array[:] = rng.uniform(size=size)
+        array[:] = rng.uniform(low=-1.0, high=1.0, size=size)
     else:
-        array.real = rng.uniform(size=size)
-        array.imag = rng.uniform(size=size)
+        array.real = rng.uniform(low=-1.0, high=1.0, size=size)
+        array.imag = rng.uniform(low=-1.0, high=1.0, size=size)
     return array
 
 

@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         os:
-          - "ubuntu-24.04"
+          - "ubuntu-latest"
           - "windows-2022"
     runs-on: ${{ matrix.os }}
     steps:
@@ -39,7 +39,7 @@ jobs:
 
   build_sdist:
     name: Build source dist and upload all
-    runs-on: "ubuntu-24.04"
+    runs-on: "ubuntu-latest"
     needs: [build_wheels]
     steps:
       - name: Checkout repository
