@@ -393,6 +393,8 @@ cpdef int zgemm3m(
 
 
 @cython.cdivision(True)
+@cython.embedsignature(True)
+@cython.wraparound(False)
 cpdef int dsymm_ab(
     double alpha,
     UpperLower upper_lower,

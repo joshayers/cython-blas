@@ -15,11 +15,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - LIB_TYPE: shared
-            CONFIG: x86_64
-            THREADING: openmp
-            BLAS: no
-            CBLAS: no
           - LIB_TYPE: static
             CONFIG: x86_64
             THREADING: openmp
