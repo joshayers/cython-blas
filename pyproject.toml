@@ -6,7 +6,11 @@ requires-python = ">=3.11"
 dependencies = ["numpy >=2.0"]
 
 [project.optional-dependencies]
+docs = ["sphinx >=8.2.3", "sphinx-rtd-theme"]
 dev = [
+    # Docs
+    "sphinx >=8.2.3",
+    "sphinx-rtd-theme",
     # Unit tests
     "pytest",
     # Linting
