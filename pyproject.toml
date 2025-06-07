@@ -30,10 +30,10 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-docs = ["sphinx >=8.2.3", "sphinx-rtd-theme"]
+docs = ["sphinx >=8.1", "sphinx-rtd-theme"]
 dev = [
     # Docs
-    "sphinx >=8.2.3",
+    "sphinx >=8.1",
     "sphinx-rtd-theme",
     # Unit tests
     "pytest",
