@@ -61,8 +61,7 @@ Repository = "https://github.com/joshayers/cython-blas/"
 build-frontend = "build"
 archs = ["auto64"]
 skip = [
-    "pp*",    # PyPy
-    "*musl*", # musllinux
+    "pp*", # PyPy
 ]
 
 [tool.cibuildwheel.linux.environment]
