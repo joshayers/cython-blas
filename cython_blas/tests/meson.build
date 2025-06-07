@@ -25,6 +25,7 @@ python_sources = [
     '__init__.py',
     'test_blis.py',
     'test_openblas.py',
+    'utils.py',
 ]
 
 py.install_sources(
