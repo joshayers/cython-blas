@@ -196,8 +196,11 @@ def build(wheel: bool) -> None:
 
 @click.command
 def docs() -> None:
-    """Run 'python -m docs.build' to build the html documentation."""
-    cmd = [python_exec_path, "-m", "docs.build"]
+    """Run 'sphinx-build' to build the html documentation."""
+    sphinxbuild_exec_path = str(scripts_dir_path / "sphinx-build")
+    source_dir = root_dir / "docs" / "source"
+    build_dir = root_dir / "docs" / "build"
+    cmd = [sphinxbuild_exec_path, "-b", "html", "--jobs=2", f"{source_dir!s}", f"{build_dir!s}"]
     print(f"Running the following command: \n{' '.join(cmd)}")
     subprocess.run(cmd, check=True, cwd=root_dir)  # noqa: S603
 

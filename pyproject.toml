@@ -1,6 +1,6 @@
 [project]
 name = "cython-blas"
-version = "0.1.1"
+version = "0.1.0"
 authors = [{ "name" = "Josh Ayers", "email" = "josh@ayers.pw" }]
 license = "MIT"
 license-files = ["LICENSE.txt"]
@@ -61,7 +61,8 @@ Repository = "https://github.com/joshayers/cython-blas/"
 build-frontend = "build"
 archs = ["auto64"]
 skip = [
-    "pp*", # PyPy
+    "pp*",    # PyPy
+    "*musl*", # muslliunx
 ]
 
 [tool.cibuildwheel.linux.environment]
@@ -144,6 +145,7 @@ package = "cyhon_blas"
 
 [tool.spin.commands]
 "Build" = [".spin/cmds.py:build"]
+"Docs" = [".spin/cmds.py:docs"]
 "Dev" = [
     ".spin/cmds.py:in_place",
     ".spin/cmds.py:setup_in_place",
