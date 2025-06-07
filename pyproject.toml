@@ -1,9 +1,32 @@
 [project]
 name = "cython-blas"
 version = "0.1.0"
+authors = [{ "name" = "Josh Ayers", "email" = "josh@ayers.pw" }]
+license = "MIT"
+license-files = ["LICENSE.txt"]
+description = "Wrappers around OpenBLAS and BLIS."
 
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 dependencies = ["numpy >=2.0"]
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: C",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Natural Language :: English",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX",
+]
 
 [project.optional-dependencies]
 docs = ["sphinx >=8.2.3", "sphinx-rtd-theme"]
@@ -28,6 +51,9 @@ dev = [
     "spin",
     "click",
 ]
+
+[project.urls]
+Repository = "https://github.com/joshayers/cython-blas/"
 
 
 [tool.cibuildwheel]
