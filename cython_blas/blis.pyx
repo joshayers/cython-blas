@@ -25,6 +25,7 @@ cpdef int dgemm(
     r"""Matrix multiplication of double precision matrices.
 
     .. math::
+
         C = \alpha A B + \beta C
 
     Args:
@@ -102,6 +103,7 @@ cpdef int zgemm(
     r"""Matrix multiplication of double precision complex matrices.
 
     .. math::
+
         C = \alpha A B + \beta C
 
     If `conjugate_a` is True, then matrix :math:`A` is implicitly conjugated before performing
@@ -207,6 +209,7 @@ cpdef enum Precision:
 
 
 @cython.cdivision(True)
+@cython.embedsignature(True)
 cpdef int gemm(
     double alpha,
     bint conjugate_a,
@@ -300,6 +303,7 @@ cpdef int gemm(
     return 0
 
 
+@cython.embedsignature(True)
 def get_int_type_size() -> str:
     """Return the integer size used by BLIS."""
     cdef const char* cstring = _blis.bli_info_get_int_type_size_str()
@@ -307,6 +311,7 @@ def get_int_type_size() -> str:
     return bstring.decode('ascii')
 
 
+@cython.embedsignature(True)
 def get_version() -> str:
     """Return the version of BLIS."""
     cdef const char* cstring = _blis.bli_info_get_version_str()
@@ -314,6 +319,7 @@ def get_version() -> str:
     return bstring.decode('ascii')
 
 
+@cython.embedsignature(True)
 def get_arch() -> str:
     """Return the architecture name currently used by BLIS."""
     cdef _blis.arch_t id = _blis.bli_arch_query_id()
@@ -322,11 +328,13 @@ def get_arch() -> str:
     return bstring.decode('ascii')
 
 
+@cython.embedsignature(True)
 cpdef void set_num_threads(dim_t n_threads) noexcept nogil:
     """Set the number of threads used by BLIS."""
     _blis.bli_thread_set_num_threads(n_threads)
 
 
+@cython.embedsignature(True)
 cpdef dim_t get_num_threads() noexcept nogil:
     """Return the number of threads currently used by BLIS."""
     return _blis.bli_thread_get_num_threads()

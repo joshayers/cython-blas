@@ -41,6 +41,7 @@ cpdef int sgemm(
     r"""Matrix multiplication of single precision matrices.
 
     .. math::
+
         C = \alpha A B + \beta C
 
     Args:
@@ -89,6 +90,7 @@ cpdef int dgemm(
     r"""Matrix multiplication of double precision matrices.
 
     .. math::
+
         C = \alpha A B + \beta C
 
     Args:
@@ -403,6 +405,7 @@ cpdef int dsymm_ab(
     double beta,
     double [:, :] C
 ) except -1:
+    """Symmetric matrix multiplication."""
     cdef Order order_a = ColMajor if A.strides[0] == sizeof(double) else RowMajor
     cdef Order order_b = ColMajor if B.strides[0] == sizeof(double) else RowMajor
     cdef Order order_c = ColMajor if C.strides[0] == sizeof(double) else RowMajor
