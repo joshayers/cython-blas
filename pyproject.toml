@@ -5,6 +5,7 @@ authors = [{ "name" = "Josh Ayers", "email" = "josh@ayers.pw" }]
 license = "MIT"
 license-files = ["LICENSE.txt"]
 description = "Wrappers around OpenBLAS and BLIS."
+readme = "README.rst"
 
 requires-python = ">=3.10"
 dependencies = ["numpy >=2.0"]
