@@ -15,12 +15,37 @@ jobs:
       - name: Build
         shell: bash
         run: |
+          ROOT_DIR=`pwd`
+          echo $ROOT_DIR
           git submodule update --init --recursive
-          SRC_DIR=`pwd`/vendor/blis
+          SRC_DIR=$ROOT_DIR/vendor/blis
           echo $SRC_DIR
           IMAGE="quay.io/pypa/manylinux2014_x86_64:2025.04.19-1"
-          echo $SRC_DIR/tools/build_blis_manylinux.sh
-          docker container run --volume=/:/host $IMAGE $SRC_DIR/tools/build_blis_manylinux.sh
+          echo $ROOT_DIR/tools/build_blis_manylinux.sh
+          docker container run --volume=/:/host $IMAGE $ROOT_DIR/tools/build_blis_manylinux.sh
+      - name: Upload compiled library
+        uses: actions/upload-artifact@v4
+        with:
+          name: blis-${{ matrix.LIB_TYPE }}
+          path: /opt/blis
+
+  linux2:
+    name: Build BLIS on Linux 2
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Build
+        shell: bash
+        run: |
+          ROOT_DIR=`pwd`
+          echo $ROOT_DIR
+          git submodule update --init --recursive
+          SRC_DIR=$ROOT_DIR/vendor/blis
+          echo $SRC_DIR
+          IMAGE="quay.io/pypa/manylinux2014_x86_64:2025.04.19-1"
+          echo $ROOT_DIR/tools/build_blis_manylinux.sh
+          docker container run --volume=/:/host $IMAGE /host$ROOT_DIR/tools/build_blis_manylinux.sh
       - name: Upload compiled library
         uses: actions/upload-artifact@v4
         with:
