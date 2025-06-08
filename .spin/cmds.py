@@ -152,7 +152,7 @@ def _add_dll_paths() -> None:
 
 def _add_cc_cxx(env: dict) -> dict:
     """Add CC and CXX to the existing environment variables and return as a dictionary."""
-    if platform.platform() != "Windows":
+    if platform.system() != "Windows":
         return env
     env["CC"] = "clang"
     env["CXX"] = "clang++"
@@ -214,7 +214,7 @@ def setup_in_place(coverage: bool, warn: str) -> None:
     warnlevel = {"0": "0", "1": "1", "2": "2", "3": "3", "4": "everything"}[warn]
     warnlevel_cmd = f"--warnlevel={warnlevel}"
     env = os.environ
-    print(f"platform.platform: {platform.platform()}")
+    print(f"platform.system: {platform.system()}")
     print(env.get("CC", "NONE"))
     print(env.get("CXX", "NONE"))
     env = _add_cc_cxx(env)
