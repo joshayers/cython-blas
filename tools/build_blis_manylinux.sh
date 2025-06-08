@@ -4,7 +4,11 @@ SRC_DIR="$1"
 
 mkdir -p /project/blis
 echo "/host$SRC_DIR"
-cp -r /host$SRC_DIR /project/blis
+cp -r /host$SRC_DIR /project
+cd /project
+ls -la
+echo `pwd`
+
 cd /project/blis
 
 ls -la
