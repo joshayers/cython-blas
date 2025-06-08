@@ -1,4 +1,4 @@
-name: Build BLIS, Linux
+name: Build BLIS, Linux, manylinux
 
 on:
   push:
@@ -9,14 +9,6 @@ jobs:
   linux:
     name: Build BLIS on Linux
     runs-on: "ubuntu-latest"
-    strategy:
-      matrix:
-        include:
-          - LIB_TYPE: static
-            CONFIG: x86_64
-            THREADING: openmp
-            BLAS: no
-            CBLAS: no
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,7 +19,8 @@ jobs:
           SRC_DIR=`pwd`/vendor/blis
           echo $SRC_DIR
           IMAGE="quay.io/pypa/manylinux2014_x86_64:2025.04.19-1"
-          docker container run --volume=/:/host $IMAGE ./tools/build_blis_manylinux.sh
+          echo $SRC_DIR/tools/build_blis_manylinux.sh
+          docker container run --volume=/:/host $IMAGE $SRC_DIR/tools/build_blis_manylinux.sh
       - name: Upload compiled library
         uses: actions/upload-artifact@v4
         with:
