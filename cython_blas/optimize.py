@@ -3,8 +3,6 @@
 import itertools
 from typing import TypeVar
 
-import numpy as np
-
 Matrix = TypeVar("Matrix", bound="Matrix")
 MultiMatrix = TypeVar("MultiMatrix", bound="MultiMatrix")
 
@@ -92,61 +90,3 @@ def optimize(mats: list[Matrix]) -> tuple[int, int, tuple[int]]:
         if flops < best_path[1]:
             best_path = (i, flops, path)
     return best_path
-
-
-if __name__ == "__main__":
-    mat1 = Matrix((10, 15), "f8")
-    mat2 = Matrix((15, 12), "f8")
-    mat3 = Matrix((12, 16), "f8")
-    best_path, worst_path = optimize([mat1, mat2, mat3])
-    print()
-    print(best_path)
-    print(worst_path)
-    path, descr = np.einsum_path(
-        "ab,bc,cd", np.empty((10, 15)), np.empty((15, 12)), np.empty((12, 16)), optimize="optimal"
-    )
-    print(path)
-    print(descr)
-
-    mat1 = Matrix((10, 15), "f8")
-    mat2 = Matrix((15, 12), "f8")
-    mat3 = Matrix((12, 5), "f8")
-    mat4 = Matrix((5, 16), "f8")
-    best_path, worst_path = optimize([mat1, mat2, mat3, mat4])
-    print()
-    print(best_path)
-    print(worst_path)
-    path, descr = np.einsum_path(
-        "ab,bc,cd,de", np.empty((10, 15)), np.empty((15, 12)), np.empty((12, 5)), np.empty((5, 16)), optimize="optimal"
-    )
-    print(path)
-    print(descr)
-
-    mat1 = Matrix((10, 15), "f8")
-    mat2 = Matrix((15, 12), "f8")
-    mat3 = Matrix((12, 5), "f8")
-    mat4 = Matrix((5, 16), "f8")
-    mat5 = Matrix((16, 15), "f8")
-    best_path, worst_path = optimize([mat1, mat2, mat3, mat4, mat5])
-    print()
-    print(best_path)
-    print(worst_path)
-    path, descr = np.einsum_path(
-        "ab,bc,cd,de,ef",
-        np.empty((10, 15)),
-        np.empty((15, 12)),
-        np.empty((12, 5)),
-        np.empty((5, 16)),
-        np.empty((16, 15)),
-        optimize="optimal",
-    )
-    print(path)
-    print(descr)
-
-    mat1 = Matrix((2, 2), "f8")
-    mat2 = Matrix((2, 5), "f8")
-    mat3 = Matrix((5, 2), "f8")
-    best_path, worst_path = optimize([mat1, mat2, mat3])
-    print()
-    print(best_path)
-    print(worst_path)
