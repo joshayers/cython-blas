@@ -55,7 +55,7 @@ class MultiMatrix:
         return flops, MultiMatrix(mats)
 
     def calc_flops_left(self, other: Matrix) -> tuple[int, MultiMatrix]:
-        """Calculate the flops."""
+        """Calculate the flops for other @ self."""
         flops = 0
         mats = []
         for mat2 in self.mats:
@@ -65,7 +65,7 @@ class MultiMatrix:
         return flops, MultiMatrix(mats)
 
     def calc_flops(self, other: Matrix | MultiMatrix) -> tuple[int, Matrix | MultiMatrix]:
-        """Calculate the flops."""
+        """Calculate the flops for self @ other."""
         if isinstance(other, MultiMatrix):
             return self._calc_flops_multimatrix(other)
         flops = 0

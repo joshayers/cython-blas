@@ -214,7 +214,12 @@ def setup_in_place(coverage: bool, warn: str) -> None:
     warnlevel = {"0": "0", "1": "1", "2": "2", "3": "3", "4": "everything"}[warn]
     warnlevel_cmd = f"--warnlevel={warnlevel}"
     env = os.environ
+    print(f"platform.platform: {platform.platform()}")
+    print(env.get("CC", "NONE"))
+    print(env.get("CXX", "NONE"))
     env = _add_cc_cxx(env)
+    print(env.get("CC", "NONE"))
+    print(env.get("CXX", "NONE"))
     env = _add_pkg_config_path(env)
     cmd = [python_exec_path, "tools/before_build.py"]
     print(f"Running the following command:\n{' '.join(cmd)}\n")
