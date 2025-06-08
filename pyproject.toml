@@ -31,6 +31,7 @@ classifiers = [
 
 [project.optional-dependencies]
 docs = ["sphinx >=8.1", "sphinx-rtd-theme"]
+test = ["pytest"]
 dev = [
     # Docs
     "sphinx >=8.1",
@@ -64,6 +65,8 @@ skip = [
     "pp*",    # PyPy
     "*musl*", # muslliunx
 ]
+test-extras = ["test"]
+test-command = ["pytest --pyargs cython_blas"]
 
 [tool.cibuildwheel.linux.environment]
 PKG_CONFIG_PATH = "$PKG_CONFIG_PATH:$(mktemp -d)"
@@ -98,12 +101,12 @@ max-line-length = 120
 atomic = true
 skip_glob = ["*.py"] # isort is only used for Cython files
 line_length = 120
-py_version = 311
+py_version = 310
 
 
 [tool.ruff]
 line-length = 120
-target-version = "py311"
+target-version = "py310"
 exclude = [
     "examples/*", # Patterns are glob expressions
 ]

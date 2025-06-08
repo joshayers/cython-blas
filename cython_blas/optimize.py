@@ -1,9 +1,12 @@
 """Optimize matrix multiplication."""
 
 import itertools
-from typing import Self
+from typing import TypeVar
 
 import numpy as np
+
+Matrix = TypeVar("Matrix", bound="Matrix")
+MultiMatrix = TypeVar("MultiMatrix", bound="MultiMatrix")
 
 
 class Matrix:
@@ -14,22 +17,16 @@ class Matrix:
         self.shape = shape
         self.dtype = dtype
 
-    def __eq__(self, other: Self) -> bool:
+    def __eq__(self, other: Matrix | MultiMatrix) -> bool:
         """Check for equality."""
         if self.shape != other.shape:
             return False
         return self.dtype == other.dtype
 
-    def calc_flops(self, other: Self) -> tuple[int, Self]:
+    def calc_flops(self, other: Matrix | MultiMatrix) -> tuple[int, Matrix | MultiMatrix]:
         """Calculate the flops due to multiplying two matrices."""
         if isinstance(other, MultiMatrix):
-            flops = 0
-            mats = []
-            for mat2 in other.mats:
-                flops_i, mats_i = self.calc_flops(mat2)
-                flops += flops_i
-                mats.append(mats_i)
-            return flops, MultiMatrix(mats)
+            return other.calc_flops_left(self)
         dtype_mult = {"f4": 1, "f8": 2, "c8": 2, "c16": 4}
         mult = max(dtype_mult[self.dtype], dtype_mult[other.dtype])
         m, k = self.shape
@@ -47,20 +44,36 @@ class MultiMatrix:
         """Initialize the class."""
         self.mats = mats
 
-    def calc_flops(self, other: Self | Matrix) -> tuple[int, Self]:
+    def _calc_flops_multimatrix(self, other: MultiMatrix) -> tuple[int, MultiMatrix]:
+        """Calculate the flops when multiplying two MultiMatrix instances."""
+        flops = 0
+        mats = []
+        for mat1, mat2 in zip(self.mats, other.mats, strict=True):
+            flops_i, mats_i = mat1.calc_flops(mat2)
+            flops += flops_i
+            mats.append(mats_i)
+        return flops, MultiMatrix(mats)
+
+    def calc_flops_left(self, other: Matrix) -> tuple[int, MultiMatrix]:
         """Calculate the flops."""
         flops = 0
         mats = []
+        for mat2 in self.mats:
+            flops_i, mats_i = other.calc_flops(mat2)
+            flops += flops_i
+            mats.append(mats_i)
+        return flops, MultiMatrix(mats)
+
+    def calc_flops(self, other: Matrix | MultiMatrix) -> tuple[int, Matrix | MultiMatrix]:
+        """Calculate the flops."""
         if isinstance(other, MultiMatrix):
-            for mat1, mat2 in zip(self.mats, other.mats, strict=True):
-                flops_i, mats_i = mat1.calc_flops(mat2)
-                flops += flops_i
-                mats.append(mats_i)
-        else:
-            for mat1 in self.mats:
-                flops_i, mats_i = mat1.calc_flops(other)
-                flops += flops_i
-                mats.append(mats_i)
+            return self._calc_flops_multimatrix(other)
+        flops = 0
+        mats = []
+        for mat1 in self.mats:
+            flops_i, mats_i = mat1.calc_flops(other)
+            flops += flops_i
+            mats.append(mats_i)
         return flops, MultiMatrix(mats)
 
 
