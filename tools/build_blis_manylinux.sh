@@ -7,6 +7,9 @@ echo "/host$SRC_DIR"
 cp -r /host$SRC_DIR /project/blis
 cd /project/blis
 
+ls -la
+echo `pwd`
+
 export CONFIGURE_OPTS="$CONFIGURE_OPTS --disable-shared --enable-static"
 export CONFIGURE_OPTS="$CONFIGURE_OPTS --disable-blas"
 export CONFIGURE_OPTS="$CONFIGURE_OPTS --disable-cblas"
