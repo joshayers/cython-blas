@@ -5,14 +5,10 @@ SRC_DIR="$1"
 mkdir -p /project/blis
 echo "/host$SRC_DIR"
 cp -r /host$SRC_DIR /project
-cd /project
-ls -la
-echo `pwd`
-
 cd /project/blis
 
+echo "Directory contents:"
 ls -la
-echo `pwd`
 
 export CONFIGURE_OPTS="$CONFIGURE_OPTS --disable-shared --enable-static"
 export CONFIGURE_OPTS="$CONFIGURE_OPTS --disable-blas"
@@ -23,4 +19,5 @@ export CONFIGURE_OPTS="$CONFIGURE_OPTS --enable-threading=openmp"
 make -j2 V=1
 make install
 
-cp /opt/blis /host/opt/blis
+mkdir -p /host/opt/blis
+cp -r /opt/blis /host/opt/blis
