@@ -7,5 +7,5 @@ Name: BLIS
 Description: BLAS-like Library Instantiation Software Framework
 Version: 3.0-dev
 Libs: -L${libdir} -lblis
-Libs.private:  -lm -lpthread -fopenmp
+Libs.private:  -lm -lpthread -fopenmp -lrt
 Cflags: -I${includedir}/blis

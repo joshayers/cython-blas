@@ -1,4 +1,4 @@
-name: Build BLIS, Linux, manylinux
+name: Build BLIS, Linux
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   linux2:
-    name: Build BLIS on Linux 2
+    name: Build BLIS on Linux
     runs-on: "ubuntu-latest"
     steps:
       - name: Checkout repository
