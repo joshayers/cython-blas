@@ -1,8 +1,11 @@
 #!/bin/bash
 
+# This script is used to build BLIS inside a manylinux container.
+# It is run by the .github/workflows/blis.yml job.
+
 SRC_DIR="$1"
 
-# Copy cython-blas/vendor/blis to container
+# Copy ./vendor/blis to container
 mkdir -p /project/blis
 echo "/host$SRC_DIR"
 cp -r /host$SRC_DIR /project

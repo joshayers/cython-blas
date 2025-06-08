@@ -69,6 +69,7 @@ skip = [
 PKG_CONFIG_PATH = "$PKG_CONFIG_PATH:$(mktemp -d)"
 
 [tool.cibuildwheel.linux]
+manylinux-x86_64-image = "manylinux_2_28"
 before-build = [
     "pip install -q scipy_openblas64>=0.3.29",
     "python tools/before_build.py",

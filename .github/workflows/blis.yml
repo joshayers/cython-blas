@@ -3,40 +3,27 @@ name: Build BLIS, Linux
 on:
   push:
     branches:
-      - dev__
+      - dev
 
 jobs:
-  linux:
+  linux2:
     name: Build BLIS on Linux
     runs-on: "ubuntu-latest"
-    strategy:
-      matrix:
-        include:
-          - LIB_TYPE: static
-            CONFIG: x86_64
-            THREADING: openmp
-            BLAS: no
-            CBLAS: no
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Build
         shell: bash
         run: |
+          ROOT_DIR=`pwd`
           git submodule update --init --recursive
-          cd vendor/blis
-          [ ${{ matrix.LIB_TYPE }} == "shared" ] && export CONFIGURE_OPTS="$CONFIGURE_OPTS --enable-shared --disable-static"
-          [ ${{ matrix.LIB_TYPE }} == "static" ] && export CONFIGURE_OPTS="$CONFIGURE_OPTS --disable-shared --enable-static"
-          [ ${{ matrix.BLAS }} == "yes" ] && export CONFIGURE_OPTS="$CONFIGURE_OPTS --enable-blas"
-          [ ${{ matrix.BLAS }} == "no" ] && export CONFIGURE_OPTS="$CONFIGURE_OPTS --disable-blas"
-          [ ${{ matrix.CBLAS }} == "yes" ] && export CONFIGURE_OPTS="$CONFIGURE_OPTS --enable-cblas"
-          [ ${{ matrix.CBLAS }} == "no" ] && export CONFIGURE_OPTS="$CONFIGURE_OPTS --disable-cblas"
-          export CONFIGURE_OPTS="$CONFIGURE_OPTS --enable-threading=${{ matrix.THREADING }}"
-          ./configure --prefix=/opt/blis $CONFIGURE_OPTS --enable-arg-max-hack ${{ matrix.config }}
-          make -j2 V=1
-          make install
+          SRC_DIR=$ROOT_DIR/vendor/blis
+          echo $SRC_DIR
+          IMAGE="quay.io/pypa/manylinux_2_28_x86_64"
+          chmod +x $ROOT_DIR/tools/build_blis_manylinux.sh
+          docker container run --volume=/:/host $IMAGE /host$ROOT_DIR/tools/build_blis_manylinux.sh $SRC_DIR
       - name: Upload compiled library
         uses: actions/upload-artifact@v4
         with:
-          name: blis-${{ matrix.LIB_TYPE }}
+          name: blis-linux-static
           path: /opt/blis
