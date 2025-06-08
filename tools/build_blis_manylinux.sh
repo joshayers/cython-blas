@@ -4,7 +4,7 @@ SRC_DIR="$1"
 
 mkdir -p /project/blis
 echo "/host$SRC_DIR"
-cp /host$SRC_DIR /project/blis
+cp -r /host$SRC_DIR /project/blis
 cd /project/blis
 
 export CONFIGURE_OPTS="$CONFIGURE_OPTS --disable-shared --enable-static"
