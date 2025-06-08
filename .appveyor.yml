@@ -1,6 +1,6 @@
 branches:
   only:
-    - dev
+    - dev__
 
 image:
   - Visual Studio 2019
