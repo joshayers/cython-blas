@@ -55,17 +55,7 @@ jobs:
           ln $POETRY_HOME/bin/poetry /usr/local/bin/poetry
           poetry --version
           poetry config virtualenvs.in-project true
-      - name: Install Python dependencies and build package, Windows
-        if: ${{ runner.os == 'Windows' }}
-        shell: bash
-        run: |
-          export CC=clang
-          export CXX=clang++
-          poetry install --extras=dev
-          poetry run spin setup-in-place
-          poetry run spin in-place
-      - name: Install Python dependencies and build package, not Windows
-        if: ${{ runner.os != 'Windows' }}
+      - name: Install Python dependencies and build package
         shell: bash
         run: |
           poetry install --extras=dev
