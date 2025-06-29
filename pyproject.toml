@@ -85,7 +85,7 @@ CXX = "clang++"
 [tool.cibuildwheel.windows]
 before-all = ["pip install -q delvewheel"]
 before-build = [
-    "pip install -q scipy_openblas64>=0.3.30",
+    "pip install -q scipy_openblas64==0.3.30",
     "python tools/before_build.py",
 ]
 repair-wheel-command = [
