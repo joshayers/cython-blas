@@ -15,7 +15,7 @@ environment:
 
 install:
   - mkdir C:\llvm_new
-  - curl https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.4/clang+llvm-20.1.4-x86_64-pc-windows-msvc.tar.xz -o C:\llvm_new\llvm.tar.xz
+  - ps: Start-FileDownload 'https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.4/clang+llvm-20.1.4-x86_64-pc-windows-msvc.tar.xz' -FileName "C:\llvm_new\llvm.tar.xz"
   - 7z x "C:\llvm_new\llvm.tar.xz" -o"c:\llvm_new"
   - del "c:\llvm_new\llvm.tar.xz"
   - 7z x "C:\llvm_new\llvm.tar" -o"c:\llvm_new"
