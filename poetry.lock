@@ -1319,11 +1319,11 @@ test = ["big-O", "importlib-resources ; python_version < \"3.9\"", "jaraco.funct
 type = ["pytest-mypy"]
 
 [extras]
-dev = ["build", "click", "cython", "cython-lint", "deptry", "isort", "meson", "meson-python", "ninja", "pytest", "ruff", "scipy-openblas64", "sphinx", "sphinx-rtd-theme", "spin"]
+dev = ["build", "click", "cython", "cython-lint", "deptry", "isort", "meson-python", "ninja", "pytest", "ruff", "scipy-openblas64", "sphinx", "sphinx-rtd-theme", "spin"]
 docs = ["sphinx", "sphinx-rtd-theme"]
 test = ["pytest"]
 
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10"
-content-hash = "18b9443eb34de2fbb964f42b4c7df9f8b5733a34a2dcc3ff6075b02631601d83"
+content-hash = "bca70d705d15eb24fbf03539b83ef31dfcae502d1e9ccfa0d39aee3f1c277b9c"

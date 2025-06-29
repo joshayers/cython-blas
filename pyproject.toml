@@ -47,7 +47,6 @@ dev = [
     "scipy-openblas64 >=0.3.29",
     "cython >=3.0.5",
     "meson-python >=0.17.0",
-    "meson >=1.7.0",
     "ninja >=1.11",
     "build",
     "spin",
@@ -161,7 +160,6 @@ package = "cyhon_blas"
 [build-system]
 requires = [
     "meson-python >=0.17.0",
-    "ninja >=1.11",
     "cython >=3.0.5",
     "numpy >=2.0",           # need to call numpy.get_include() during build
 ]
