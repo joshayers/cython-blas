@@ -44,8 +44,8 @@ dev = [
     "isort",
     "cython-lint",
     # Build environment
-    "scipy-openblas64 >=0.3.29",
-    "cython >=3.0.5",
+    "scipy-openblas64 ==0.3.30",
+    "cython >=3.1.0",
     "meson-python >=0.17.0",
     "ninja >=1.11",
     "build",
@@ -85,7 +85,7 @@ CXX = "clang++"
 [tool.cibuildwheel.windows]
 before-all = ["pip install -q delvewheel"]
 before-build = [
-    "pip install -q scipy_openblas64>=0.3.29",
+    "pip install -q scipy_openblas64>=0.3.30",
     "python tools/before_build.py",
 ]
 repair-wheel-command = [
@@ -160,7 +160,7 @@ package = "cyhon_blas"
 [build-system]
 requires = [
     "meson-python >=0.17.0",
-    "cython >=3.0.5",
+    "cython >=3.1.0",
     "numpy >=2.0",           # need to call numpy.get_include() during build
 ]
 build-backend = "mesonpy"
