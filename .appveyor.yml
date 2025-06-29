@@ -14,12 +14,18 @@ environment:
       CBLAS: no
 
 install:
-  - git submodule update --init --recursive
+  - mkdir C:\llvm_new
+  - curl https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.4/clang+llvm-20.1.4-x86_64-pc-windows-msvc.tar.xz -o C:\llvm_new\llvm.tar.xz
+  - 7z x "C:\llvm_new\llvm.tar.xz" -o"c:\llvm_new"
+  - del "c:\llvm_new\llvm.tar.xz"
+  - 7z x "C:\llvm_new\llvm.tar" -o"c:\llvm_new"
+  - del "c:\llvm_new\llvm.tar"
   - set "PATH=C:\msys64\mingw64\bin;C:\msys64\bin;%PATH%"
-  - if [%CC%]==[clang] set "PATH=C:\Program Files\LLVM\bin;%PATH%"
+  - if [%CC%]==[clang] set "PATH=C:\llvm_new\clang+llvm-20.1.4-x86_64-pc-windows-msvc\bin;%PATH%"
   - if [%CC%]==[clang] set "AR=llvm-ar"
   - if [%CC%]==[clang] set "AS=llvm-as"
   - if [%CC%]==[clang] call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64
+  - git submodule update --init --recursive
 
 build_script:
   - if [%LIB_TYPE%]==[shared] set "CONFIGURE_OPTS=%CONFIGURE_OPTS% --enable-shared --disable-static"
