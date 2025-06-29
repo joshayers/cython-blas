@@ -27,7 +27,7 @@ jobs:
         with:
           python-version: "3.13"
       - name: Install LLVM and Clang on Windows
-        if: ${{ runner.os != 'Windows' }}
+        if: ${{ runner.os == 'Windows' }}
         uses: KyleMayes/install-llvm-action@v2
         with:
           version: "20.1"
