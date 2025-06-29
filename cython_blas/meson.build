@@ -37,26 +37,3 @@ foreach pyx_file : blis_pyx_files
         subdir: subdir_path,
     )
 endforeach
-
-pxd_files = [
-    '_blis.pxd',
-    '_cblas.pxd',
-]
-
-py.install_sources(
-    pxd_files,
-    pure: false,
-    subdir: subdir_path,
-)
-
-python_sources = [
-    '__init__.py',
-]
-
-py.install_sources(
-    python_sources,
-    pure: false,
-    subdir: subdir_path,
-)
-
-subdir('tests')

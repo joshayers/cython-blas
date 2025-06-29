@@ -102,27 +102,20 @@ def copy_compiled_files() -> None:
     """Copy Cython-generated C++ files and compiled extension modules from build directory to the code tree."""
     ninja_build_rules = get_ninja_build_rules()
     cython_build_rules = get_cython_build_rules(ninja_build_rules)
-    cpp_build_rules = get_cpp_build_rules(ninja_build_rules)
     link_rules = get_link_rules(ninja_build_rules)
 
+    # Copy Cython-generated .cpp files
     for cpp_src, pyx_src in cython_build_rules:
         dest_dir = pyx_src.parent
-        # find matching C++ compiler rule
-        for i, (_, cpp_src2) in enumerate(cpp_build_rules):
-            if build_dir / cpp_src2 == cpp_src:
-                obj_dest, _ = cpp_build_rules[i]
-                break
-        # find matching linker rule
-        for j, (_, obj_src) in enumerate(link_rules):
-            if build_dir / obj_src == obj_dest:
-                pyd_src, _ = link_rules[j]
-                break
         cpp_suffixes = cpp_src.suffixes
         assert len(cpp_suffixes) == 2  # noqa: S101
         cpp_basename = Path(cpp_src.stem).stem
         cpp_dest = dest_dir / (cpp_basename + cpp_src.suffix)
         shutil.copy(cpp_src, cpp_dest)
-        pyd_dest = dest_dir / pyd_src.name
+
+    # Copy compiled extension modules (.pyd or .so)
+    for pyd_src, _ in link_rules:
+        pyd_dest = root_dir / pyd_src.relative_to(build_dir)
         shutil.copy(pyd_src, pyd_dest)
 
 

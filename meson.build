@@ -6,7 +6,7 @@ project(
   default_options: ['cpp_std=c++17'],
 )
 
-py = import('python').find_installation()
+py = import('python').find_installation(pure: false)
 
 py_dep = py.dependency()
 blis_dep = declare_dependency(
@@ -25,5 +25,7 @@ if get_option('coverage')
   add_project_arguments('-DCYTHON_TRACE=1', language: 'cpp')
   add_project_arguments('-DCYTHON_TRACE_NOGIL=1', language: 'cpp')
 endif
+
+install_subdir('cython_blas', install_dir: py.get_install_dir())
 
 subdir('cython_blas')
