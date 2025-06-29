@@ -134,6 +134,10 @@ extern "C" {
 
 #define BLIS_VERSION_STRING "3.0-dev"
 
+#define BLIS_VERSION_MAJOR 3
+#define BLIS_VERSION_MINOR 0-dev
+#define BLIS_VERSION_REVISION 0
+
 #if 1
 #define BLIS_ENABLE_SYSTEM
 #else
@@ -345,6 +349,13 @@ extern "C" {
 #include <float.h> // skipped
 #include <errno.h> // skipped
 #include <ctype.h> // skipped
+
+#ifdef _MSC_VER
+  #define strncasecmp _strnicmp
+  #define strcasecmp _stricmp
+#else
+#include <strings.h> // skipped
+#endif
 
 // Determine the compiler (hopefully) and define conveniently named macros
 // accordingly.
@@ -2773,6 +2784,7 @@ typedef enum
 
    Copyright (C) 2014, The University of Texas at Austin
    Copyright (C) 2018 - 2019, Advanced Micro Devices, Inc.
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -3159,7 +3171,7 @@ arrayname[BLIS_NUM_FP_TYPES][BLIS_NUM_FP_TYPES][BLIS_NUM_FP_TYPES] = \
 
 #endif
 // end bli_genarray_macro_defs.h
-#line 94 "./frame/include//bli_macro_defs.h"
+#line 95 "./frame/include//bli_macro_defs.h"
 
 // begin bli_gentdef_macro_defs.h
 #line 1 "./frame/include//bli_gentdef_macro_defs.h"
@@ -3241,7 +3253,7 @@ GENTDEFR( void,     void,      ,  , opname, _vft )
 
 #endif
 // end bli_gentdef_macro_defs.h
-#line 95 "./frame/include//bli_macro_defs.h"
+#line 96 "./frame/include//bli_macro_defs.h"
 
 // begin bli_gentfunc_macro_defs.h
 #line 1 "./frame/include//bli_gentfunc_macro_defs.h"
@@ -3253,6 +3265,7 @@ GENTDEFR( void,     void,      ,  , opname, _vft )
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2023, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -3830,7 +3843,7 @@ GENTFUNC3U12( dcomplex, dcomplex, scomplex, dcomplex, z, z, c, z, __VA_ARGS__ )
 
 #endif
 // end bli_gentfunc_macro_defs.h
-#line 96 "./frame/include//bli_macro_defs.h"
+#line 97 "./frame/include//bli_macro_defs.h"
 
 // begin bli_gentprot_macro_defs.h
 #line 1 "./frame/include//bli_gentprot_macro_defs.h"
@@ -4380,7 +4393,7 @@ GENTPROT3U12( dcomplex, dcomplex, scomplex, dcomplex, z, z, c, z, funcname )
 
 #endif
 // end bli_gentprot_macro_defs.h
-#line 97 "./frame/include//bli_macro_defs.h"
+#line 98 "./frame/include//bli_macro_defs.h"
 
 // begin bli_gentconf_macro_defs.h
 #line 1 "./frame/include//bli_gentconf_macro_defs.h"
@@ -4680,7 +4693,7 @@ INSERT_GENTCONF_GENERIC
 
 #endif
 // end bli_gentconf_macro_defs.h
-#line 98 "./frame/include//bli_macro_defs.h"
+#line 99 "./frame/include//bli_macro_defs.h"
 
 
 // begin bli_misc_macro_defs.h
@@ -4894,7 +4907,7 @@ BLIS_INLINE void bli_toggle_bool( bool* b )
 
 #endif
 // end bli_misc_macro_defs.h
-#line 100 "./frame/include//bli_macro_defs.h"
+#line 101 "./frame/include//bli_macro_defs.h"
 
 // begin bli_cast_macro_defs.h
 #line 1 "./frame/include//bli_cast_macro_defs.h"
@@ -4906,6 +4919,7 @@ BLIS_INLINE void bli_toggle_bool( bool* b )
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -5429,7 +5443,7 @@ BLIS_INLINE double bli_randnp2s( void )
 #endif
 
 // end bli_cast_macro_defs.h
-#line 101 "./frame/include//bli_macro_defs.h"
+#line 102 "./frame/include//bli_macro_defs.h"
 
 // begin bli_edge_case_macro_defs.h
 #line 1 "./frame/include//bli_edge_case_macro_defs.h"
@@ -5440,7 +5454,7 @@ BLIS_INLINE double bli_randnp2s( void )
    An object-based framework for developing high-performance BLAS-like
    libraries.
 
-   Copyright (C) 2021, The University of Texas at Austin
+   Copyright (C) 2021, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -5654,7 +5668,7 @@ BLIS_INLINE double bli_randnp2s( void )
 #endif
 
 // end bli_edge_case_macro_defs.h
-#line 102 "./frame/include//bli_macro_defs.h"
+#line 103 "./frame/include//bli_macro_defs.h"
 
 // begin bli_param_macro_defs.h
 #line 1 "./frame/include//bli_param_macro_defs.h"
@@ -7131,7 +7145,7 @@ BLIS_INLINE void bli_set_dims_incs_2d
 
 #endif
 // end bli_param_macro_defs.h
-#line 103 "./frame/include//bli_macro_defs.h"
+#line 104 "./frame/include//bli_macro_defs.h"
 
 // begin bli_complex_macro_defs.h
 #line 1 "./frame/include//bli_complex_macro_defs.h"
@@ -7143,6 +7157,7 @@ BLIS_INLINE void bli_set_dims_incs_2d
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2023, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -7292,7 +7307,7 @@ extern "C"
 #endif
 
 // end bli_complex_macro_defs.h
-#line 104 "./frame/include//bli_macro_defs.h"
+#line 105 "./frame/include//bli_macro_defs.h"
 
 // begin bli_obj_macro_defs.h
 #line 1 "./frame/include//bli_obj_macro_defs.h"
@@ -8719,7 +8734,7 @@ BLIS_INLINE void bli_obj_alias_submatrix( const obj_t* a, obj_t* b )
 
 #endif
 // end bli_obj_macro_defs.h
-#line 105 "./frame/include//bli_macro_defs.h"
+#line 106 "./frame/include//bli_macro_defs.h"
 
 // begin bli_scalar_macro_defs.h
 #line 1 "./frame/include//bli_scalar_macro_defs.h"
@@ -8731,6 +8746,7 @@ BLIS_INLINE void bli_obj_alias_submatrix( const obj_t* a, obj_t* b )
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -8772,6 +8788,7 @@ BLIS_INLINE void bli_obj_alias_submatrix( const obj_t* a, obj_t* b )
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -8818,7 +8835,7 @@ BLIS_INLINE void bli_obj_alias_submatrix( const obj_t* a, obj_t* b )
 #endif
 
 // end bli_assigns.h
-#line 40 "./frame/include//bli_scalar_macro_defs.h"
+#line 41 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_complex_terms.h
 #line 1 "./frame/include/level0//bli_complex_terms.h"
@@ -8830,6 +8847,7 @@ BLIS_INLINE void bli_obj_alias_submatrix( const obj_t* a, obj_t* b )
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -8896,7 +8914,7 @@ BLIS_INLINE void bli_obj_alias_submatrix( const obj_t* a, obj_t* b )
 
 #endif
 // end bli_complex_terms.h
-#line 41 "./frame/include//bli_scalar_macro_defs.h"
+#line 42 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_constants.h
 #line 1 "./frame/include/level0//bli_constants.h"
@@ -8908,6 +8926,7 @@ BLIS_INLINE void bli_obj_alias_submatrix( const obj_t* a, obj_t* b )
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -9010,7 +9029,7 @@ BLIS_INLINE void bli_obj_alias_submatrix( const obj_t* a, obj_t* b )
 #endif
 
 // end bli_constants.h
-#line 42 "./frame/include//bli_scalar_macro_defs.h"
+#line 43 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_declinits.h
 #line 1 "./frame/include/level0//bli_declinits.h"
@@ -9022,6 +9041,7 @@ BLIS_INLINE void bli_obj_alias_submatrix( const obj_t* a, obj_t* b )
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -9075,7 +9095,7 @@ BLIS_INLINE void bli_obj_alias_submatrix( const obj_t* a, obj_t* b )
 #endif
 
 // end bli_declinits.h
-#line 43 "./frame/include//bli_scalar_macro_defs.h"
+#line 44 "./frame/include//bli_scalar_macro_defs.h"
 
 
 // -- Assignment/Accessor macros --
@@ -9094,7 +9114,8 @@ BLIS_INLINE void bli_obj_alias_submatrix( const obj_t* a, obj_t* b )
    An object-based framework for developing high-performance BLAS-like
    libraries.
 
-   Copyright (C) 2021, Southern Methodist University
+   Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -9417,7 +9438,7 @@ BLIS_INLINE void bli_obj_alias_submatrix( const obj_t* a, obj_t* b )
 
 // -- Notes --------------------------------------------------------------------
 // end bli_tsets.h
-#line 52 "./frame/include//bli_scalar_macro_defs.h"
+#line 53 "./frame/include//bli_scalar_macro_defs.h"
 
 
 // NOTE: This macro also needs to be defined early on since it determines
@@ -9434,6 +9455,7 @@ BLIS_INLINE void bli_obj_alias_submatrix( const obj_t* a, obj_t* b )
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -9529,7 +9551,7 @@ BLIS_INLINE void bli_obj_alias_submatrix( const obj_t* a, obj_t* b )
 #endif
 
 // end bli_tgets.h
-#line 58 "./frame/include//bli_scalar_macro_defs.h"
+#line 59 "./frame/include//bli_scalar_macro_defs.h"
 
 
 // -- Scalar macros --
@@ -9544,6 +9566,7 @@ BLIS_INLINE void bli_obj_alias_submatrix( const obj_t* a, obj_t* b )
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -9673,7 +9696,7 @@ BLIS_INLINE void bli_obj_alias_submatrix( const obj_t* a, obj_t* b )
 #endif
 
 // end bli_tabsq2s.h
-#line 62 "./frame/include//bli_scalar_macro_defs.h"
+#line 63 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_tabval2s.h
 #line 1 "./frame/include/level0//bli_tabval2s.h"
@@ -9685,6 +9708,7 @@ BLIS_INLINE void bli_obj_alias_submatrix( const obj_t* a, obj_t* b )
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -9885,7 +9909,7 @@ BLIS_INLINE void bli_obj_alias_submatrix( const obj_t* a, obj_t* b )
 #endif
 
 // end bli_tabval2s.h
-#line 63 "./frame/include//bli_scalar_macro_defs.h"
+#line 64 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_tadd3s.h
 #line 1 "./frame/include/level0//bli_tadd3s.h"
@@ -9897,6 +9921,7 @@ BLIS_INLINE void bli_obj_alias_submatrix( const obj_t* a, obj_t* b )
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -10090,7 +10115,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
 #endif
 
 // end bli_tadd3s.h
-#line 64 "./frame/include//bli_scalar_macro_defs.h"
+#line 65 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_tadds.h
 #line 1 "./frame/include/level0//bli_tadds.h"
@@ -10102,6 +10127,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -10272,7 +10298,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
 #endif
 
 // end bli_tadds.h
-#line 65 "./frame/include//bli_scalar_macro_defs.h"
+#line 66 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_taxpbys.h
 #line 1 "./frame/include/level0//bli_taxpbys.h"
@@ -10284,6 +10310,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -10556,7 +10583,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
 #endif
 
 // end bli_taxpbys.h
-#line 66 "./frame/include//bli_scalar_macro_defs.h"
+#line 67 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_taxpys.h
 #line 1 "./frame/include/level0//bli_taxpys.h"
@@ -10568,6 +10595,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -10803,7 +10831,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
 #endif
 
 // end bli_taxpys.h
-#line 67 "./frame/include//bli_scalar_macro_defs.h"
+#line 68 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_tconjs.h
 #line 1 "./frame/include/level0//bli_tconjs.h"
@@ -10815,6 +10843,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -10897,7 +10926,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
 #endif
 
 // end bli_tconjs.h
-#line 68 "./frame/include//bli_scalar_macro_defs.h"
+#line 69 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_tcopycjs.h
 #line 1 "./frame/include/level0//bli_tcopycjs.h"
@@ -10909,6 +10938,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -11032,7 +11062,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
 #endif
 
 // end bli_tcopycjs.h
-#line 69 "./frame/include//bli_scalar_macro_defs.h"
+#line 70 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_tcopynzs.h
 #line 1 "./frame/include/level0//bli_tcopynzs.h"
@@ -11044,6 +11074,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -11229,7 +11260,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
 #endif
 
 // end bli_tcopynzs.h
-#line 70 "./frame/include//bli_scalar_macro_defs.h"
+#line 71 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_tcopys.h
 #line 1 "./frame/include/level0//bli_tcopys.h"
@@ -11241,6 +11272,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -11489,7 +11521,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
 #endif
 
 // end bli_tcopys.h
-#line 71 "./frame/include//bli_scalar_macro_defs.h"
+#line 72 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_tdots.h
 #line 1 "./frame/include/level0//bli_tdots.h"
@@ -11501,6 +11533,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -11615,7 +11648,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
 #endif
 
 // end bli_tdots.h
-#line 72 "./frame/include//bli_scalar_macro_defs.h"
+#line 73 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_teqs.h
 #line 1 "./frame/include/level0//bli_teqs.h"
@@ -11627,6 +11660,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -11792,7 +11826,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
 #endif
 
 // end bli_teqs.h
-#line 73 "./frame/include//bli_scalar_macro_defs.h"
+#line 74 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_tfprints.h
 #line 1 "./frame/include/level0//bli_tfprints.h"
@@ -11804,6 +11838,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -11911,7 +11946,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
 #endif
 
 // end bli_tfprints.h
-#line 74 "./frame/include//bli_scalar_macro_defs.h"
+#line 75 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_tinverts.h
 #line 1 "./frame/include/level0//bli_tinverts.h"
@@ -11923,6 +11958,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -12143,7 +12179,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
 #endif
 
 // end bli_tinverts.h
-#line 75 "./frame/include//bli_scalar_macro_defs.h"
+#line 76 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_tinvscals.h
 #line 1 "./frame/include/level0//bli_tinvscals.h"
@@ -12155,6 +12191,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -12413,7 +12450,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
 #endif
 
 // end bli_tinvscals.h
-#line 76 "./frame/include//bli_scalar_macro_defs.h"
+#line 77 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_tneg2s.h
 #line 1 "./frame/include/level0//bli_tneg2s.h"
@@ -12425,6 +12462,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -12520,7 +12558,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
 #endif
 
 // end bli_tneg2s.h
-#line 77 "./frame/include//bli_scalar_macro_defs.h"
+#line 78 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_trandnp2s.h
 #line 1 "./frame/include/level0//bli_trandnp2s.h"
@@ -12532,6 +12570,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -12614,7 +12653,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
 #endif
 
 // end bli_trandnp2s.h
-#line 78 "./frame/include//bli_scalar_macro_defs.h"
+#line 79 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_trands.h
 #line 1 "./frame/include/level0//bli_trands.h"
@@ -12626,6 +12665,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -12708,7 +12748,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
 #endif
 
 // end bli_trands.h
-#line 79 "./frame/include//bli_scalar_macro_defs.h"
+#line 80 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_tscalcjs.h
 #line 1 "./frame/include/level0//bli_tscalcjs.h"
@@ -12720,6 +12760,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -12843,7 +12884,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
 #endif
 
 // end bli_tscalcjs.h
-#line 80 "./frame/include//bli_scalar_macro_defs.h"
+#line 81 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_tscal2s.h
 #line 1 "./frame/include/level0//bli_tscal2s.h"
@@ -12855,6 +12896,7 @@ UNIT_TEST(chx,chy,chz,chc,opname) \
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -13503,7 +13545,7 @@ PASTECH(bli_tscal2bbs_mxn_,PASTEMAC(chy,dom)) \
 #endif
 
 // end bli_tscal2s.h
-#line 81 "./frame/include//bli_scalar_macro_defs.h"
+#line 82 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_tscals.h
 #line 1 "./frame/include/level0//bli_tscals.h"
@@ -13515,6 +13557,7 @@ PASTECH(bli_tscal2bbs_mxn_,PASTEMAC(chy,dom)) \
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -13793,7 +13836,7 @@ PASTECH(bli_tscal2bbs_mxn_,PASTEMAC(chy,dom)) \
 #endif
 
 // end bli_tscals.h
-#line 82 "./frame/include//bli_scalar_macro_defs.h"
+#line 83 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_tsets.h
 #line 1 "./frame/include/level0//bli_tsets.h"
@@ -13804,7 +13847,8 @@ PASTECH(bli_tscal2bbs_mxn_,PASTEMAC(chy,dom)) \
    An object-based framework for developing high-performance BLAS-like
    libraries.
 
-   Copyright (C) 2021, Southern Methodist University
+   Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -14127,7 +14171,7 @@ PASTECH(bli_tscal2bbs_mxn_,PASTEMAC(chy,dom)) \
 
 // -- Notes --------------------------------------------------------------------
 // end bli_tsets.h
-#line 83 "./frame/include//bli_scalar_macro_defs.h"
+#line 84 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_tsqrt2s.h
 #line 1 "./frame/include/level0//bli_tsqrt2s.h"
@@ -14139,6 +14183,7 @@ PASTECH(bli_tscal2bbs_mxn_,PASTEMAC(chy,dom)) \
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -14330,7 +14375,7 @@ PASTECH(bli_tscal2bbs_mxn_,PASTEMAC(chy,dom)) \
 #endif
 
 // end bli_tsqrt2s.h
-#line 84 "./frame/include//bli_scalar_macro_defs.h"
+#line 85 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_tsubs.h
 #line 1 "./frame/include/level0//bli_tsubs.h"
@@ -14342,6 +14387,7 @@ PASTECH(bli_tscal2bbs_mxn_,PASTEMAC(chy,dom)) \
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -14497,7 +14543,7 @@ PASTECH(bli_tscal2bbs_mxn_,PASTEMAC(chy,dom)) \
 #endif
 
 // end bli_tsubs.h
-#line 85 "./frame/include//bli_scalar_macro_defs.h"
+#line 86 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_tswaps.h
 #line 1 "./frame/include/level0//bli_tswaps.h"
@@ -14509,6 +14555,7 @@ PASTECH(bli_tscal2bbs_mxn_,PASTEMAC(chy,dom)) \
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -14657,7 +14704,7 @@ PASTECH(bli_tscal2bbs_mxn_,PASTEMAC(chy,dom)) \
 #endif
 
 // end bli_tswaps.h
-#line 86 "./frame/include//bli_scalar_macro_defs.h"
+#line 87 "./frame/include//bli_scalar_macro_defs.h"
 
 // begin bli_txpbys.h
 #line 1 "./frame/include/level0//bli_txpbys.h"
@@ -14669,6 +14716,7 @@ PASTECH(bli_tscal2bbs_mxn_,PASTEMAC(chy,dom)) \
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -14988,13 +15036,13 @@ PASTECH(bli_tscal2bbs_mxn_,PASTEMAC(chy,dom)) \
 #endif
 
 // end bli_txpbys.h
-#line 87 "./frame/include//bli_scalar_macro_defs.h"
+#line 88 "./frame/include//bli_scalar_macro_defs.h"
 
 
 
 #endif
 // end bli_scalar_macro_defs.h
-#line 106 "./frame/include//bli_macro_defs.h"
+#line 107 "./frame/include//bli_macro_defs.h"
 
 // begin bli_error_macro_defs.h
 #line 1 "./frame/include//bli_error_macro_defs.h"
@@ -15044,7 +15092,7 @@ PASTECH(bli_tscal2bbs_mxn_,PASTEMAC(chy,dom)) \
 #endif
 
 // end bli_error_macro_defs.h
-#line 107 "./frame/include//bli_macro_defs.h"
+#line 108 "./frame/include//bli_macro_defs.h"
 
 // begin bli_blas_macro_defs.h
 #line 1 "./frame/include//bli_blas_macro_defs.h"
@@ -15130,7 +15178,7 @@ PASTECH(bli_tscal2bbs_mxn_,PASTEMAC(chy,dom)) \
 #endif
 
 // end bli_blas_macro_defs.h
-#line 108 "./frame/include//bli_macro_defs.h"
+#line 109 "./frame/include//bli_macro_defs.h"
 
 // begin bli_builtin_macro_defs.h
 #line 1 "./frame/include//bli_builtin_macro_defs.h"
@@ -15195,7 +15243,7 @@ PASTECH(bli_tscal2bbs_mxn_,PASTEMAC(chy,dom)) \
 
 #endif
 // end bli_builtin_macro_defs.h
-#line 109 "./frame/include//bli_macro_defs.h"
+#line 110 "./frame/include//bli_macro_defs.h"
 
 
 // begin bli_oapi_macro_defs.h
@@ -15240,7 +15288,7 @@ PASTECH(bli_tscal2bbs_mxn_,PASTEMAC(chy,dom)) \
 #define BLIS_OAPI_EX_SUF _ex
 
 // end bli_oapi_macro_defs.h
-#line 111 "./frame/include//bli_macro_defs.h"
+#line 112 "./frame/include//bli_macro_defs.h"
 
 // begin bli_tapi_macro_defs.h
 #line 1 "./frame/include//bli_tapi_macro_defs.h"
@@ -15284,7 +15332,7 @@ PASTECH(bli_tscal2bbs_mxn_,PASTEMAC(chy,dom)) \
 #define BLIS_TAPI_EX_SUF _ex
 
 // end bli_tapi_macro_defs.h
-#line 112 "./frame/include//bli_macro_defs.h"
+#line 113 "./frame/include//bli_macro_defs.h"
 
 
 
@@ -19480,8 +19528,6 @@ void bli_thrcomm_barrier_single( dim_t tid, thrcomm_t* comm );
 // enabled.
 #ifdef BLIS_ENABLE_OPENMP
 
-#include <omp.h> // skipped
-
 // OpenMP-specific function prototypes.
 void bli_thrcomm_init_openmp( dim_t nt, thrcomm_t* comm );
 void bli_thrcomm_cleanup_openmp( thrcomm_t* comm );
@@ -19666,6 +19712,7 @@ void                   bli_thrcomm_barrier_atomic( dim_t thread_id, thrcomm_t* c
 
    Copyright (C) 2014, The University of Texas at Austin
    Copyright (C) 2018 - 2019, Advanced Micro Devices, Inc.
+   Copyright (C) 2022, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -20092,7 +20139,7 @@ int bli_thread_finalize_hpx();
    An object-based framework for developing high-performance BLAS-like
    libraries.
 
-   Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2023, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -21808,6 +21855,7 @@ dim_t bli_determine_blocksize
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -22264,6 +22312,7 @@ err_t bli_check_valid_nr_even( const blksz_t* mr, const mbool_t* row_pref );
    Copyright (C) 2014, The University of Texas at Austin
    Copyright (C) 2016, Hewlett Packard Enterprise Development LP
    Copyright (C) 2019, Advanced Micro Devices, Inc.
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -23069,6 +23118,7 @@ dim_t bli_rntm_calc_num_threads_in
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -24521,8 +24571,7 @@ BLIS_EXPORT_BLIS void bli_acquire_vi
    An object-based framework for developing high-performance BLAS-like
    libraries.
 
-   Copyright (C) 2014, The University of Texas at Austin
-   Copyright (C) 2018 - 2019, Advanced Micro Devices, Inc.
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -25599,6 +25648,14 @@ BLIS_EXPORT_BLIS void bli_cntl_attach_sub_node
      (
        dim_t   ways,
        cntl_t* sub_node,
+       cntl_t* cntl
+     );
+
+BLIS_EXPORT_BLIS void bli_cntl_insert_sub_node
+     (
+       dim_t   ways,
+       cntl_t* sub_node,
+       cntl_t* child_node,
        cntl_t* cntl
      );
 
@@ -35016,6 +35073,7 @@ BLIS_EXPORT_BLIS void* bli_packm_alloc_ex
 
    Copyright (C) 2014, The University of Texas at Austin
    Copyright (C) 2018 - 2019, Advanced Micro Devices, Inc.
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -38950,8 +39008,7 @@ INSERT_GENTPROT_BASIC( trsv_unf_var2 )
    An object-based framework for developing high-performance BLAS-like
    libraries.
 
-   Copyright (C) 2014, The University of Texas at Austin
-   Copyright (C) 2020, Advanced Micro Devices, Inc.
+   Copyright (C) 2023, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -41539,6 +41596,7 @@ GENPROT( trsm,     trsm_u_ukernel )
 
    Copyright (C) 2014, The University of Texas at Austin
    Copyright (C) 2018 - 2019, Advanced Micro Devices, Inc.
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -42243,6 +42301,7 @@ GENPROT( trmm_ru_ker_var2b )
 
    Copyright (C) 2014, The University of Texas at Austin
    Copyright (C) 2018 - 2019, Advanced Micro Devices, Inc.
+   Copyright (C) 2024, Southern Methodist University
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -57139,6 +57198,10 @@ BLIS_EXPORT_BLAS void PASTEF77(bli_thread_set_num_threads)
 
 #define BLIS_VERSION_STRING "3.0-dev"
 
+#define BLIS_VERSION_MAJOR 3
+#define BLIS_VERSION_MINOR 0-dev
+#define BLIS_VERSION_REVISION 0
+
 #if 1
 #define BLIS_ENABLE_SYSTEM
 #else
@@ -57346,6 +57409,13 @@ BLIS_EXPORT_BLAS void PASTEF77(bli_thread_set_num_threads)
 #include <float.h> // skipped
 #include <errno.h> // skipped
 #include <ctype.h> // skipped
+
+#ifdef _MSC_VER
+  #define strncasecmp _strnicmp
+  #define strcasecmp _stricmp
+#else
+#include <strings.h> // skipped
+#endif
 
 // Determine the compiler (hopefully) and define conveniently named macros
 // accordingly.
