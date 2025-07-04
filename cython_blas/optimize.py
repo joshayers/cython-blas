@@ -19,7 +19,7 @@ kind_to_weight = {
 }
 
 
-class Matrix:
+class Matrix:  # noqa: PLW1641
     """Matrix class."""
 
     def __init__(self, shape: tuple[int, int], kind: str, itemsize: int) -> None:

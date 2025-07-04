@@ -123,7 +123,7 @@ def _add_dll_paths() -> None:
     """Write a file that will add the scipy-openblas library directory to the DLL search path."""
     if platform.system() != "Windows":
         return
-    import scipy_openblas64
+    import scipy_openblas64  # noqa: PLC0415
 
     openblas_lib_dir = scipy_openblas64.get_lib_dir()
     string = (
