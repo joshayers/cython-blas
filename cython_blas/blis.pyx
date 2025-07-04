@@ -46,45 +46,46 @@ cpdef int sgemm(
         raise ValueError(msg)
 
     cdef obj_t bli_a, bli_b, bli_c, bli_alpha, bli_beta
-    _blis.bli_obj_create_1x1_with_attached_buffer(
-        _blis.BLIS_FLOAT,
-        &alpha,
-        &bli_alpha,
-    )
-    _blis.bli_obj_create_with_attached_buffer(
-        _blis.BLIS_FLOAT,
-        m,
-        k,
-        <void*> &A[0, 0],
-        A.strides[0] / sizeof(float),
-        A.strides[1] / sizeof(float),
-        &bli_a,
-    )
-    _blis.bli_obj_create_with_attached_buffer(
-        _blis.BLIS_FLOAT,
-        k,
-        n,
-        <void*> &B[0, 0],
-        B.strides[0] / sizeof(float),
-        B.strides[1] / sizeof(float),
-        &bli_b,
-    )
-    _blis.bli_obj_create_1x1_with_attached_buffer(
-        _blis.BLIS_FLOAT,
-        &beta,
-        &bli_beta,
-    )
-    _blis.bli_obj_create_with_attached_buffer(
-        _blis.BLIS_FLOAT,
-        m,
-        n,
-        <void*> &C[0, 0],
-        C.strides[0] / sizeof(float),
-        C.strides[1] / sizeof(float),
-        &bli_c,
-    )
+    with nogil, cython.boundscheck(False):
+        _blis.bli_obj_create_1x1_with_attached_buffer(
+            _blis.BLIS_FLOAT,
+            &alpha,
+            &bli_alpha,
+        )
+        _blis.bli_obj_create_with_attached_buffer(
+            _blis.BLIS_FLOAT,
+            m,
+            k,
+            <void*> &A[0, 0],
+            A.strides[0] / sizeof(float),
+            A.strides[1] / sizeof(float),
+            &bli_a,
+        )
+        _blis.bli_obj_create_with_attached_buffer(
+            _blis.BLIS_FLOAT,
+            k,
+            n,
+            <void*> &B[0, 0],
+            B.strides[0] / sizeof(float),
+            B.strides[1] / sizeof(float),
+            &bli_b,
+        )
+        _blis.bli_obj_create_1x1_with_attached_buffer(
+            _blis.BLIS_FLOAT,
+            &beta,
+            &bli_beta,
+        )
+        _blis.bli_obj_create_with_attached_buffer(
+            _blis.BLIS_FLOAT,
+            m,
+            n,
+            <void*> &C[0, 0],
+            C.strides[0] / sizeof(float),
+            C.strides[1] / sizeof(float),
+            &bli_c,
+        )
 
-    _blis.bli_gemm(&bli_alpha, &bli_a, &bli_b, &bli_beta, &bli_c)
+        _blis.bli_gemm(&bli_alpha, &bli_a, &bli_b, &bli_beta, &bli_c)
     return 0
 
 
@@ -122,46 +123,48 @@ cpdef int dgemm(
         raise ValueError(msg)
 
     cdef obj_t bli_a, bli_b, bli_c, bli_alpha, bli_beta
-    _blis.bli_obj_create_1x1_with_attached_buffer(
-        _blis.BLIS_DOUBLE,
-        &alpha,
-        &bli_alpha,
-    )
-    _blis.bli_obj_create_with_attached_buffer(
-        _blis.BLIS_DOUBLE,
-        m,
-        k,
-        <void*> &A[0, 0],
-        A.strides[0] / sizeof(double),
-        A.strides[1] / sizeof(double),
-        &bli_a,
-    )
-    _blis.bli_obj_create_with_attached_buffer(
-        _blis.BLIS_DOUBLE,
-        k,
-        n,
-        <void*> &B[0, 0],
-        B.strides[0] / sizeof(double),
-        B.strides[1] / sizeof(double),
-        &bli_b,
-    )
-    _blis.bli_obj_create_1x1_with_attached_buffer(
-        _blis.BLIS_DOUBLE,
-        &beta,
-        &bli_beta,
-    )
-    _blis.bli_obj_create_with_attached_buffer(
-        _blis.BLIS_DOUBLE,
-        m,
-        n,
-        <void*> &C[0, 0],
-        C.strides[0] / sizeof(double),
-        C.strides[1] / sizeof(double),
-        &bli_c,
-    )
+    with nogil, cython.boundscheck(False):
+        _blis.bli_obj_create_1x1_with_attached_buffer(
+            _blis.BLIS_DOUBLE,
+            &alpha,
+            &bli_alpha,
+        )
+        _blis.bli_obj_create_with_attached_buffer(
+            _blis.BLIS_DOUBLE,
+            m,
+            k,
+            <void*> &A[0, 0],
+            A.strides[0] / sizeof(double),
+            A.strides[1] / sizeof(double),
+            &bli_a,
+        )
+        _blis.bli_obj_create_with_attached_buffer(
+            _blis.BLIS_DOUBLE,
+            k,
+            n,
+            <void*> &B[0, 0],
+            B.strides[0] / sizeof(double),
+            B.strides[1] / sizeof(double),
+            &bli_b,
+        )
+        _blis.bli_obj_create_1x1_with_attached_buffer(
+            _blis.BLIS_DOUBLE,
+            &beta,
+            &bli_beta,
+        )
+        _blis.bli_obj_create_with_attached_buffer(
+            _blis.BLIS_DOUBLE,
+            m,
+            n,
+            <void*> &C[0, 0],
+            C.strides[0] / sizeof(double),
+            C.strides[1] / sizeof(double),
+            &bli_c,
+        )
 
-    _blis.bli_gemm(&bli_alpha, &bli_a, &bli_b, &bli_beta, &bli_c)
+        _blis.bli_gemm(&bli_alpha, &bli_a, &bli_b, &bli_beta, &bli_c)
     return 0
+
 
 @cython.cdivision(True)
 @cython.embedsignature(True)
@@ -204,49 +207,50 @@ cpdef int cgemm(
         raise ValueError(msg)
 
     cdef obj_t bli_a, bli_b, bli_c, bli_alpha, bli_beta
-    _blis.bli_obj_create_1x1_with_attached_buffer(
-        _blis.BLIS_SCOMPLEX,
-        &alpha,
-        &bli_alpha,
-    )
-    _blis.bli_obj_create_with_attached_buffer(
-        _blis.BLIS_SCOMPLEX,
-        m,
-        k,
-        <void*> &A[0, 0],
-        A.strides[0] / sizeof(float complex),
-        A.strides[1] / sizeof(float complex),
-        &bli_a,
-    )
-    if conjugate_a:
-        _blis.bli_obj_set_conj(_blis.BLIS_CONJUGATE, &bli_a)
-    _blis.bli_obj_create_with_attached_buffer(
-        _blis.BLIS_SCOMPLEX,
-        k,
-        n,
-        <void*> &B[0, 0],
-        B.strides[0] / sizeof(float complex),
-        B.strides[1] / sizeof(float complex),
-        &bli_b,
-    )
-    if conjugate_b:
-        _blis.bli_obj_set_conj(_blis.BLIS_CONJUGATE, &bli_b)
-    _blis.bli_obj_create_1x1_with_attached_buffer(
-        _blis.BLIS_SCOMPLEX,
-        &beta,
-        &bli_beta,
-    )
-    _blis.bli_obj_create_with_attached_buffer(
-        _blis.BLIS_SCOMPLEX,
-        m,
-        n,
-        <void*> &C[0, 0],
-        C.strides[0] / sizeof(float complex),
-        C.strides[1] / sizeof(float complex),
-        &bli_c,
-    )
+    with nogil, cython.boundscheck(False):
+        _blis.bli_obj_create_1x1_with_attached_buffer(
+            _blis.BLIS_SCOMPLEX,
+            &alpha,
+            &bli_alpha,
+        )
+        _blis.bli_obj_create_with_attached_buffer(
+            _blis.BLIS_SCOMPLEX,
+            m,
+            k,
+            <void*> &A[0, 0],
+            A.strides[0] / sizeof(float complex),
+            A.strides[1] / sizeof(float complex),
+            &bli_a,
+        )
+        if conjugate_a:
+            _blis.bli_obj_set_conj(_blis.BLIS_CONJUGATE, &bli_a)
+        _blis.bli_obj_create_with_attached_buffer(
+            _blis.BLIS_SCOMPLEX,
+            k,
+            n,
+            <void*> &B[0, 0],
+            B.strides[0] / sizeof(float complex),
+            B.strides[1] / sizeof(float complex),
+            &bli_b,
+        )
+        if conjugate_b:
+            _blis.bli_obj_set_conj(_blis.BLIS_CONJUGATE, &bli_b)
+        _blis.bli_obj_create_1x1_with_attached_buffer(
+            _blis.BLIS_SCOMPLEX,
+            &beta,
+            &bli_beta,
+        )
+        _blis.bli_obj_create_with_attached_buffer(
+            _blis.BLIS_SCOMPLEX,
+            m,
+            n,
+            <void*> &C[0, 0],
+            C.strides[0] / sizeof(float complex),
+            C.strides[1] / sizeof(float complex),
+            &bli_c,
+        )
 
-    _blis.bli_gemm(&bli_alpha, &bli_a, &bli_b, &bli_beta, &bli_c)
+        _blis.bli_gemm(&bli_alpha, &bli_a, &bli_b, &bli_beta, &bli_c)
     return 0
 
 
@@ -291,49 +295,50 @@ cpdef int zgemm(
         raise ValueError(msg)
 
     cdef obj_t bli_a, bli_b, bli_c, bli_alpha, bli_beta
-    _blis.bli_obj_create_1x1_with_attached_buffer(
-        _blis.BLIS_DCOMPLEX,
-        &alpha,
-        &bli_alpha,
-    )
-    _blis.bli_obj_create_with_attached_buffer(
-        _blis.BLIS_DCOMPLEX,
-        m,
-        k,
-        <void*> &A[0, 0],
-        A.strides[0] / sizeof(double complex),
-        A.strides[1] / sizeof(double complex),
-        &bli_a,
-    )
-    if conjugate_a:
-        _blis.bli_obj_set_conj(_blis.BLIS_CONJUGATE, &bli_a)
-    _blis.bli_obj_create_with_attached_buffer(
-        _blis.BLIS_DCOMPLEX,
-        k,
-        n,
-        <void*> &B[0, 0],
-        B.strides[0] / sizeof(double complex),
-        B.strides[1] / sizeof(double complex),
-        &bli_b,
-    )
-    if conjugate_b:
-        _blis.bli_obj_set_conj(_blis.BLIS_CONJUGATE, &bli_b)
-    _blis.bli_obj_create_1x1_with_attached_buffer(
-        _blis.BLIS_DCOMPLEX,
-        &beta,
-        &bli_beta,
-    )
-    _blis.bli_obj_create_with_attached_buffer(
-        _blis.BLIS_DCOMPLEX,
-        m,
-        n,
-        <void*> &C[0, 0],
-        C.strides[0] / sizeof(double complex),
-        C.strides[1] / sizeof(double complex),
-        &bli_c,
-    )
+    with nogil, cython.boundscheck(False):
+        _blis.bli_obj_create_1x1_with_attached_buffer(
+            _blis.BLIS_DCOMPLEX,
+            &alpha,
+            &bli_alpha,
+        )
+        _blis.bli_obj_create_with_attached_buffer(
+            _blis.BLIS_DCOMPLEX,
+            m,
+            k,
+            <void*> &A[0, 0],
+            A.strides[0] / sizeof(double complex),
+            A.strides[1] / sizeof(double complex),
+            &bli_a,
+        )
+        if conjugate_a:
+            _blis.bli_obj_set_conj(_blis.BLIS_CONJUGATE, &bli_a)
+        _blis.bli_obj_create_with_attached_buffer(
+            _blis.BLIS_DCOMPLEX,
+            k,
+            n,
+            <void*> &B[0, 0],
+            B.strides[0] / sizeof(double complex),
+            B.strides[1] / sizeof(double complex),
+            &bli_b,
+        )
+        if conjugate_b:
+            _blis.bli_obj_set_conj(_blis.BLIS_CONJUGATE, &bli_b)
+        _blis.bli_obj_create_1x1_with_attached_buffer(
+            _blis.BLIS_DCOMPLEX,
+            &beta,
+            &bli_beta,
+        )
+        _blis.bli_obj_create_with_attached_buffer(
+            _blis.BLIS_DCOMPLEX,
+            m,
+            n,
+            <void*> &C[0, 0],
+            C.strides[0] / sizeof(double complex),
+            C.strides[1] / sizeof(double complex),
+            &bli_c,
+        )
 
-    _blis.bli_gemm(&bli_alpha, &bli_a, &bli_b, &bli_beta, &bli_c)
+        _blis.bli_gemm(&bli_alpha, &bli_a, &bli_b, &bli_beta, &bli_c)
     return 0
 
 
@@ -362,12 +367,6 @@ cdef int _convert_type(ndarray arr) except -99:
 # verify -99 is not used and is valid for DefaultPrecision
 static_assert(_blis.BLIS_DOUBLE_PREC != -99)
 static_assert(_blis.BLIS_SINGLE_PREC != -99)
-
-
-cpdef enum Precision:
-    DefaultPrecision = -99
-    DoublePrecision = _blis.BLIS_DOUBLE_PREC
-    SinglePrecision = _blis.BLIS_SINGLE_PREC
 
 
 @cython.cdivision(True)
@@ -417,56 +416,60 @@ cpdef int gemm(
         raise ValueError(msg)
 
     cdef obj_t bli_a, bli_b, bli_c, bli_alpha, bli_beta
-    _blis.bli_obj_create_1x1_with_attached_buffer(
-        _blis.BLIS_DOUBLE,
-        &alpha,
-        &bli_alpha,
-    )
-    _blis.bli_obj_create_with_attached_buffer(
-        <_blis.num_t> _convert_type(A),
-        m,
-        k,
-        np.PyArray_DATA(A),
-        np.PyArray_STRIDE(A, 0) / np.PyArray_ITEMSIZE(A),
-        np.PyArray_STRIDE(A, 1) / np.PyArray_ITEMSIZE(A),
-        &bli_a,
-    )
-    if conjugate_a:
-        _blis.bli_obj_set_conj(_blis.BLIS_CONJUGATE, &bli_a)
-    _blis.bli_obj_create_with_attached_buffer(
-        <_blis.num_t> _convert_type(B),
-        k,
-        n,
-        np.PyArray_DATA(B),
-        np.PyArray_STRIDE(B, 0) / np.PyArray_ITEMSIZE(B),
-        np.PyArray_STRIDE(B, 1) / np.PyArray_ITEMSIZE(B),
-        &bli_b,
-    )
-    if conjugate_b:
-        _blis.bli_obj_set_conj(_blis.BLIS_CONJUGATE, &bli_b)
-    _blis.bli_obj_create_1x1_with_attached_buffer(
-        _blis.BLIS_DCOMPLEX,
-        &beta,
-        &bli_beta,
-    )
-    _blis.bli_obj_create_with_attached_buffer(
-        <_blis.num_t> _convert_type(C),
-        m,
-        n,
-        np.PyArray_DATA(C),
-        np.PyArray_STRIDE(C, 0) / np.PyArray_ITEMSIZE(C),
-        np.PyArray_STRIDE(C, 1) / np.PyArray_ITEMSIZE(C),
-        &bli_c,
-    )
-    if precision != Precision.DefaultPrecision:
-        _blis.bli_obj_set_comp_prec(<_blis.prec_t> precision, &bli_c)
+    cdef _blis.num_t blis_type_A = <_blis.num_t> _convert_type(A)
+    cdef _blis.num_t blis_type_B = <_blis.num_t> _convert_type(B)
+    cdef _blis.num_t blis_type_C = <_blis.num_t> _convert_type(C)
+    with nogil, cython.boundscheck(False):
+        _blis.bli_obj_create_1x1_with_attached_buffer(
+            _blis.BLIS_DOUBLE,
+            &alpha,
+            &bli_alpha,
+        )
+        _blis.bli_obj_create_with_attached_buffer(
+            blis_type_A,
+            m,
+            k,
+            np.PyArray_DATA(A),
+            np.PyArray_STRIDE(A, 0) / np.PyArray_ITEMSIZE(A),
+            np.PyArray_STRIDE(A, 1) / np.PyArray_ITEMSIZE(A),
+            &bli_a,
+        )
+        if conjugate_a:
+            _blis.bli_obj_set_conj(_blis.BLIS_CONJUGATE, &bli_a)
+        _blis.bli_obj_create_with_attached_buffer(
+            blis_type_B,
+            k,
+            n,
+            np.PyArray_DATA(B),
+            np.PyArray_STRIDE(B, 0) / np.PyArray_ITEMSIZE(B),
+            np.PyArray_STRIDE(B, 1) / np.PyArray_ITEMSIZE(B),
+            &bli_b,
+        )
+        if conjugate_b:
+            _blis.bli_obj_set_conj(_blis.BLIS_CONJUGATE, &bli_b)
+        _blis.bli_obj_create_1x1_with_attached_buffer(
+            _blis.BLIS_DCOMPLEX,
+            &beta,
+            &bli_beta,
+        )
+        _blis.bli_obj_create_with_attached_buffer(
+            blis_type_C,
+            m,
+            n,
+            np.PyArray_DATA(C),
+            np.PyArray_STRIDE(C, 0) / np.PyArray_ITEMSIZE(C),
+            np.PyArray_STRIDE(C, 1) / np.PyArray_ITEMSIZE(C),
+            &bli_c,
+        )
+        if precision != Precision.DefaultPrecision:
+            _blis.bli_obj_set_comp_prec(<_blis.prec_t> precision, &bli_c)
 
-    _blis.bli_gemm(&bli_alpha, &bli_a, &bli_b, &bli_beta, &bli_c)
+        _blis.bli_gemm(&bli_alpha, &bli_a, &bli_b, &bli_beta, &bli_c)
     return 0
 
 
 @cython.embedsignature(True)
-def get_int_type_size() -> str:
+cpdef str get_int_type_size():
     """Return the integer size used by BLIS."""
     cdef const char* cstring = _blis.bli_info_get_int_type_size_str()
     cdef bytes bstring = cstring
@@ -474,7 +477,7 @@ def get_int_type_size() -> str:
 
 
 @cython.embedsignature(True)
-def get_version() -> str:
+cpdef str get_version():
     """Return the version of BLIS."""
     cdef const char* cstring = _blis.bli_info_get_version_str()
     cdef bytes bstring = cstring
@@ -482,7 +485,7 @@ def get_version() -> str:
 
 
 @cython.embedsignature(True)
-def get_arch() -> str:
+cpdef str get_arch():
     """Return the architecture name currently used by BLIS."""
     cdef _blis.arch_t id = _blis.bli_arch_query_id()
     cdef const char* cstring = _blis.bli_arch_string(id)

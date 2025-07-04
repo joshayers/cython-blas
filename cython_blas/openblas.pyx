@@ -69,11 +69,12 @@ cpdef int sgemm(
     cdef Transpose trans_a = NoTrans if order_a == order_c else Trans
     cdef Transpose trans_b = NoTrans if order_b == order_c else Trans
 
-    _cblas.scipy_cblas_sgemm64_(
-        <_cblas.CBLAS_ORDER> order_c, <_cblas.CBLAS_TRANSPOSE> trans_a, <_cblas.CBLAS_TRANSPOSE> trans_b,
-        m, n, k,
-        alpha, &A[0, 0], lda, &B[0, 0], ldb, beta, &C[0, 0], ldc
-    )
+    with nogil, cython.boundscheck(False):
+        _cblas.scipy_cblas_sgemm64_(
+            <_cblas.CBLAS_ORDER> order_c, <_cblas.CBLAS_TRANSPOSE> trans_a, <_cblas.CBLAS_TRANSPOSE> trans_b,
+            m, n, k,
+            alpha, &A[0, 0], lda, &B[0, 0], ldb, beta, &C[0, 0], ldc
+        )
     return 0
 
 
@@ -118,11 +119,12 @@ cpdef int dgemm(
     cdef Transpose trans_a = NoTrans if order_a == order_c else Trans
     cdef Transpose trans_b = NoTrans if order_b == order_c else Trans
 
-    _cblas.scipy_cblas_dgemm64_(
-        <_cblas.CBLAS_ORDER> order_c, <_cblas.CBLAS_TRANSPOSE> trans_a, <_cblas.CBLAS_TRANSPOSE> trans_b,
-        m, n, k,
-        alpha, &A[0, 0], lda, &B[0, 0], ldb, beta, &C[0, 0], ldc
-    )
+    with nogil, cython.boundscheck(False):
+        _cblas.scipy_cblas_dgemm64_(
+            <_cblas.CBLAS_ORDER> order_c, <_cblas.CBLAS_TRANSPOSE> trans_a, <_cblas.CBLAS_TRANSPOSE> trans_b,
+            m, n, k,
+            alpha, &A[0, 0], lda, &B[0, 0], ldb, beta, &C[0, 0], ldc
+        )
     return 0
 
 
@@ -184,11 +186,12 @@ cpdef int cgemm(
     else:
         trans_b = NoTrans if order_b == order_c else Trans
 
-    _cblas.scipy_cblas_cgemm64_(
-        <_cblas.CBLAS_ORDER> order_c, <_cblas.CBLAS_TRANSPOSE> trans_a, <_cblas.CBLAS_TRANSPOSE> trans_b,
-        m, n, k,
-        &alpha, &A[0, 0], lda, &B[0, 0], ldb, &beta, &C[0, 0], ldc
-    )
+    with nogil, cython.boundscheck(False):
+        _cblas.scipy_cblas_cgemm64_(
+            <_cblas.CBLAS_ORDER> order_c, <_cblas.CBLAS_TRANSPOSE> trans_a, <_cblas.CBLAS_TRANSPOSE> trans_b,
+            m, n, k,
+            &alpha, &A[0, 0], lda, &B[0, 0], ldb, &beta, &C[0, 0], ldc
+        )
     return 0
 
 
@@ -252,11 +255,12 @@ cpdef int cgemm3m(
     else:
         trans_b = NoTrans if order_b == order_c else Trans
 
-    _cblas.scipy_cblas_cgemm3m64_(
-        <_cblas.CBLAS_ORDER> order_c, <_cblas.CBLAS_TRANSPOSE> trans_a, <_cblas.CBLAS_TRANSPOSE> trans_b,
-        m, n, k,
-        &alpha, &A[0, 0], lda, &B[0, 0], ldb, &beta, &C[0, 0], ldc
-    )
+    with nogil, cython.boundscheck(False):
+        _cblas.scipy_cblas_cgemm3m64_(
+            <_cblas.CBLAS_ORDER> order_c, <_cblas.CBLAS_TRANSPOSE> trans_a, <_cblas.CBLAS_TRANSPOSE> trans_b,
+            m, n, k,
+            &alpha, &A[0, 0], lda, &B[0, 0], ldb, &beta, &C[0, 0], ldc
+        )
     return 0
 
 
@@ -318,11 +322,12 @@ cpdef int zgemm(
     else:
         trans_b = NoTrans if order_b == order_c else Trans
 
-    _cblas.scipy_cblas_zgemm64_(
-        <_cblas.CBLAS_ORDER> order_c, <_cblas.CBLAS_TRANSPOSE> trans_a, <_cblas.CBLAS_TRANSPOSE> trans_b,
-        m, n, k,
-        &alpha, &A[0, 0], lda, &B[0, 0], ldb, &beta, &C[0, 0], ldc
-    )
+    with nogil, cython.boundscheck(False):
+        _cblas.scipy_cblas_zgemm64_(
+            <_cblas.CBLAS_ORDER> order_c, <_cblas.CBLAS_TRANSPOSE> trans_a, <_cblas.CBLAS_TRANSPOSE> trans_b,
+            m, n, k,
+            &alpha, &A[0, 0], lda, &B[0, 0], ldb, &beta, &C[0, 0], ldc
+        )
     return 0
 
 
@@ -386,11 +391,12 @@ cpdef int zgemm3m(
     else:
         trans_b = NoTrans if order_b == order_c else Trans
 
-    _cblas.scipy_cblas_zgemm3m64_(
-        <_cblas.CBLAS_ORDER> order_c, <_cblas.CBLAS_TRANSPOSE> trans_a, <_cblas.CBLAS_TRANSPOSE> trans_b,
-        m, n, k,
-        &alpha, &A[0, 0], lda, &B[0, 0], ldb, &beta, &C[0, 0], ldc
-    )
+    with nogil, cython.boundscheck(False):
+        _cblas.scipy_cblas_zgemm3m64_(
+            <_cblas.CBLAS_ORDER> order_c, <_cblas.CBLAS_TRANSPOSE> trans_a, <_cblas.CBLAS_TRANSPOSE> trans_b,
+            m, n, k,
+            &alpha, &A[0, 0], lda, &B[0, 0], ldb, &beta, &C[0, 0], ldc
+        )
     return 0
 
 
@@ -429,10 +435,11 @@ cpdef int dsymm_ab(
     if order_a != order_c:
         upper_lower = Upper if upper_lower == Lower else Lower
 
-    _cblas.scipy_cblas_dsymm64_(
-        <_cblas.CBLAS_ORDER> order_c, <_cblas.CBLAS_SIDE> side, <_cblas.CBLAS_UPLO> upper_lower,
-        m, n,
-        alpha, &A[0, 0], lda, &B[0, 0], ldb, beta, &C[0, 0], ldc)
+    with nogil, cython.boundscheck(False):
+        _cblas.scipy_cblas_dsymm64_(
+            <_cblas.CBLAS_ORDER> order_c, <_cblas.CBLAS_SIDE> side, <_cblas.CBLAS_UPLO> upper_lower,
+            m, n,
+            alpha, &A[0, 0], lda, &B[0, 0], ldb, beta, &C[0, 0], ldc)
     return 0
 
 
