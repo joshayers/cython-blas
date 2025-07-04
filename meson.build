@@ -6,6 +6,8 @@ project(
   default_options: ['cpp_std=c++17'],
 )
 
+cython = meson.get_compiler('cython')
+
 py = import('python').find_installation(pure: false)
 
 py_dep = py.dependency()
