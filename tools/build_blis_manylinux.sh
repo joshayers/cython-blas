@@ -1,8 +1,10 @@
 #!/bin/bash
 
 # This script is used to build BLIS inside a manylinux container.
+# The host file system is mounted as /host in the container.
 # It is run by the .github/workflows/blis.yml job.
 
+# This is the path to ./vendor/blis on the host
 SRC_DIR="$1"
 
 # Copy ./vendor/blis to container
