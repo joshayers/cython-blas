@@ -290,3 +290,16 @@ def cython_stringfix() -> None:
         check=False,
         cwd=root_dir,
     )
+
+
+@click.command
+def deptry() -> None:
+    """Run deptry."""
+    deptry_path = scripts_dir_path / "deptry"
+    cmd = [str(deptry_path), "."]
+    print(f"Running the following command:\n{' '.join(cmd)}\n")
+    subprocess.run(  # noqa: S603
+        cmd,
+        check=False,
+        cwd=root_dir,
+    )

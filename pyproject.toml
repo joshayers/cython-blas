@@ -187,6 +187,7 @@ package = "cyhon_blas"
     ".spin/cmds.py:setup_in_place",
     ".spin/cmds.py:cython_lint",
     ".spin/cmds.py:cython_stringfix",
+    ".spin/cmds.py:deptry",
 ]
 
 

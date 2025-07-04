@@ -103,10 +103,10 @@ jobs:
           poetry run ruff format --config=pyproject.toml --diff .
       - name: Deptry
         run: |
-          poetry run deptry .
+          poetry run spin deptry
       - name: cython-lint
         run: |
-          poetry run cython-lint .
+          poetry run spin cython-lint
       - name: isort Cython
         run: |
           poetry run isort --diff .
