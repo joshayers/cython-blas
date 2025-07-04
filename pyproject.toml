@@ -32,6 +32,7 @@ classifiers = [
 [project.optional-dependencies]
 docs = ["sphinx >=8.1", "sphinx-rtd-theme"]
 test = ["pytest"]
+lint = ["deptry", "ruff", "isort", "cython-lint"]
 dev = [
     # Docs
     "sphinx >=8.1",
@@ -44,7 +45,7 @@ dev = [
     "isort",
     "cython-lint",
     # Build environment
-    "scipy-openblas64 ==0.3.30",
+    "scipy-openblas64 ==0.3.30", # keep up to date with cibuildwheel config (two places)
     "cython >=3.1.0",
     "meson-python >=0.17.0",
     "ninja >=1.11",
@@ -73,7 +74,7 @@ PKG_CONFIG_PATH = "$PKG_CONFIG_PATH:$(mktemp -d)"
 [tool.cibuildwheel.linux]
 manylinux-x86_64-image = "manylinux_2_28"
 before-build = [
-    "pip install -q scipy_openblas64>=0.3.29",
+    "pip install -q scipy_openblas64==0.3.30", # keep this up to date with dev extra dependency
     "python tools/before_build.py",
 ]
 
@@ -85,7 +86,7 @@ CXX = "clang++"
 [tool.cibuildwheel.windows]
 before-all = ["pip install -q delvewheel"]
 before-build = [
-    "pip install -q scipy_openblas64==0.3.30",
+    "pip install -q scipy_openblas64==0.3.30", # keep this up to date with dev extra dependency
     "python tools/before_build.py",
 ]
 repair-wheel-command = [
@@ -94,6 +95,30 @@ repair-wheel-command = [
 
 [tool.cython-lint]
 max-line-length = 120
+
+
+[tool.deptry.per_rule_ignores]
+DEP001 = [] # packages that are imported but not listed as dependencies
+DEP002 = [ # packages that are not directly imported in the codebase
+    # Docs
+    "sphinx",
+    "sphinx-rtd-theme",
+    # Unit tests
+    "pytest",
+    # Linting
+    "deptry",
+    "ruff",
+    "isort",
+    "cython-lint",
+    # Build environment
+    "scipy-openblas64",
+    "cython",
+    "meson-python",
+    "ninja",
+    "build",
+    "spin",
+    "click",
+]
 
 
 [tool.isort]
@@ -106,8 +131,9 @@ py_version = 310
 [tool.ruff]
 line-length = 120
 target-version = "py310"
-exclude = [
-    "examples/*", # Patterns are glob expressions
+exclude = [ # Patterns are glob expressions
+    "examples/*",
+    "vendor/*",
 ]
 lint.select = ["ALL"]
 lint.ignore = [
@@ -137,6 +163,13 @@ lint.unfixable = [
 ]
 "**/tests/**/__init__.py" = [
     "D104", # Don't require docstrings in test packages.
+]
+".spin/__init__.py" = [
+    "D104", # Don't require docstrings
+    "N999", # Ignore invalid module name
+]
+"**/tools/**/__init__.py" = [
+    "D104", # Don't require docstrings in tools packages.
 ]
 
 [tool.ruff.lint.pydocstyle]

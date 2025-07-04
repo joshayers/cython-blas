@@ -179,7 +179,7 @@ description = "Composable command line interface toolkit"
 optional = true
 python-versions = ">=3.10"
 groups = ["main"]
-markers = "extra == \"dev\""
+markers = "extra == \"lint\" or extra == \"dev\""
 files = [
     {file = "click-8.2.1-py3-none-any.whl", hash = "sha256:61a3265b914e850b85317d0b3109c7f8cd35a670f963866005d6ef1d5175a12b"},
     {file = "click-8.2.1.tar.gz", hash = "sha256:27c491cc05d968d271d5a1db13e3b5a184636d9d930f148c50b038f0d0646202"},
@@ -195,7 +195,7 @@ description = "Cross-platform colored terminal text."
 optional = true
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7"
 groups = ["main"]
-markers = "sys_platform == \"win32\" and (extra == \"docs\" or extra == \"dev\" or extra == \"test\") or extra == \"dev\" and platform_system == \"Windows\" or extra == \"dev\" and os_name == \"nt\""
+markers = "sys_platform == \"win32\" and (extra == \"docs\" or extra == \"dev\" or extra == \"test\" or extra == \"lint\") or (extra == \"docs\" or extra == \"dev\" or extra == \"test\" or extra == \"lint\") and platform_system == \"Windows\" and (extra == \"lint\" or extra == \"dev\" or extra == \"docs\") and (extra == \"lint\" or extra == \"dev\" or extra == \"test\") and (extra == \"lint\" or extra == \"dev\") or extra == \"dev\" and platform_system == \"Windows\" or extra == \"dev\" and os_name == \"nt\""
 files = [
     {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
     {file = "colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},
@@ -208,7 +208,7 @@ description = "The Cython compiler for writing C extensions in the Python langua
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"dev\""
+markers = "extra == \"lint\" or extra == \"dev\""
 files = [
     {file = "cython-3.1.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:0f2add8b23cb19da3f546a688cd8f9e0bfc2776715ebf5e283bc3113b03ff008"},
     {file = "cython-3.1.2-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:0d6248a2ae155ca4c42d7fa6a9a05154d62e695d7736bc17e1b85da6dcc361df"},
@@ -281,7 +281,7 @@ description = "Lint Cython files"
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"dev\""
+markers = "extra == \"lint\" or extra == \"dev\""
 files = [
     {file = "cython_lint-0.16.6-py3-none-any.whl", hash = "sha256:5057fdbb0ebe41912431293a3d33d1e547c9f2242c5a1426525a14b2b4a869a4"},
     {file = "cython_lint-0.16.6.tar.gz", hash = "sha256:829046988d3986443c47183e7ea567a6893d78dfb135144670ffff67d58deb9e"},
@@ -300,7 +300,7 @@ description = "A command line utility to check for unused, missing and transitiv
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "python_version >= \"3.12\" and extra == \"dev\""
+markers = "python_version >= \"3.12\" and (extra == \"lint\" or extra == \"dev\")"
 files = [
     {file = "deptry-0.20.0-cp38-abi3-macosx_10_12_x86_64.whl", hash = "sha256:41434d95124851b83cb05524d1a09ad6fea62006beafed2ef90a6b501c1b237f"},
     {file = "deptry-0.20.0-cp38-abi3-macosx_11_0_arm64.whl", hash = "sha256:b3b4b22d1406147de5d606a24042126cd74d52fdfdb0232b9c5fd0270d601610"},
@@ -327,7 +327,7 @@ description = "A command line utility to check for unused, missing and transitiv
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "python_version < \"3.12\" and extra == \"dev\""
+markers = "python_version < \"3.12\" and (extra == \"lint\" or extra == \"dev\")"
 files = [
     {file = "deptry-0.23.0-cp39-abi3-macosx_10_12_x86_64.whl", hash = "sha256:1f2a6817a37d76e8f6b667381b7caf6ea3e6d6c18b5be24d36c625f387c79852"},
     {file = "deptry-0.23.0-cp39-abi3-macosx_11_0_arm64.whl", hash = "sha256:9601b64cc0aed42687fdd5c912d5f1e90d7f7333fb589b14e35bfdfebae866f3"},
@@ -460,7 +460,7 @@ description = "A Python utility / library to sort Python imports."
 optional = true
 python-versions = ">=3.9.0"
 groups = ["main"]
-markers = "extra == \"dev\""
+markers = "extra == \"lint\" or extra == \"dev\""
 files = [
     {file = "isort-6.0.1-py3-none-any.whl", hash = "sha256:2dc5d7f65c9678d94c88dfc29161a320eec67328bc97aad576874cb4be1e9615"},
     {file = "isort-6.0.1.tar.gz", hash = "sha256:1cb5df28dfbc742e490c5e41bad6da41b805b0a8be7bc93cd0fb2a8a890ac450"},
@@ -768,7 +768,7 @@ description = "Core utilities for Python packages"
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"docs\" or extra == \"dev\" or extra == \"test\""
+markers = "(python_version < \"3.12\" or extra == \"docs\" or extra == \"dev\" or extra == \"test\") and (extra == \"docs\" or extra == \"dev\" or extra == \"test\" or extra == \"lint\")"
 files = [
     {file = "packaging-25.0-py3-none-any.whl", hash = "sha256:29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484"},
     {file = "packaging-25.0.tar.gz", hash = "sha256:d443872c98d677bf60f6a1f2f8c1cb748e8fe762d2bf9d3148b5599295b0fc4f"},
@@ -798,7 +798,7 @@ description = "Python style guide checker"
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"dev\""
+markers = "extra == \"lint\" or extra == \"dev\""
 files = [
     {file = "pycodestyle-2.14.0-py2.py3-none-any.whl", hash = "sha256:dd6bf7cb4ee77f8e016f9c8e74a35ddd9f67e1d5fd4184d86c3b98e07099f42d"},
     {file = "pycodestyle-2.14.0.tar.gz", hash = "sha256:c4b5b517d278089ff9d0abdec919cd97262a3367449ea1c8b49b91529167b783"},
@@ -908,7 +908,7 @@ description = "This is a small Python module for parsing Pip requirement files."
 optional = true
 python-versions = "<4.0,>=3.8"
 groups = ["main"]
-markers = "python_version < \"3.12\" and extra == \"dev\""
+markers = "python_version < \"3.12\" and (extra == \"lint\" or extra == \"dev\")"
 files = [
     {file = "requirements_parser-0.13.0-py3-none-any.whl", hash = "sha256:2b3173faecf19ec5501971b7222d38f04cb45bb9d87d0ad629ca71e2e62ded14"},
     {file = "requirements_parser-0.13.0.tar.gz", hash = "sha256:0843119ca2cb2331de4eb31b10d70462e39ace698fd660a915c247d2301a4418"},
@@ -941,7 +941,7 @@ description = "An extremely fast Python linter and code formatter, written in Ru
 optional = true
 python-versions = ">=3.7"
 groups = ["main"]
-markers = "extra == \"dev\""
+markers = "extra == \"lint\" or extra == \"dev\""
 files = [
     {file = "ruff-0.12.1-py3-none-linux_armv6l.whl", hash = "sha256:6013a46d865111e2edb71ad692fbb8262e6c172587a57c0669332a449384a36b"},
     {file = "ruff-0.12.1-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:b3f75a19e03a4b0757d1412edb7f27cffb0c700365e9d6b60bc1b68d35bc89e0"},
@@ -1244,7 +1244,7 @@ description = "A wrapper around the stdlib `tokenize` which roundtrips."
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"dev\""
+markers = "extra == \"lint\" or extra == \"dev\""
 files = [
     {file = "tokenize_rt-6.2.0-py2.py3-none-any.whl", hash = "sha256:a152bf4f249c847a66497a4a95f63376ed68ac6abf092a2f7cfb29d044ecff44"},
     {file = "tokenize_rt-6.2.0.tar.gz", hash = "sha256:8439c042b330c553fdbe1758e4a05c0ed460dbbbb24a606f11f0dee75da4cad6"},
@@ -1257,7 +1257,7 @@ description = "A lil' TOML parser"
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(extra == \"docs\" or extra == \"dev\" or extra == \"test\") and python_version < \"3.11\""
+markers = "(extra == \"docs\" or extra == \"dev\" or extra == \"test\" or extra == \"lint\") and python_version < \"3.11\""
 files = [
     {file = "tomli-2.2.1-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:678e4fa69e4575eb77d103de3df8a895e1591b48e740211bd1067378c69e8249"},
     {file = "tomli-2.2.1-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:023aa114dd824ade0100497eb2318602af309e5a55595f76b626d6d9f3b7b0a6"},
@@ -1349,9 +1349,10 @@ type = ["pytest-mypy"]
 [extras]
 dev = ["build", "click", "cython", "cython-lint", "deptry", "isort", "meson-python", "ninja", "pytest", "ruff", "scipy-openblas64", "sphinx", "sphinx-rtd-theme", "spin"]
 docs = ["sphinx", "sphinx-rtd-theme"]
+lint = ["cython-lint", "deptry", "isort", "ruff"]
 test = ["pytest"]
 
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10"
-content-hash = "16f15f167c7f5818c77fde590f1af5d6bcf61d99e98d8acc22f4f034b109f415"
+content-hash = "9b809db60627573bcf9267cfbc46459b2688e4c376fb45fb6f2f50ca5f96987b"

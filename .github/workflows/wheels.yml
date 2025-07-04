@@ -31,7 +31,7 @@ jobs:
         uses: KyleMayes/install-llvm-action@v2
         with:
           version: "20.1"
-      - name: Install pkg-config
+      - name: Install pkg-config on Windows
         if: ${{ runner.os == 'Windows' }}
         run: |
           choco install pkgconfiglite
