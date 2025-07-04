@@ -3,7 +3,11 @@
 BLIS
 ====
 
+.. autofunction:: sgemm
+
 .. autofunction:: dgemm
+
+.. autofunction:: cgemm
 
 .. autofunction:: zgemm
 

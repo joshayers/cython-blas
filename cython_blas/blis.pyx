@@ -15,6 +15,82 @@ cdef extern from * nogil:
 @cython.cdivision(True)
 @cython.embedsignature(True)
 @cython.wraparound(False)
+cpdef int sgemm(
+    float alpha,
+    const float [:, :] A,
+    const float [:, :] B,
+    float beta,
+    float [:, :] C
+) except -1:
+    r"""Matrix multiplication of single precision matrices.
+
+    .. math::
+
+        C = \alpha A B + \beta C
+
+    Args:
+        alpha: Scalar multiplier for A @ B
+        A: The A matrix.
+        B: The B matrix. The number of rows in this matrix must equal the number of columns
+            in `A`.
+        beta: Scalar multiplier for C
+        C: The C matrix. This matrix must have the same number of rows as `A` and the same
+            number of columns as `B`. The result will be written to this matrix.
+    """
+    cdef dim_t m = A.shape[0], n = B.shape[1], k = A.shape[1]
+    if B.shape[0] != k or C.shape[0] != m or C.shape[1] != n:
+        msg = (
+            "matrix dimensions not compatible: "
+            f"({A.shape[0]}, {A.shape[1]}) @ ({B.shape[0], B.shape[1]}) = ({C.shape[0]}, {C.shape[1]})"
+        )
+        raise ValueError(msg)
+
+    cdef obj_t bli_a, bli_b, bli_c, bli_alpha, bli_beta
+    _blis.bli_obj_create_1x1_with_attached_buffer(
+        _blis.BLIS_FLOAT,
+        &alpha,
+        &bli_alpha,
+    )
+    _blis.bli_obj_create_with_attached_buffer(
+        _blis.BLIS_FLOAT,
+        m,
+        k,
+        <void*> &A[0, 0],
+        A.strides[0] / sizeof(float),
+        A.strides[1] / sizeof(float),
+        &bli_a,
+    )
+    _blis.bli_obj_create_with_attached_buffer(
+        _blis.BLIS_FLOAT,
+        k,
+        n,
+        <void*> &B[0, 0],
+        B.strides[0] / sizeof(float),
+        B.strides[1] / sizeof(float),
+        &bli_b,
+    )
+    _blis.bli_obj_create_1x1_with_attached_buffer(
+        _blis.BLIS_FLOAT,
+        &beta,
+        &bli_beta,
+    )
+    _blis.bli_obj_create_with_attached_buffer(
+        _blis.BLIS_FLOAT,
+        m,
+        n,
+        <void*> &C[0, 0],
+        C.strides[0] / sizeof(float),
+        C.strides[1] / sizeof(float),
+        &bli_c,
+    )
+
+    _blis.bli_gemm(&bli_alpha, &bli_a, &bli_b, &bli_beta, &bli_c)
+    return 0
+
+
+@cython.cdivision(True)
+@cython.embedsignature(True)
+@cython.wraparound(False)
 cpdef int dgemm(
     double alpha,
     const double [:, :] A,
@@ -81,6 +157,92 @@ cpdef int dgemm(
         <void*> &C[0, 0],
         C.strides[0] / sizeof(double),
         C.strides[1] / sizeof(double),
+        &bli_c,
+    )
+
+    _blis.bli_gemm(&bli_alpha, &bli_a, &bli_b, &bli_beta, &bli_c)
+    return 0
+
+@cython.cdivision(True)
+@cython.embedsignature(True)
+@cython.wraparound(False)
+cpdef int cgemm(
+    float complex alpha,
+    bint conjugate_a,
+    const float complex [:, :] A,
+    bint conjugate_b,
+    const float complex [:, :] B,
+    float complex beta,
+    float complex [:, :] C,
+) except -1:
+    r"""Matrix multiplication of single precision complex matrices.
+
+    .. math::
+
+        C = \alpha A B + \beta C
+
+    If `conjugate_a` is True, then matrix :math:`A` is implicitly conjugated before performing
+    the multiplication. Similarly for `conjugate_b`.
+
+    Args:
+        alpha: Scalar multiplier for A @ B
+        conjugate_a: If True, matrix `A` will be conjugated.
+        A: The A matrix.
+        conjugate_b: If True, matrix `B` will be conjugated.
+        B: The B matrix. The number of rows in this matrix must equal the number of columns
+            in `A`.
+        beta: Scalar multiplier for C
+        C: The C matrix. This matrix must have the same number of rows as `A` and the same
+            number of columns as `B`. The result will be written to this matrix.
+    """
+    cdef dim_t m = A.shape[0], n = B.shape[1], k = A.shape[1]
+    if B.shape[0] != k or C.shape[0] != m or C.shape[1] != n:
+        msg = (
+            "matrix dimensions not compatible: "
+            f"({A.shape[0]}, {A.shape[1]}) @ ({B.shape[0], B.shape[1]}) = ({C.shape[0]}, {C.shape[1]})"
+        )
+        raise ValueError(msg)
+
+    cdef obj_t bli_a, bli_b, bli_c, bli_alpha, bli_beta
+    _blis.bli_obj_create_1x1_with_attached_buffer(
+        _blis.BLIS_SCOMPLEX,
+        &alpha,
+        &bli_alpha,
+    )
+    _blis.bli_obj_create_with_attached_buffer(
+        _blis.BLIS_SCOMPLEX,
+        m,
+        k,
+        <void*> &A[0, 0],
+        A.strides[0] / sizeof(float complex),
+        A.strides[1] / sizeof(float complex),
+        &bli_a,
+    )
+    if conjugate_a:
+        _blis.bli_obj_set_conj(_blis.BLIS_CONJUGATE, &bli_a)
+    _blis.bli_obj_create_with_attached_buffer(
+        _blis.BLIS_SCOMPLEX,
+        k,
+        n,
+        <void*> &B[0, 0],
+        B.strides[0] / sizeof(float complex),
+        B.strides[1] / sizeof(float complex),
+        &bli_b,
+    )
+    if conjugate_b:
+        _blis.bli_obj_set_conj(_blis.BLIS_CONJUGATE, &bli_b)
+    _blis.bli_obj_create_1x1_with_attached_buffer(
+        _blis.BLIS_SCOMPLEX,
+        &beta,
+        &bli_beta,
+    )
+    _blis.bli_obj_create_with_attached_buffer(
+        _blis.BLIS_SCOMPLEX,
+        m,
+        n,
+        <void*> &C[0, 0],
+        C.strides[0] / sizeof(float complex),
+        C.strides[1] / sizeof(float complex),
         &bli_c,
     )
 
