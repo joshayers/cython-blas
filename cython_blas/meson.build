@@ -16,6 +16,7 @@ py.extension_module(
         ],
     ),
     subdir: subdir_path,
+    limited_api: '3.11',
     install: true,
 )
 cython_args = ['--shared=cython_blas._cyutility']
@@ -34,8 +35,9 @@ foreach pyx_file : openblas_pyx_files
         ],
         override_options: ['cython_language=cpp'],
         cython_args: cython_args,
-        install: true,
         subdir: subdir_path,
+        limited_api: '3.11',
+        install: true,
     )
 endforeach
 
@@ -55,7 +57,8 @@ foreach pyx_file : blis_pyx_files
         override_options: ['cython_language=cpp'],
         cython_args: cython_args,
         cpp_args: ['-Wno-unused-parameter'], # suppress warnings from blis.h
-        install: true,
         subdir: subdir_path,
+        limited_api: '3.11',
+        install: true,
     )
 endforeach

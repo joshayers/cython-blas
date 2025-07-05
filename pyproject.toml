@@ -7,14 +7,13 @@ license-files = ["LICENSE.txt"]
 description = "Wrappers around OpenBLAS and BLIS."
 readme = "README.rst"
 
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = ["numpy >=2.0"]
 
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Programming Language :: C",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
@@ -66,7 +65,7 @@ skip = [
     "*musl*", # muslliunx
 ]
 before-build = [
-    "pip install -q scipy_openblas64==0.3.30", # keep this up to date with dev extra dependency
+    "pip install -q abi3audit scipy_openblas64==0.3.30", # keep openblas version up to date with dev extra dependency
     "python tools/before_build.py",
 ]
 test-extras = ["test"]
@@ -77,6 +76,10 @@ PKG_CONFIG_PATH = "$PKG_CONFIG_PATH:$(mktemp -d)"
 
 [tool.cibuildwheel.linux]
 manylinux-x86_64-image = "manylinux_2_28"
+repair-wheel-command = [
+    "abi3audit --strict --report --verbose {wheel}",
+    "auditwheel repair -w {dest_dir} {wheel}",
+]
 
 [tool.cibuildwheel.windows.environment]
 PKG_CONFIG_PATH = "$PKG_CONFIG_PATH;$(python -c 'import tempfile; print(tempfile.mkdtemp())')"
@@ -86,6 +89,7 @@ CXX = "clang++"
 [tool.cibuildwheel.windows]
 before-all = ["pip install -q delvewheel"]
 repair-wheel-command = [
+    "abi3audit --strict --report --verbose {wheel}",
     "python tools/repair_wheel_windows.py {dest_dir} {wheel}",
 ]
 
@@ -121,7 +125,11 @@ DEP002 = [ # packages that are not directly imported in the codebase
 atomic = true
 skip_glob = ["*.py"] # isort is only used for Cython files
 line_length = 120
-py_version = 310
+py_version = 311
+
+
+[tool.meson-python]
+limited-api = true
 
 
 [tool.ruff]
