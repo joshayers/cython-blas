@@ -2,13 +2,14 @@ project(
   'cython_blas',
   'cython',
   'cpp',
-  meson_version: '>= 1.7.0',
+  meson_version: '>= 1.8.0',
   default_options: ['cpp_std=c++17'],
 )
 
 cython = meson.get_compiler('cython')
 
 py = import('python').find_installation(pure: false)
+py_limited_api_version = '3.11' # keep up to date with requires-python in pyproject.toml
 
 py_dep = py.dependency()
 blis_dep = declare_dependency(
