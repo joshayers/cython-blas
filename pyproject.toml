@@ -61,8 +61,7 @@ Repository = "https://github.com/joshayers/cython-blas/"
 build-frontend = "build"
 archs = ["auto64"]
 skip = [
-    "pp*",    # PyPy
-    "*musl*", # muslliunx
+    "pp*", # PyPy
 ]
 before-build = [
     "pip install -q abi3audit scipy_openblas64==0.3.30", # keep openblas version up to date with dev extra dependency
