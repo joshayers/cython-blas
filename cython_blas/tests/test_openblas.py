@@ -193,7 +193,7 @@ def test_dgemm_strided(array: int, axis: int, order: str):
     mat_a, mat_b, mat_c = mats
     expected = alpha * mat_a @ mat_b + beta * mat_c
     openblas.dgemm(alpha, mat_a, mat_b, beta, mat_c)
-    np.testing.assert_allclose(mat_c, expected, atol=5e-7, rtol=5e-7)
+    np.testing.assert_allclose(mat_c, expected, atol=1e-8, rtol=1e-8)
 
 
 @pytest.mark.parametrize(*_shape_error_params_gemm)
@@ -244,7 +244,7 @@ def test_cgemm(  # noqa: PLR0913
     mat_c = create_array(rng, (m, n), "c8", c_order)
     expected = alpha * conjugate_if(mat_a, conjugate_a) @ conjugate_if(mat_b, conjugate_b) + beta * mat_c
     openblas.cgemm(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
-    np.testing.assert_allclose(mat_c, expected, atol=5e-6, rtol=5e-6)
+    np.testing.assert_allclose(mat_c, expected, atol=7e-7, rtol=7e-7)
 
 
 @pytest.mark.parametrize(*_strided_params_gemm)
@@ -311,7 +311,7 @@ def test_cgemm3m(  # noqa: PLR0913
     mat_c = create_array(rng, (m, n), "c8", c_order)
     expected = alpha * conjugate_if(mat_a, conjugate_a) @ conjugate_if(mat_b, conjugate_b) + beta * mat_c
     openblas.cgemm3m(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
-    np.testing.assert_allclose(mat_c, expected, atol=5e-6, rtol=5e-6)
+    np.testing.assert_allclose(mat_c, expected, atol=2e-6, rtol=7e-7)
 
 
 @pytest.mark.parametrize(*_strided_params_gemm)
