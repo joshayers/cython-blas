@@ -63,6 +63,15 @@ cpdef int sgemm(
             f"({A.shape[0]}, {A.shape[1]}) @ ({B.shape[0], B.shape[1]}) = ({C.shape[0]}, {C.shape[1]})"
         )
         raise ValueError(msg)
+    if order_a == RowMajor and A.strides[1] != sizeof(float):
+        msg = "matrix A must be contiguous along one dimension"
+        raise ValueError(msg)
+    if order_b == RowMajor and B.strides[1] != sizeof(float):
+        msg = "matrix B must be contiguous along one dimension"
+        raise ValueError(msg)
+    if order_c == RowMajor and C.strides[1] != sizeof(float):
+        msg = "matrix C must be contiguous along one dimension"
+        raise ValueError(msg)
     cdef blasint lda = A.strides[1] / sizeof(float) if order_a == ColMajor else A.strides[0] / sizeof(float)
     cdef blasint ldb = B.strides[1] / sizeof(float) if order_b == ColMajor else B.strides[0] / sizeof(float)
     cdef blasint ldc = C.strides[1] / sizeof(float) if order_c == ColMajor else C.strides[0] / sizeof(float)
@@ -112,6 +121,15 @@ cpdef int dgemm(
             "matrix dimensions not compatible: "
             f"({A.shape[0]}, {A.shape[1]}) @ ({B.shape[0], B.shape[1]}) = ({C.shape[0]}, {C.shape[1]})"
         )
+        raise ValueError(msg)
+    if order_a == RowMajor and A.strides[1] != sizeof(double):
+        msg = "matrix A must be contiguous along one dimension"
+        raise ValueError(msg)
+    if order_b == RowMajor and B.strides[1] != sizeof(double):
+        msg = "matrix B must be contiguous along one dimension"
+        raise ValueError(msg)
+    if order_c == RowMajor and C.strides[1] != sizeof(double):
+        msg = "matrix C must be contiguous along one dimension"
         raise ValueError(msg)
     cdef blasint lda = A.strides[1] / sizeof(double) if order_a == ColMajor else A.strides[0] / sizeof(double)
     cdef blasint ldb = B.strides[1] / sizeof(double) if order_b == ColMajor else B.strides[0] / sizeof(double)
@@ -168,6 +186,15 @@ cpdef int cgemm(
             "matrix dimensions not compatible: "
             f"({A.shape[0]}, {A.shape[1]}) @ ({B.shape[0], B.shape[1]}) = ({C.shape[0]}, {C.shape[1]})"
         )
+        raise ValueError(msg)
+    if order_a == RowMajor and A.strides[1] != sizeof(float complex):
+        msg = "matrix A must be contiguous along one dimension"
+        raise ValueError(msg)
+    if order_b == RowMajor and B.strides[1] != sizeof(float complex):
+        msg = "matrix B must be contiguous along one dimension"
+        raise ValueError(msg)
+    if order_c == RowMajor and C.strides[1] != sizeof(float complex):
+        msg = "matrix C must be contiguous along one dimension"
         raise ValueError(msg)
     cdef blasint lda = (A.strides[1] / sizeof(float complex)
                         if order_a == ColMajor else A.strides[0] / sizeof(float complex))
@@ -238,6 +265,15 @@ cpdef int cgemm3m(
             f"({A.shape[0]}, {A.shape[1]}) @ ({B.shape[0], B.shape[1]}) = ({C.shape[0]}, {C.shape[1]})"
         )
         raise ValueError(msg)
+    if order_a == RowMajor and A.strides[1] != sizeof(float complex):
+        msg = "matrix A must be contiguous along one dimension"
+        raise ValueError(msg)
+    if order_b == RowMajor and B.strides[1] != sizeof(float complex):
+        msg = "matrix B must be contiguous along one dimension"
+        raise ValueError(msg)
+    if order_c == RowMajor and C.strides[1] != sizeof(float complex):
+        msg = "matrix C must be contiguous along one dimension"
+        raise ValueError(msg)
     cdef blasint lda = (A.strides[1] / sizeof(float complex)
                         if order_a == ColMajor else A.strides[0] / sizeof(float complex))
     cdef blasint ldb = (B.strides[1] / sizeof(float complex)
@@ -304,6 +340,15 @@ cpdef int zgemm(
             "matrix dimensions not compatible: "
             f"({A.shape[0]}, {A.shape[1]}) @ ({B.shape[0], B.shape[1]}) = ({C.shape[0]}, {C.shape[1]})"
         )
+        raise ValueError(msg)
+    if order_a == RowMajor and A.strides[1] != sizeof(double complex):
+        msg = "matrix A must be contiguous along one dimension"
+        raise ValueError(msg)
+    if order_b == RowMajor and B.strides[1] != sizeof(double complex):
+        msg = "matrix B must be contiguous along one dimension"
+        raise ValueError(msg)
+    if order_c == RowMajor and C.strides[1] != sizeof(double complex):
+        msg = "matrix C must be contiguous along one dimension"
         raise ValueError(msg)
     cdef blasint lda = (A.strides[1] / sizeof(double complex)
                         if order_a == ColMajor else A.strides[0] / sizeof(double complex))
@@ -373,6 +418,15 @@ cpdef int zgemm3m(
             "matrix dimensions not compatible: "
             f"({A.shape[0]}, {A.shape[1]}) @ ({B.shape[0], B.shape[1]}) = ({C.shape[0]}, {C.shape[1]})"
         )
+        raise ValueError(msg)
+    if order_a == RowMajor and A.strides[1] != sizeof(double complex):
+        msg = "matrix A must be contiguous along one dimension"
+        raise ValueError(msg)
+    if order_b == RowMajor and B.strides[1] != sizeof(double complex):
+        msg = "matrix B must be contiguous along one dimension"
+        raise ValueError(msg)
+    if order_c == RowMajor and C.strides[1] != sizeof(double complex):
+        msg = "matrix C must be contiguous along one dimension"
         raise ValueError(msg)
     cdef blasint lda = (A.strides[1] / sizeof(double complex)
                         if order_a == ColMajor else A.strides[0] / sizeof(double complex))
