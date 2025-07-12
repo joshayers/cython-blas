@@ -12,6 +12,7 @@
         "*.pxd": "cython",
         "meson.build": "meson",
         "meson.options": "meson",
+        "asv.conf.json": "plaintext",
     },
     //
     // Python

@@ -19,3 +19,8 @@ cython_blas/**/*.c
 cython_blas/**/*.cpp
 cython_blas/**/*.pyd
 cython_blas/**/*.so
+
+# Benchmarks
+benchmarks/html
+benchmarks/env
+benchmarks/results

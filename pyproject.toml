@@ -43,6 +43,8 @@ dev = [
     "ruff",
     "isort",
     "cython-lint",
+    # Benchmarks
+    "asv",
     # Build environment
     "scipy-openblas64 ==0.3.30.0.1", # keep up to date with cibuildwheel config, before-build command
     "cython >=3.1.0",
@@ -171,6 +173,14 @@ lint.unfixable = [
 ]
 "**/tools/**/__init__.py" = [
     "D104", # Don't require docstrings in tools packages.
+]
+"benchmarks/**" = [
+    "D101",   # Don't require docstrings in benchmarks.
+    "D102",   # Don't require docstrings in benchmarks.
+    "D104",   # Don't require docstrings in benchmarks.
+    "ANN201", # Allow no return types in benchmarks.
+    "ARG002", # Allow unused arguments in benchmarks.
+    "RUF012", # Allow untyped class attributes
 ]
 
 [tool.ruff.lint.pydocstyle]
