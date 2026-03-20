@@ -23,7 +23,7 @@ jobs:
           chmod +x $ROOT_DIR/tools/build_blis_manylinux.sh
           docker container run --volume=/:/host $IMAGE /host$ROOT_DIR/tools/build_blis_manylinux.sh $SRC_DIR
       - name: Upload compiled library
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: blis-linux-static
           path: /opt/blis
