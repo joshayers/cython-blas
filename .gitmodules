@@ -1,3 +1,6 @@
 [submodule "vendor/blis"]
 	path = vendor/blis
 	url = https://github.com/joshayers/blis.git
+[submodule "vendor/eigen"]
+	path = vendor/eigen
+	url = https://gitlab.com/libeigen/eigen.git

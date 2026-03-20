@@ -5,6 +5,7 @@
         120
     ],
     "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
     //
     // Custom file associations
     "files.associations": {

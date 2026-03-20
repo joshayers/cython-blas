@@ -24,3 +24,7 @@ cython_blas/**/*.so
 benchmarks/html
 benchmarks/env
 benchmarks/results
+
+# Package config
+blis.pc
+scipy-openblas.pc

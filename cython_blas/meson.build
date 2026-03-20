@@ -62,3 +62,26 @@ foreach pyx_file : blis_pyx_files
         install: true,
     )
 endforeach
+
+eigen_pyx_files = [
+    'eigen',
+]
+include_src = include_directories(['_src', '../vendor/eigen'])
+foreach pyx_file : eigen_pyx_files
+    py.extension_module(
+        pyx_file,
+        pyx_file + '.pyx',
+        dependencies: [
+            py_dep,
+            np_dep,
+            openmp_dep,
+        ],
+        include_directories: [include_src],
+        override_options: ['cython_language=cpp'],
+        cython_args: cython_args,
+        cpp_args: [],
+        subdir: subdir_path,
+        limited_api: py_limited_api_version,
+        install: true,
+    )
+endforeach
