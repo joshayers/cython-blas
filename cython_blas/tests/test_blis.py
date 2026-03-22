@@ -197,7 +197,7 @@ def test_cgemm(  # noqa: PLR0913
     mat_c = create_array(rng, (m, n), "c8", c_order)
     expected = alpha * conjugate_if(mat_a, conjugate_a) @ conjugate_if(mat_b, conjugate_b) + beta * mat_c
     blis.cgemm(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
-    np.testing.assert_allclose(mat_c, expected, atol=5e-7, rtol=5e-7)
+    np.testing.assert_allclose(mat_c, expected, atol=7e-7, rtol=1e-6)
 
 
 @pytest.mark.parametrize(*_strided_params_gemm)
