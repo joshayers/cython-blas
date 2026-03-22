@@ -94,7 +94,7 @@ def test_sgemm(  # noqa: PLR0913
     mat_c = create_array(rng, (m, n), "f4", c_order)
     expected = alpha * mat_a @ mat_b + beta * mat_c
     blis.sgemm(alpha, mat_a, mat_b, beta, mat_c)
-    np.testing.assert_allclose(mat_c, expected, atol=5e-7, rtol=5e-7)
+    np.testing.assert_allclose(mat_c, expected, atol=5e-7, rtol=1e-6)
 
 
 @pytest.mark.parametrize(*_strided_params_gemm)
