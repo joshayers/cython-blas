@@ -132,10 +132,10 @@ extern "C" {
 // Disabled symbols (symbol_omit_list)
 
 
-#define BLIS_VERSION_STRING "3.0-dev"
+#define BLIS_VERSION_STRING "3.0"
 
 #define BLIS_VERSION_MAJOR 3
-#define BLIS_VERSION_MINOR 0-dev
+#define BLIS_VERSION_MINOR 0
 #define BLIS_VERSION_REVISION 0
 
 #if 1
@@ -1251,7 +1251,7 @@ typedef void  (*free_ft)  ( void*  p    );
 
 // -- Operational parameter types --
 
-typedef enum
+typedef enum trans_e
 {
 	BLIS_NO_TRANSPOSE      = 0x0,
 	BLIS_TRANSPOSE         = BLIS_BITVAL_TRANS,
@@ -1259,13 +1259,13 @@ typedef enum
 	BLIS_CONJ_TRANSPOSE    = BLIS_BITVAL_CONJ_TRANS
 } trans_t;
 
-typedef enum
+typedef enum conj_e
 {
 	BLIS_NO_CONJUGATE      = 0x0,
 	BLIS_CONJUGATE         = BLIS_BITVAL_CONJ
 } conj_t;
 
-typedef enum
+typedef enum uplo_e
 {
 	BLIS_ZEROS             = BLIS_BITVAL_ZEROS,
 	BLIS_LOWER             = BLIS_BITVAL_LOWER,
@@ -1273,25 +1273,25 @@ typedef enum
 	BLIS_DENSE             = BLIS_BITVAL_DENSE
 } uplo_t;
 
-typedef enum
+typedef enum side_e
 {
 	BLIS_LEFT              = 0x0,
 	BLIS_RIGHT
 } side_t;
 
-typedef enum
+typedef enum diag_e
 {
 	BLIS_NONUNIT_DIAG      = 0x0,
 	BLIS_UNIT_DIAG         = BLIS_BITVAL_UNIT_DIAG
 } diag_t;
 
-typedef enum
+typedef enum invdiag_e
 {
 	BLIS_NO_INVERT_DIAG    = 0x0,
 	BLIS_INVERT_DIAG       = BLIS_BITVAL_INVERT_DIAG
 } invdiag_t;
 
-typedef enum
+typedef enum struc_e
 {
 	BLIS_GENERAL           = BLIS_BITVAL_GENERAL,
 	BLIS_HERMITIAN         = BLIS_BITVAL_HERMITIAN,
@@ -1302,7 +1302,7 @@ typedef enum
 
 // -- Data type --
 
-typedef enum
+typedef enum num_e
 {
 	BLIS_FLOAT             = BLIS_BITVAL_FLOAT_TYPE,
 	BLIS_DOUBLE            = BLIS_BITVAL_DOUBLE_TYPE,
@@ -1314,13 +1314,13 @@ typedef enum
 	BLIS_DT_HI             = BLIS_DCOMPLEX
 } num_t;
 
-typedef enum
+typedef enum dom_e
 {
 	BLIS_REAL              = BLIS_BITVAL_REAL,
 	BLIS_COMPLEX           = BLIS_BITVAL_COMPLEX
 } dom_t;
 
-typedef enum
+typedef enum prec_e
 {
 	BLIS_SINGLE_PREC       = BLIS_BITVAL_SINGLE_PREC,
 	BLIS_DOUBLE_PREC       = BLIS_BITVAL_DOUBLE_PREC
@@ -1329,7 +1329,7 @@ typedef enum
 
 // -- Pack schema type --
 
-typedef enum
+typedef enum pack_e
 {
 	BLIS_NOT_PACKED       = BLIS_BITVAL_NOT_PACKED,
 	BLIS_PACKED_UNSPEC    = BLIS_BITVAL_PACKED_UNSPEC,
@@ -1349,7 +1349,7 @@ typedef enum
 
 // -- Pack order type --
 
-typedef enum
+typedef enum packord_e
 {
 	BLIS_PACK_FWD_IF_UPPER = BLIS_BITVAL_PACK_FWD_IF_UPPER,
 	BLIS_PACK_REV_IF_UPPER = BLIS_BITVAL_PACK_REV_IF_UPPER,
@@ -1361,7 +1361,7 @@ typedef enum
 
 // -- Pack buffer type --
 
-typedef enum
+typedef enum packbuf_e
 {
 	BLIS_BUFFER_FOR_A_BLOCK = BLIS_BITVAL_BUFFER_FOR_A_BLOCK,
 	BLIS_BUFFER_FOR_B_PANEL = BLIS_BITVAL_BUFFER_FOR_B_PANEL,
@@ -1372,7 +1372,7 @@ typedef enum
 
 // -- Partitioning direction --
 
-typedef enum
+typedef enum dir_e
 {
 	BLIS_FWD,
 	BLIS_BWD
@@ -1381,7 +1381,7 @@ typedef enum
 
 // -- Subpartition type --
 
-typedef enum
+typedef enum subpart_e
 {
 	BLIS_SUBPART0,
 	BLIS_SUBPART1,
@@ -1404,7 +1404,7 @@ typedef enum
 
 // -- Matrix dimension type --
 
-typedef enum
+typedef enum mdim_e
 {
 	BLIS_M = 0,
 	BLIS_N = 1
@@ -1413,7 +1413,7 @@ typedef enum
 
 // -- Machine parameter types --
 
-typedef enum
+typedef enum machval_e
 {
 	BLIS_MACH_EPS = 0,
 	BLIS_MACH_SFMIN,
@@ -1437,7 +1437,7 @@ typedef enum
 
 // -- Induced method types --
 
-typedef enum
+typedef enum ind_e
 {
 	BLIS_1M        = 0,
 	BLIS_NAT,
@@ -1457,7 +1457,7 @@ typedef enum
 
 // -- Threading implementation type --
 
-typedef enum
+typedef enum timpl_e
 {
 	BLIS_SINGLE = 0,
 	BLIS_OPENMP,
@@ -1494,7 +1494,7 @@ typedef uint32_t kerid_t;
 
 #define BLIS_VA_END  ((kerid_t)-1)
 
-typedef enum
+typedef enum ukr_e
 {
 	// -- Single-type kernels --
 
@@ -1578,7 +1578,7 @@ typedef enum
 } ukr_t;
 
 
-typedef enum
+typedef enum ukr_pref_e
 {
     // l3 kernel row preferences
 	BLIS_GEMM_UKR_ROW_PREF,
@@ -1605,7 +1605,7 @@ typedef enum
 	BLIS_UKR_PREFS_END_ = BLIS_VA_END
 } ukr_pref_t;
 
-typedef enum
+typedef enum kimpl_e
 {
 	BLIS_REFERENCE_UKERNEL = 0,
 	BLIS_VIRTUAL_UKERNEL,
@@ -1618,7 +1618,7 @@ typedef enum
 
 
 #if 0
-typedef enum
+typedef enum l3sup_e
 {
 	// RV = row-stored, contiguous vector-loading
 	// RG = row-stored, non-contiguous gather-loading
@@ -1652,7 +1652,7 @@ typedef enum
 #endif
 
 
-typedef enum
+typedef enum stor3_e
 {
 	// 3-operand storage combinations
 	BLIS_RRR = 0,
@@ -1693,7 +1693,7 @@ typedef enum
 
 
 #if 0
-typedef enum
+typedef enum thridx_e
 {
 	BLIS_JC_IDX = 0,
 	BLIS_PC_IDX,
@@ -1709,7 +1709,7 @@ typedef enum
 
 // -- Operation ID type --
 
-typedef enum
+typedef enum opid_e
 {
 //
 // NOTE: If/when additional type values are added to this enum,
@@ -1746,7 +1746,7 @@ typedef enum
 
 // -- Blocksize ID type --
 
-typedef enum
+typedef enum bszid_e
 {
 	// NOTE: the level-3 blocksizes MUST be indexed starting at zero.
 	// At one point, we made this assumption in bli_cntx_set_blkszs()
@@ -1813,7 +1813,7 @@ enum
 // OR if values are rearranged, be sure to update the string array
 // in bli_arch.c.
 
-typedef enum
+typedef enum arch_e
 {
 	// NOTE: The C language standard guarantees that the first enum value
 	// starts at 0.
@@ -1963,7 +1963,7 @@ typedef int bli_pthread_barrierattr_t;
 
 // -- pthread types --
 
-typedef struct
+typedef struct bli_pthread_s
 {
     HANDLE handle;
     void* retval;
@@ -1974,7 +1974,7 @@ typedef void bli_pthread_mutexattr_t;
 typedef CONDITION_VARIABLE bli_pthread_cond_t;
 typedef void bli_pthread_condattr_t;
 typedef INIT_ONCE bli_pthread_once_t;
-typedef struct
+typedef struct bli_pthread_barrier_s
 {
     bli_pthread_mutex_t mutex;
     bli_pthread_cond_t  cond;
@@ -1994,7 +1994,7 @@ typedef void bli_pthread_barrierattr_t;
 #include <pthread.h> // skipped
 
 // This branch defines a pthreads-like API, bli_pthreads_*(), and implements it
-// in terms of the corresponding pthreads_*() types, macros, and function calls. 
+// in terms of the corresponding pthreads_*() types, macros, and function calls.
 
 // -- pthread types --
 
@@ -2013,7 +2013,7 @@ typedef pthread_once_t      bli_pthread_once_t;
 
 typedef void bli_pthread_barrierattr_t;
 
-typedef struct
+typedef struct bli_pthread_barrier_s
 {
 	bli_pthread_mutex_t mutex;
 	bli_pthread_cond_t  cond;
@@ -2165,7 +2165,7 @@ BLIS_EXPORT_BLIS int bli_pthread_barrier_wait
 
 // -- pthread_switch --
 
-typedef struct
+typedef struct bli_pthread_switch_s
 {
     int                 status;
     bli_pthread_mutex_t mutex;
@@ -2193,7 +2193,7 @@ int bli_pthread_switch_off
 
 // -- Pool block type --
 
-typedef struct
+typedef struct pblk_s
 {
 	void*     buf;
 	siz_t     block_size;
@@ -2203,7 +2203,7 @@ typedef struct
 
 // -- Pool type --
 
-typedef struct
+typedef struct pool_s
 {
 	void*     block_ptrs;
 	dim_t     block_ptrs_len;
@@ -2223,7 +2223,7 @@ typedef struct
 
 // -- Array type --
 
-typedef struct
+typedef struct array_s
 {
 	void*     buf;
 
@@ -2235,7 +2235,7 @@ typedef struct
 
 // -- Locked pool-of-arrays-of-pools type --
 
-typedef struct
+typedef struct apool_s
 {
 	bli_pthread_mutex_t mutex;
 	pool_t              pool;
@@ -2337,7 +2337,7 @@ typedef struct mbool_s
 // parameter values that may be of use to the micro-kernel without
 // cluttering up the micro-kernel interface itself.
 
-typedef struct
+typedef struct auxinfo_s
 {
 	// The pack schemas of A and B.
 	pack_t schema_a;
@@ -2601,7 +2601,7 @@ BLIS_INLINE void bli_obj_init_subpart_from( const obj_t* a, obj_t* b )
 // -- Stack type --
 
 // NB: stack_t is already taken by <signal.h>
-typedef struct
+typedef struct stck_s
 {
 	siz_t elem_size;
 	siz_t block_len;
@@ -2652,13 +2652,13 @@ typedef struct rntm_s
 
 // -- Error types --
 
-typedef enum
+typedef enum errlev_e
 {
 	BLIS_NO_ERROR_CHECKING = 0,
 	BLIS_FULL_ERROR_CHECKING
 } errlev_t;
 
-typedef enum
+typedef enum err_e
 {
 	// Generic error codes
 	BLIS_SUCCESS                               = (  -1),
@@ -18260,12 +18260,26 @@ GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_3x8 )
 GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_2x8 )
 GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_1x8 )
 
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_6x7 )
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_5x7 )
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_4x7 )
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_3x7 )
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_2x7 )
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_1x7 )
+
 GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_6x6 )
 GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_5x6 )
 GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_4x6 )
 GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_3x6 )
 GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_2x6 )
 GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_1x6 )
+
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_6x5 )
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_5x5 )
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_4x5 )
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_3x5 )
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_2x5 )
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_1x5 )
 
 GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_6x4 )
 GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_5x4 )
@@ -18274,6 +18288,13 @@ GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_3x4 )
 GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_2x4 )
 GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_1x4 )
 
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_6x3 )
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_5x3 )
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_4x3 )
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_3x3 )
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_2x3 )
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_1x3 )
+
 GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_6x2 )
 GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_5x2 )
 GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_4x2 )
@@ -18281,6 +18302,12 @@ GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_3x2 )
 GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_2x2 )
 GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_1x2 )
 
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_6x1 )
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_5x1 )
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_4x1 )
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_3x1 )
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_2x1 )
+GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_1x1 )
 // gemmsup_rv (mkernel in m dim)
 
 GEMMSUP_KER_PROT( double,   d, gemmsup_rv_haswell_asm_6x8m )
@@ -18501,7 +18528,7 @@ AXPYF_KER_PROT( double,   d, axpyf_zen_int_5 )
    libraries.
 
    Copyright (C) 2014, The University of Texas at Austin
-   Copyright (C) 2020 - 2022, Advanced Micro Devices, Inc. All rights reserved.
+   Copyright (C) 2020 - 2025, Advanced Micro Devices, Inc. All rights reserved.
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -18547,9 +18574,10 @@ AXPYV_KER_PROT( float,    s, axpyv_zen_int )
 AXPYV_KER_PROT( double,   d, axpyv_zen_int )
 
 // axpyv (intrinsics unrolled x10)
-AXPYV_KER_PROT( float,    s, axpyv_zen_int10 )
-AXPYV_KER_PROT( double,   d, axpyv_zen_int10 )
-
+AXPYV_KER_PROT( float,    s, axpyv_zen_int_10 )
+AXPYV_KER_PROT( double,   d, axpyv_zen_int_10 )
+AXPYV_KER_PROT( scomplex, c, axpyv_zen_int_5 )
+AXPYV_KER_PROT( dcomplex, z, axpyv_zen_int_5 )
 // dotv (intrinsics)
 DOTV_KER_PROT( float,    s, dotv_zen_int )
 DOTV_KER_PROT( double,   d, dotv_zen_int )
@@ -18595,8 +18623,11 @@ AXPYF_KER_PROT( float,    s, axpyf_zen_int_8 )
 AXPYF_KER_PROT( double,   d, axpyf_zen_int_8 )
 AXPYF_KER_PROT( float,    s, axpyf_zen_int_5 )
 AXPYF_KER_PROT( double,   d, axpyf_zen_int_5 )
+AXPYF_KER_PROT( scomplex,    c, axpyf_zen_int_5 )
+AXPYF_KER_PROT( dcomplex,   z, axpyf_zen_int_5 )
 
 AXPYF_KER_PROT( double,   d, axpyf_zen_int_16x4 )
+AXPYF_KER_PROT( double,   d, axpyf_zen_int_16x2 )
 AXPYF_KER_PROT( scomplex, c, axpyf_zen_int_4 )
 
 // dotxf (intrinsics)
@@ -18622,7 +18653,7 @@ GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_2x8 )
 GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_1x8 )
 
 GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_6x4 )
-GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_5x4 ) 
+GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_5x4 )
 GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_4x4 )
 GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_3x4 )
 GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_2x4 )
@@ -18647,6 +18678,33 @@ GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_6x16m )
 GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_6x8m )
 GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_6x4m )
 GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_6x2m )
+//gemmsup_rv (mkernel in m dim) for mask load/store
+GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_6x16m_mask )
+GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_6x8m_mask )
+GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_6x4m_mask )
+GEMMSUP_KER_PROT( float,   s, bli_sgemmsup_rv_zen_asm_6x8m )
+GEMMSUP_KER_PROT( float,   s, bli_sgemmsup_rv_zen_asm_6x4m )
+GEMMSUP_KER_PROT( float,   s, bli_sgemmsup_rv_zen_asm_6x2m )
+
+//gemmsup_rv (mkernel in m dim) for fringe case
+GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_1x16_mask )
+GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_2x16_mask )
+GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_3x16_mask )
+GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_4x16_mask )
+GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_5x16_mask )
+
+GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_1x8_mask )
+GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_2x8_mask )
+GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_3x8_mask )
+GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_4x8_mask )
+GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_5x8_mask )
+
+GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_1x4_mask )
+GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_2x4_mask )
+GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_3x4_mask )
+GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_4x4_mask )
+GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_5x4_mask )
+
 // gemmsup_rv (mkernel in n dim)
 
 GEMMSUP_KER_PROT( float,   s, gemmsup_rv_zen_asm_6x16n )
@@ -18676,36 +18734,6 @@ GEMMSUP_KER_PROT( float,   s, gemmsup_rd_zen_asm_6x16n)
 GEMMSUP_KER_PROT( float,   s, gemmsup_rd_zen_asm_3x16n)
 GEMMSUP_KER_PROT( float,   s, gemmsup_rd_zen_asm_2x16n)
 GEMMSUP_KER_PROT( float,   s, gemmsup_rd_zen_asm_1x16n)
-
-GEMMSUP_KER_PROT( scomplex,   c, gemmsup_rv_zen_asm_3x8m )
-GEMMSUP_KER_PROT( scomplex,   c, gemmsup_rv_zen_asm_3x4m )
-GEMMSUP_KER_PROT( scomplex,   c, gemmsup_rv_zen_asm_3x2m )
-GEMMSUP_KER_PROT( scomplex,   c, gemmsup_rv_zen_asm_2x8 )
-GEMMSUP_KER_PROT( scomplex,   c, gemmsup_rv_zen_asm_1x8 )
-GEMMSUP_KER_PROT( scomplex,   c, gemmsup_rv_zen_asm_2x4 )
-GEMMSUP_KER_PROT( scomplex,   c, gemmsup_rv_zen_asm_1x4 )
-GEMMSUP_KER_PROT( scomplex,   c, gemmsup_rv_zen_asm_2x2 )
-GEMMSUP_KER_PROT( scomplex,   c, gemmsup_rv_zen_asm_1x2 )
-GEMMSUP_KER_PROT( dcomplex,   z, gemmsup_rv_zen_asm_3x4m )
-GEMMSUP_KER_PROT( dcomplex,   z, gemmsup_rv_zen_asm_3x2m )
-GEMMSUP_KER_PROT( dcomplex,   z, gemmsup_rv_zen_asm_2x4 )
-GEMMSUP_KER_PROT( dcomplex,   z, gemmsup_rv_zen_asm_1x4 )
-GEMMSUP_KER_PROT( dcomplex,   z, gemmsup_rv_zen_asm_2x2 )
-GEMMSUP_KER_PROT( dcomplex,   z, gemmsup_rv_zen_asm_1x2 )
-
-// gemmsup_rv (mkernel in n dim)
-
-
-GEMMSUP_KER_PROT( scomplex,   c, gemmsup_rv_zen_asm_3x8n )
-GEMMSUP_KER_PROT( scomplex,   c, gemmsup_rv_zen_asm_2x8n )
-GEMMSUP_KER_PROT( scomplex,   c, gemmsup_rv_zen_asm_1x8n )
-GEMMSUP_KER_PROT( scomplex,   c, gemmsup_rv_zen_asm_3x4 )
-GEMMSUP_KER_PROT( scomplex,   c, gemmsup_rv_zen_asm_3x2 )
-GEMMSUP_KER_PROT( dcomplex,   z, gemmsup_rv_zen_asm_3x4n )
-GEMMSUP_KER_PROT( dcomplex,   z, gemmsup_rv_zen_asm_2x4n )
-GEMMSUP_KER_PROT( dcomplex,   z, gemmsup_rv_zen_asm_1x4n )
-GEMMSUP_KER_PROT( dcomplex,   z, gemmsup_rv_zen_asm_3x2 )
-GEMMSUP_KER_PROT( dcomplex,   z, gemmsup_rv_zen_asm_3x1 )
 
 // end bli_kernels_zen.h
 #line 228 "./frame/include//bli_arch_config.h"
@@ -19678,16 +19706,16 @@ BLIS_INLINE timpl_t bli_thrcomm_thread_impl( thrcomm_t* comm )
 
 
 // Threading method-agnostic function prototypes.
-thrcomm_t* bli_thrcomm_create( timpl_t ti, pool_t* sba_pool, dim_t n_threads );
-void       bli_thrcomm_free( pool_t* sba_pool, thrcomm_t* comm );
+BLIS_EXPORT_BLIS thrcomm_t* bli_thrcomm_create( timpl_t ti, pool_t* sba_pool, dim_t n_threads );
+BLIS_EXPORT_BLIS void       bli_thrcomm_free( pool_t* sba_pool, thrcomm_t* comm );
 
 // Threading method-specific function prototypes.
 // NOTE: These are the prototypes to the dispatcher functions and thus they
 // require the timpl_t as an argument. The threading-specific functions can
 // (and do) omit the timpl_t from their function signatures since their
 // threading implementation is intrinsically known.
-void                   bli_thrcomm_init( timpl_t ti, dim_t n_threads, thrcomm_t* comm );
-void                   bli_thrcomm_cleanup( thrcomm_t* comm );
+BLIS_EXPORT_BLIS void  bli_thrcomm_init( timpl_t ti, dim_t n_threads, thrcomm_t* comm );
+BLIS_EXPORT_BLIS void  bli_thrcomm_cleanup( thrcomm_t* comm );
 BLIS_EXPORT_BLIS void  bli_thrcomm_barrier( dim_t thread_id, thrcomm_t* comm );
 
 // Other function prototypes.
@@ -20200,7 +20228,7 @@ BLIS_EXPORT_BLIS void bli_thread_launch
 // -----------------------------------------------------------------------------
 
 // Factorization and partitioning prototypes
-typedef struct
+typedef struct bli_prime_factors_s
 {
     dim_t n;
     dim_t sqrt_n;
@@ -20789,7 +20817,7 @@ typedef int bli_pthread_barrierattr_t;
 
 // -- pthread types --
 
-typedef struct
+typedef struct bli_pthread_s
 {
     HANDLE handle;
     void* retval;
@@ -20800,7 +20828,7 @@ typedef void bli_pthread_mutexattr_t;
 typedef CONDITION_VARIABLE bli_pthread_cond_t;
 typedef void bli_pthread_condattr_t;
 typedef INIT_ONCE bli_pthread_once_t;
-typedef struct
+typedef struct bli_pthread_barrier_s
 {
     bli_pthread_mutex_t mutex;
     bli_pthread_cond_t  cond;
@@ -20820,7 +20848,7 @@ typedef void bli_pthread_barrierattr_t;
 #include <pthread.h> // skipped
 
 // This branch defines a pthreads-like API, bli_pthreads_*(), and implements it
-// in terms of the corresponding pthreads_*() types, macros, and function calls. 
+// in terms of the corresponding pthreads_*() types, macros, and function calls.
 
 // -- pthread types --
 
@@ -20839,7 +20867,7 @@ typedef pthread_once_t      bli_pthread_once_t;
 
 typedef void bli_pthread_barrierattr_t;
 
-typedef struct
+typedef struct bli_pthread_barrier_s
 {
 	bli_pthread_mutex_t mutex;
 	bli_pthread_cond_t  cond;
@@ -20991,7 +21019,7 @@ BLIS_EXPORT_BLIS int bli_pthread_barrier_wait
 
 // -- pthread_switch --
 
-typedef struct
+typedef struct bli_pthread_switch_s
 {
     int                 status;
     bli_pthread_mutex_t mutex;
@@ -22132,7 +22160,7 @@ BLIS_EXPORT_BLIS void bli_mbool_free( mbool_t* b );
 // -- Stack type based on a dynamic block array --
 
 /*
-typedef struct
+typedef struct stck_s
 {
 	siz_t elem_size;
 	siz_t block_len;
@@ -23076,7 +23104,7 @@ void bli_rntm_sanitize
        rntm_t* rntm
      );
 
-void bli_rntm_factorize
+BLIS_EXPORT_BLIS void bli_rntm_factorize
      (
        dim_t   m,
        dim_t   n,
@@ -23563,7 +23591,7 @@ void bli_pba_compute_pool_block_sizes_dt
 // -- Pool block type --
 
 /*
-typedef struct
+typedef struct pblk_s
 {
 	void*     buf;
 	siz_t     block_size;
@@ -23574,7 +23602,7 @@ typedef struct
 // -- Pool type --
 
 /*
-typedef struct
+typedef struct pool_s
 {
 	void*     block_ptrs;
 	siz_t     block_ptrs_len;
@@ -23860,7 +23888,7 @@ void bli_pblk_print
 // -- Array type --
 
 /*
-typedef struct
+typedef struct array_s
 {
 	void*     buf;
 
@@ -23983,7 +24011,7 @@ void bli_array_set_elem
 // -- Locked pool-of-arrays type --
 
 /*
-typedef struct
+typedef struct apool_s
 {
 	bli_pthread_mutex_t mutex;
 	pool_t              pool;
@@ -24271,7 +24299,7 @@ typedef struct mem_s
 	siz_t     size;
 } mem_t;
 
-typedef struct
+typedef struct pblk_s
 {
 	void*     buf;
 	siz_t     block_size;
@@ -26027,7 +26055,7 @@ void bli_arch_log( const char*, ... );
   // Used only during standalone testing of ARM support.
   #define FALSE 0
   #define TRUE  1
-  typedef enum
+  typedef enum arch_e
   {
 	BLIS_ARCH_CORTEXA57 = 10,
 	BLIS_ARCH_CORTEXA15 = 11,
@@ -35629,7 +35657,7 @@ INSERT_GENTPROT2_MIX_P( packm_struc_cxk )
 // packm params types.
 //
 
-typedef struct
+typedef struct packm_blk_var1_params_s
 {
 	//                  Type of C          Type of P
 	packm_ker_ft ukr_fn[BLIS_NUM_FP_TYPES][BLIS_NUM_FP_TYPES];
@@ -42108,7 +42136,7 @@ BLIS_INLINE void bli_gemm_cntl_set_kc( const blksz_t* kc, gemm_cntl_t* cntl )
 // gemm kernel parameter struct.
 //
 
-typedef struct
+typedef struct gemm_ker_params_s
 {
 	gemm_ukr_ft ukr;
 } gemm_ker_params_t;
@@ -57196,10 +57224,10 @@ BLIS_EXPORT_BLAS void PASTEF77(bli_thread_set_num_threads)
 // Disabled symbols (symbol_omit_list)
 
 
-#define BLIS_VERSION_STRING "3.0-dev"
+#define BLIS_VERSION_STRING "3.0"
 
 #define BLIS_VERSION_MAJOR 3
-#define BLIS_VERSION_MINOR 0-dev
+#define BLIS_VERSION_MINOR 0
 #define BLIS_VERSION_REVISION 0
 
 #if 1
@@ -58183,7 +58211,7 @@ typedef void  (*free_ft)  ( void*  p    );
 
 // -- Operational parameter types --
 
-typedef enum
+typedef enum trans_e
 {
 	BLIS_NO_TRANSPOSE      = 0x0,
 	BLIS_TRANSPOSE         = BLIS_BITVAL_TRANS,
@@ -58191,13 +58219,13 @@ typedef enum
 	BLIS_CONJ_TRANSPOSE    = BLIS_BITVAL_CONJ_TRANS
 } trans_t;
 
-typedef enum
+typedef enum conj_e
 {
 	BLIS_NO_CONJUGATE      = 0x0,
 	BLIS_CONJUGATE         = BLIS_BITVAL_CONJ
 } conj_t;
 
-typedef enum
+typedef enum uplo_e
 {
 	BLIS_ZEROS             = BLIS_BITVAL_ZEROS,
 	BLIS_LOWER             = BLIS_BITVAL_LOWER,
@@ -58205,25 +58233,25 @@ typedef enum
 	BLIS_DENSE             = BLIS_BITVAL_DENSE
 } uplo_t;
 
-typedef enum
+typedef enum side_e
 {
 	BLIS_LEFT              = 0x0,
 	BLIS_RIGHT
 } side_t;
 
-typedef enum
+typedef enum diag_e
 {
 	BLIS_NONUNIT_DIAG      = 0x0,
 	BLIS_UNIT_DIAG         = BLIS_BITVAL_UNIT_DIAG
 } diag_t;
 
-typedef enum
+typedef enum invdiag_e
 {
 	BLIS_NO_INVERT_DIAG    = 0x0,
 	BLIS_INVERT_DIAG       = BLIS_BITVAL_INVERT_DIAG
 } invdiag_t;
 
-typedef enum
+typedef enum struc_e
 {
 	BLIS_GENERAL           = BLIS_BITVAL_GENERAL,
 	BLIS_HERMITIAN         = BLIS_BITVAL_HERMITIAN,
@@ -58234,7 +58262,7 @@ typedef enum
 
 // -- Data type --
 
-typedef enum
+typedef enum num_e
 {
 	BLIS_FLOAT             = BLIS_BITVAL_FLOAT_TYPE,
 	BLIS_DOUBLE            = BLIS_BITVAL_DOUBLE_TYPE,
@@ -58246,13 +58274,13 @@ typedef enum
 	BLIS_DT_HI             = BLIS_DCOMPLEX
 } num_t;
 
-typedef enum
+typedef enum dom_e
 {
 	BLIS_REAL              = BLIS_BITVAL_REAL,
 	BLIS_COMPLEX           = BLIS_BITVAL_COMPLEX
 } dom_t;
 
-typedef enum
+typedef enum prec_e
 {
 	BLIS_SINGLE_PREC       = BLIS_BITVAL_SINGLE_PREC,
 	BLIS_DOUBLE_PREC       = BLIS_BITVAL_DOUBLE_PREC
@@ -58261,7 +58289,7 @@ typedef enum
 
 // -- Pack schema type --
 
-typedef enum
+typedef enum pack_e
 {
 	BLIS_NOT_PACKED       = BLIS_BITVAL_NOT_PACKED,
 	BLIS_PACKED_UNSPEC    = BLIS_BITVAL_PACKED_UNSPEC,
@@ -58281,7 +58309,7 @@ typedef enum
 
 // -- Pack order type --
 
-typedef enum
+typedef enum packord_e
 {
 	BLIS_PACK_FWD_IF_UPPER = BLIS_BITVAL_PACK_FWD_IF_UPPER,
 	BLIS_PACK_REV_IF_UPPER = BLIS_BITVAL_PACK_REV_IF_UPPER,
@@ -58293,7 +58321,7 @@ typedef enum
 
 // -- Pack buffer type --
 
-typedef enum
+typedef enum packbuf_e
 {
 	BLIS_BUFFER_FOR_A_BLOCK = BLIS_BITVAL_BUFFER_FOR_A_BLOCK,
 	BLIS_BUFFER_FOR_B_PANEL = BLIS_BITVAL_BUFFER_FOR_B_PANEL,
@@ -58304,7 +58332,7 @@ typedef enum
 
 // -- Partitioning direction --
 
-typedef enum
+typedef enum dir_e
 {
 	BLIS_FWD,
 	BLIS_BWD
@@ -58313,7 +58341,7 @@ typedef enum
 
 // -- Subpartition type --
 
-typedef enum
+typedef enum subpart_e
 {
 	BLIS_SUBPART0,
 	BLIS_SUBPART1,
@@ -58336,7 +58364,7 @@ typedef enum
 
 // -- Matrix dimension type --
 
-typedef enum
+typedef enum mdim_e
 {
 	BLIS_M = 0,
 	BLIS_N = 1
@@ -58345,7 +58373,7 @@ typedef enum
 
 // -- Machine parameter types --
 
-typedef enum
+typedef enum machval_e
 {
 	BLIS_MACH_EPS = 0,
 	BLIS_MACH_SFMIN,
@@ -58369,7 +58397,7 @@ typedef enum
 
 // -- Induced method types --
 
-typedef enum
+typedef enum ind_e
 {
 	BLIS_1M        = 0,
 	BLIS_NAT,
@@ -58389,7 +58417,7 @@ typedef enum
 
 // -- Threading implementation type --
 
-typedef enum
+typedef enum timpl_e
 {
 	BLIS_SINGLE = 0,
 	BLIS_OPENMP,
@@ -58426,7 +58454,7 @@ typedef uint32_t kerid_t;
 
 #define BLIS_VA_END  ((kerid_t)-1)
 
-typedef enum
+typedef enum ukr_e
 {
 	// -- Single-type kernels --
 
@@ -58510,7 +58538,7 @@ typedef enum
 } ukr_t;
 
 
-typedef enum
+typedef enum ukr_pref_e
 {
     // l3 kernel row preferences
 	BLIS_GEMM_UKR_ROW_PREF,
@@ -58537,7 +58565,7 @@ typedef enum
 	BLIS_UKR_PREFS_END_ = BLIS_VA_END
 } ukr_pref_t;
 
-typedef enum
+typedef enum kimpl_e
 {
 	BLIS_REFERENCE_UKERNEL = 0,
 	BLIS_VIRTUAL_UKERNEL,
@@ -58550,7 +58578,7 @@ typedef enum
 
 
 #if 0
-typedef enum
+typedef enum l3sup_e
 {
 	// RV = row-stored, contiguous vector-loading
 	// RG = row-stored, non-contiguous gather-loading
@@ -58584,7 +58612,7 @@ typedef enum
 #endif
 
 
-typedef enum
+typedef enum stor3_e
 {
 	// 3-operand storage combinations
 	BLIS_RRR = 0,
@@ -58625,7 +58653,7 @@ typedef enum
 
 
 #if 0
-typedef enum
+typedef enum thridx_e
 {
 	BLIS_JC_IDX = 0,
 	BLIS_PC_IDX,
@@ -58641,7 +58669,7 @@ typedef enum
 
 // -- Operation ID type --
 
-typedef enum
+typedef enum opid_e
 {
 //
 // NOTE: If/when additional type values are added to this enum,
@@ -58678,7 +58706,7 @@ typedef enum
 
 // -- Blocksize ID type --
 
-typedef enum
+typedef enum bszid_e
 {
 	// NOTE: the level-3 blocksizes MUST be indexed starting at zero.
 	// At one point, we made this assumption in bli_cntx_set_blkszs()
@@ -58745,7 +58773,7 @@ enum
 // OR if values are rearranged, be sure to update the string array
 // in bli_arch.c.
 
-typedef enum
+typedef enum arch_e
 {
 	// NOTE: The C language standard guarantees that the first enum value
 	// starts at 0.
@@ -58895,7 +58923,7 @@ typedef int bli_pthread_barrierattr_t;
 
 // -- pthread types --
 
-typedef struct
+typedef struct bli_pthread_s
 {
     HANDLE handle;
     void* retval;
@@ -58906,7 +58934,7 @@ typedef void bli_pthread_mutexattr_t;
 typedef CONDITION_VARIABLE bli_pthread_cond_t;
 typedef void bli_pthread_condattr_t;
 typedef INIT_ONCE bli_pthread_once_t;
-typedef struct
+typedef struct bli_pthread_barrier_s
 {
     bli_pthread_mutex_t mutex;
     bli_pthread_cond_t  cond;
@@ -58926,7 +58954,7 @@ typedef void bli_pthread_barrierattr_t;
 #include <pthread.h> // skipped
 
 // This branch defines a pthreads-like API, bli_pthreads_*(), and implements it
-// in terms of the corresponding pthreads_*() types, macros, and function calls. 
+// in terms of the corresponding pthreads_*() types, macros, and function calls.
 
 // -- pthread types --
 
@@ -58945,7 +58973,7 @@ typedef pthread_once_t      bli_pthread_once_t;
 
 typedef void bli_pthread_barrierattr_t;
 
-typedef struct
+typedef struct bli_pthread_barrier_s
 {
 	bli_pthread_mutex_t mutex;
 	bli_pthread_cond_t  cond;
@@ -59097,7 +59125,7 @@ BLIS_EXPORT_BLIS int bli_pthread_barrier_wait
 
 // -- pthread_switch --
 
-typedef struct
+typedef struct bli_pthread_switch_s
 {
     int                 status;
     bli_pthread_mutex_t mutex;
@@ -59125,7 +59153,7 @@ int bli_pthread_switch_off
 
 // -- Pool block type --
 
-typedef struct
+typedef struct pblk_s
 {
 	void*     buf;
 	siz_t     block_size;
@@ -59135,7 +59163,7 @@ typedef struct
 
 // -- Pool type --
 
-typedef struct
+typedef struct pool_s
 {
 	void*     block_ptrs;
 	dim_t     block_ptrs_len;
@@ -59155,7 +59183,7 @@ typedef struct
 
 // -- Array type --
 
-typedef struct
+typedef struct array_s
 {
 	void*     buf;
 
@@ -59167,7 +59195,7 @@ typedef struct
 
 // -- Locked pool-of-arrays-of-pools type --
 
-typedef struct
+typedef struct apool_s
 {
 	bli_pthread_mutex_t mutex;
 	pool_t              pool;
@@ -59269,7 +59297,7 @@ typedef struct mbool_s
 // parameter values that may be of use to the micro-kernel without
 // cluttering up the micro-kernel interface itself.
 
-typedef struct
+typedef struct auxinfo_s
 {
 	// The pack schemas of A and B.
 	pack_t schema_a;
@@ -59533,7 +59561,7 @@ BLIS_INLINE void bli_obj_init_subpart_from( const obj_t* a, obj_t* b )
 // -- Stack type --
 
 // NB: stack_t is already taken by <signal.h>
-typedef struct
+typedef struct stck_s
 {
 	siz_t elem_size;
 	siz_t block_len;
@@ -59584,13 +59612,13 @@ typedef struct rntm_s
 
 // -- Error types --
 
-typedef enum
+typedef enum errlev_e
 {
 	BLIS_NO_ERROR_CHECKING = 0,
 	BLIS_FULL_ERROR_CHECKING
 } errlev_t;
 
-typedef enum
+typedef enum err_e
 {
 	// Generic error codes
 	BLIS_SUCCESS                               = (  -1),
