@@ -140,7 +140,7 @@ def test_optimize_compare_to_einsum(shapes: tuple):
     mats = [optimize.Matrix(shape, "f", 4) for shape in shapes]
     best_path = optimize.optimize(mats)
     expression = ",".join([f"{chr(97 + i)}{chr(97 + i + 1)}" for i in range(len(shapes))])
-    (_, *es_path), es_descr = np.einsum_path(expression, *(np.empty(shape) for shape in shapes), optimize="optimal")
+    (_, *_), es_descr = np.einsum_path(expression, *(np.empty(shape) for shape in shapes), optimize="optimal")
     es_flop_count = parse_optimized_flop_count(es_descr)
     assert best_path[1] == es_flop_count - 1
     print(best_path[1])

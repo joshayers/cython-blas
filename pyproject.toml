@@ -46,7 +46,7 @@ dev = [
     # Benchmarks
     "asv",
     # Build environment
-    "scipy-openblas64 ==0.3.30.0.1", # keep up to date with cibuildwheel config, before-build command
+    "scipy-openblas64 ==0.3.31.188.0", # keep up to date with cibuildwheel config, before-build command
     "cython >=3.1.0",
     "meson-python >=0.17.0",
     "ninja >=1.11",
@@ -64,7 +64,7 @@ build-frontend = "build"
 archs = ["auto64"]
 skip = []
 before-build = [
-    "pip install -q abi3audit scipy_openblas64==0.3.30.0.1", # keep openblas version up to date with dev extra dependency
+    "pip install -q abi3audit scipy_openblas64==0.3.31.188.0", # keep openblas version up to date with dev extra dependency
     "python tools/before_build.py",
 ]
 test-extras = ["test"]
@@ -109,6 +109,8 @@ DEP002 = [ # packages that are not directly imported in the codebase
     "ruff",
     "isort",
     "cython-lint",
+    # Benchmarks
+    "asv",
     # Build environment
     "scipy-openblas64",
     "cython",
