@@ -1263,24 +1263,24 @@ files = [
 
 [[package]]
 name = "scipy-openblas64"
-version = "0.3.31.188.0"
+version = "0.3.34.0.0"
 description = "Provides OpenBLAS for python packaging"
 optional = true
 python-versions = ">=3.7"
 groups = ["main"]
 markers = "extra == \"dev\""
 files = [
-    {file = "scipy_openblas64-0.3.31.188.0-py3-none-macosx_10_9_x86_64.whl", hash = "sha256:893305cc5b68fbdf10f04333a4dc55e04fab74a3bbac33a968e25ce0737e6b25"},
-    {file = "scipy_openblas64-0.3.31.188.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:eb0d2b178632e11979c93a3cf7944f2a778eac00e40014f7140dea0a54bf7b7a"},
-    {file = "scipy_openblas64-0.3.31.188.0-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:b49e96ef401fdbadce2c1034dfa7326b963d54b0c09f9498c4e22e171e877cbf"},
-    {file = "scipy_openblas64-0.3.31.188.0-py3-none-manylinux2014_ppc64le.manylinux_2_17_ppc64le.whl", hash = "sha256:d99c72eb68f9c570a47bb6ad8a32c2c73e1e64b01b5fc019a2b7c5a729aa80b4"},
-    {file = "scipy_openblas64-0.3.31.188.0-py3-none-manylinux2014_s390x.manylinux_2_17_s390x.whl", hash = "sha256:d89ea6ca9636b3cda3a6d9b7fa0078c52b58fd8fd87b04ac4b152a653ed1990e"},
-    {file = "scipy_openblas64-0.3.31.188.0-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:2d02f588ba6817a222be8d7053c0dc8bea7f1083de78fdeb2bf9b3e53dcaacb9"},
-    {file = "scipy_openblas64-0.3.31.188.0-py3-none-manylinux_2_38_riscv64.manylinux_2_39_riscv64.whl", hash = "sha256:c07943c275eec6cbc832f5853e4c19f9be76052e90665b8b7f8ae41bdd69e664"},
-    {file = "scipy_openblas64-0.3.31.188.0-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:5e0a27cdc9ef1ebf19d0e63bc5c7f1a464f029b223089def6e02c42b2f882211"},
-    {file = "scipy_openblas64-0.3.31.188.0-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:901dd43675784218e40c130551ba85937f7622565d46691a979289f0e90bacf9"},
-    {file = "scipy_openblas64-0.3.31.188.0-py3-none-win_amd64.whl", hash = "sha256:4958b7fb8dcc5b8312652764acc762f42e7f1cc7269fe5a561b0635ffd1a8601"},
-    {file = "scipy_openblas64-0.3.31.188.0-py3-none-win_arm64.whl", hash = "sha256:1f788318f34cc1d54db741c530e4ce8098c4ecb528aa836139851d4ab852148e"},
+    {file = "scipy_openblas64-0.3.34.0.0-py3-none-macosx_10_9_x86_64.whl", hash = "sha256:a78b41c5bb781c44cb23ebed48d72c35f8e37670c785fe1febeaf3746990e21d"},
+    {file = "scipy_openblas64-0.3.34.0.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:0c1109a05550b3a231f34fcebabd56e3929b379e75a90fa746bda82873e1442a"},
+    {file = "scipy_openblas64-0.3.34.0.0-py3-none-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:c3468971a0e757a0bfeeffa4cbd99dfe1f0c4882909673f5039b79cb5bf2996a"},
+    {file = "scipy_openblas64-0.3.34.0.0-py3-none-manylinux_2_27_ppc64le.manylinux_2_28_ppc64le.whl", hash = "sha256:e5442fc01374a216b2228560ae22ba334f5d6ed8a626a084e97330b3d3512e92"},
+    {file = "scipy_openblas64-0.3.34.0.0-py3-none-manylinux_2_27_s390x.manylinux_2_28_s390x.whl", hash = "sha256:bbe342939bf2645673c855a58fd838ac9c831126387428aa79054cce2cbb235b"},
+    {file = "scipy_openblas64-0.3.34.0.0-py3-none-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:181eaaae08cd7d274bfd2b68f569792b369adf40ff5e8ebcc89c4ddbc348bfb2"},
+    {file = "scipy_openblas64-0.3.34.0.0-py3-none-manylinux_2_38_riscv64.manylinux_2_39_riscv64.whl", hash = "sha256:c52fa2a5a9a46610d5a7a1b5dc68887dc0eb5631805efb9e60d8c4abe4ce5f61"},
+    {file = "scipy_openblas64-0.3.34.0.0-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:0341e48ca657d9b5f9bd7f3ef7e576b905c3eb86975e3b5c77dbe2b39aed96ee"},
+    {file = "scipy_openblas64-0.3.34.0.0-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:265de5d6dc538cf8d2d9a899d9ac0c608b281bf3c572e90e7f549176ab8f38da"},
+    {file = "scipy_openblas64-0.3.34.0.0-py3-none-win_amd64.whl", hash = "sha256:1789cc9db88ccb0aeb41e370ecce600814a7e6f887e089c0ac43504cd899db00"},
+    {file = "scipy_openblas64-0.3.34.0.0-py3-none-win_arm64.whl", hash = "sha256:627451cf9f9e1bbfd684db1c079050189c6649762152f0bf03440afee962926a"},
 ]
 
 [[package]]
@@ -1680,4 +1680,4 @@ test = ["pytest"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11"
-content-hash = "7d3314377961625fe611070c8d03c0fd195d77ca94d787a48bf0fbf3a01623ea"
+content-hash = "dac6c8179e73743229bc97926f3a46b8d4fedad69c4db97b4971d578ea0a4ce7"

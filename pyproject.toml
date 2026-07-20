@@ -47,7 +47,7 @@ dev = [
     # Benchmarks
     "asv",
     # Build environment
-    "scipy-openblas64 ==0.3.31.188.0", # keep up to date with cibuildwheel config, before-build command
+    "scipy-openblas64 ==0.3.34.0.0", # keep up to date with cibuildwheel config, before-build command
     "cython >=3.1.0",
     "meson-python >=0.17.0",
     "ninja >=1.11",
@@ -67,7 +67,7 @@ skip = [
     "cp3??t-*", # free-threading builds on all platforms
 ]
 before-build = [
-    "pip install -q abi3audit scipy_openblas64==0.3.31.188.0", # keep openblas version up to date with dev extra dependency
+    "pip install -q abi3audit scipy_openblas64==0.3.34.0.0", # keep openblas version up to date with dev extra dependency
     "python tools/before_build.py",
 ]
 test-extras = ["test"]

@@ -201,6 +201,12 @@ extern "C" {
 #define BLIS_DISABLE_MEM_TRACING
 #endif
 
+#if 1
+#define BLIS_ENABLE_MIXED_PRECISION_NORM
+#else
+#define BLIS_DISABLE_MIXED_PRECISION_NORM
+#endif
+
 #if 0
 #define BLIS_ENABLE_SCALAPACK_COMPAT
 #else
@@ -6560,6 +6566,54 @@ BLIS_INLINE ukr_t bli_stor3_ukr( stor3_t id )
 		case BLIS_CCR: return BLIS_GEMMSUP_CCR_UKR;
 		case BLIS_CCC: return BLIS_GEMMSUP_CCC_UKR;
 		default: return BLIS_GEMMSUP_XXX_UKR;
+	}
+}
+
+BLIS_INLINE char bli_stor3_stora( stor3_t id )
+{
+	switch ( id )
+	{
+		case BLIS_RRR: return 'r';
+		case BLIS_RRC: return 'r';
+		case BLIS_RCR: return 'c';
+		case BLIS_RCC: return 'c';
+		case BLIS_CRR: return 'r';
+		case BLIS_CRC: return 'r';
+		case BLIS_CCR: return 'c';
+		case BLIS_CCC: return 'c';
+		default: return 'r';
+	}
+}
+
+BLIS_INLINE char bli_stor3_storb( stor3_t id )
+{
+	switch ( id )
+	{
+		case BLIS_RRR: return 'r';
+		case BLIS_RRC: return 'c';
+		case BLIS_RCR: return 'r';
+		case BLIS_RCC: return 'c';
+		case BLIS_CRR: return 'r';
+		case BLIS_CRC: return 'c';
+		case BLIS_CCR: return 'r';
+		case BLIS_CCC: return 'c';
+		default: return 'r';
+	}
+}
+
+BLIS_INLINE char bli_stor3_storc( stor3_t id )
+{
+	switch ( id )
+	{
+		case BLIS_RRR: return 'r';
+		case BLIS_RRC: return 'r';
+		case BLIS_RCR: return 'r';
+		case BLIS_RCC: return 'r';
+		case BLIS_CRR: return 'c';
+		case BLIS_CRC: return 'c';
+		case BLIS_CCR: return 'c';
+		case BLIS_CCC: return 'c';
+		default: return 'r';
 	}
 }
 
@@ -18610,6 +18664,8 @@ COPYV_KER_PROT( double,   d, copyv_zen_int )
 //
 SETV_KER_PROT(float,    s, setv_zen_int)
 SETV_KER_PROT(double,   d, setv_zen_int)
+SETV_KER_PROT( scomplex, c, setv_zen_int)
+SETV_KER_PROT( dcomplex, z, setv_zen_int)
 
 // swapv (intrinsics)
 SWAPV_KER_PROT(float, 	s, swapv_zen_int8 )
@@ -26309,7 +26365,7 @@ BLIS_EXPORT_BLIS void PASTEMAC(ch,opname) \
        double ai, \
        dim_t  i, \
        dim_t  j, \
-       void*  b, inc_t rs, inc_t cs  \
+       ctype* b, inc_t rs, inc_t cs  \
      );
 
 INSERT_GENTPROT_BASIC( setijm )
@@ -26332,7 +26388,7 @@ BLIS_EXPORT_BLIS void PASTEMAC(ch,opname) \
      ( \
              dim_t   i, \
              dim_t   j, \
-       const void*   b, inc_t rs, inc_t cs, \
+       const ctype*  b, inc_t rs, inc_t cs, \
              double* ar, \
              double* ai  \
      );
@@ -26395,7 +26451,7 @@ BLIS_EXPORT_BLIS void PASTEMAC(ch,opname) \
        double ar, \
        double ai, \
        dim_t  i, \
-       void*  x, inc_t incx  \
+       ctype* x, inc_t incx  \
      );
 
 INSERT_GENTPROT_BASIC( setijv )
@@ -26416,7 +26472,7 @@ BLIS_EXPORT_BLIS err_t bli_getijv
 BLIS_EXPORT_BLIS void PASTEMAC(ch,opname) \
      ( \
              dim_t   i, \
-       const void*   b, inc_t incx, \
+       const ctype*  b, inc_t incx, \
              double* ar, \
              double* ai  \
      );
@@ -39182,8 +39238,8 @@ thrinfo_t* bli_l3_sup_thrinfo_create
 
 void bli_l3_sup_thrinfo_update
      (
-       const rntm_t*     rntm,
-             thrinfo_t** root
+       const rntm_t*    rntm,
+             thrinfo_t* root
      );
 
 void bli_l3_thrinfo_print_gemm_paths
@@ -57293,6 +57349,12 @@ BLIS_EXPORT_BLAS void PASTEF77(bli_thread_set_num_threads)
 #define BLIS_DISABLE_MEM_TRACING
 #endif
 
+#if 1
+#define BLIS_ENABLE_MIXED_PRECISION_NORM
+#else
+#define BLIS_DISABLE_MIXED_PRECISION_NORM
+#endif
+
 #if 0
 #define BLIS_ENABLE_SCALAPACK_COMPAT
 #else
@@ -59838,7 +59900,7 @@ void BLIS_EXPORT_BLAS cblas_zaxpy(f77_int N, const void *alpha, const void *X,
 
 
 /*
- * Routines with S and D prefix only
+ * Routines with S D C Z CS and ZD prefixes
  */
 void BLIS_EXPORT_BLAS cblas_srotg(float *a, float *b, float *c, float *s);
 void BLIS_EXPORT_BLAS cblas_srotmg(float *d1, float *d2, float *b1, const float b2, float *P);
@@ -59854,10 +59916,13 @@ void BLIS_EXPORT_BLAS cblas_drot(f77_int N, double *X, f77_int incX,
 void BLIS_EXPORT_BLAS cblas_drotm(f77_int N, double *X, f77_int incX,
                 double *Y, f77_int incY, const double *P);
 
+void BLIS_EXPORT_BLAS cblas_crotg(void *a, void *b, float *c, void *s);
+void BLIS_EXPORT_BLAS cblas_csrot(f77_int N, void *X, f77_int incX,
+                void *Y, f77_int incY, const float c, const float s);
+void BLIS_EXPORT_BLAS cblas_zrotg(void *a, void *b, double *c, void *s);
+void BLIS_EXPORT_BLAS cblas_zdrot(f77_int N, void *X, f77_int incX,
+                void *Y, f77_int incY, const double c, const double s);
 
-/*
- * Routines with S D C Z CS and ZD prefixes
- */
 void BLIS_EXPORT_BLAS cblas_sscal(f77_int N, float alpha, float *X, f77_int incX);
 void BLIS_EXPORT_BLAS cblas_dscal(f77_int N, double alpha, double *X, f77_int incX);
 void BLIS_EXPORT_BLAS cblas_cscal(f77_int N, const void *alpha, void *X, f77_int incX);
