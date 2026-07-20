@@ -4,6 +4,7 @@
     "editor.rulers": [
         120
     ],
+    "workbench.colorTheme": "Dark Modern",
     "files.trimTrailingWhitespace": true,
     //
     // Custom file associations
@@ -17,6 +18,7 @@
     //
     // Python
     "[python]": {
+        "editor.semanticHighlighting.enabled": true,
         "editor.defaultFormatter": "charliermarsh.ruff",
         "editor.formatOnSave": true,
         "editor.codeActionsOnSave": {
@@ -24,6 +26,7 @@
             "source.organizeImports": "explicit",
         },
     },
+    "python.languageServer": "Pylance",
     "python.analysis.autoImportCompletions": false,
     // Linting
     "ruff.importStrategy": "fromEnvironment",
@@ -45,4 +48,6 @@
     "mesonbuild.linting.enabled": true,
     "mesonbuild.downloadLanguageServer": true,
     "mesonbuild.configureOnOpen": false,
+    "python-envs.defaultEnvManager": "ms-python.python:poetry",
+    "python-envs.defaultPackageManager": "ms-python.python:poetry",
 }
