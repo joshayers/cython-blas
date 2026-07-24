@@ -77,7 +77,7 @@ def test_sgemm_shape_error(
 
 
 @pytest.mark.parametrize(*_real_params_gemm)
-def test_sgemm(  # noqa: PLR0913
+def test_sgemm(  # noqa: PLR0913, PLR0917
     alpha: float,
     beta: float,
     m: int,
@@ -127,7 +127,7 @@ def test_dgemm_shape_error(
 
 
 @pytest.mark.parametrize(*_real_params_gemm)
-def test_dgemm(  # noqa: PLR0913
+def test_dgemm(  # noqa: PLR0913, PLR0917
     alpha: float,
     beta: float,
     m: int,
@@ -178,7 +178,7 @@ def test_cgemm_shape_error(
 
 
 @pytest.mark.parametrize(*_complex_params_gemm)
-def test_cgemm(  # noqa: PLR0913
+def test_cgemm(  # noqa: PLR0913, PLR0917
     alpha: complex,
     conjugate_a: bool,
     beta: complex,
@@ -231,7 +231,7 @@ def test_zgemm_shape_error(
 
 
 @pytest.mark.parametrize(*_complex_params_gemm)
-def test_zgemm(  # noqa: PLR0913
+def test_zgemm(  # noqa: PLR0913, PLR0917
     alpha: complex,
     conjugate_a: bool,
     beta: complex,
@@ -329,7 +329,7 @@ def test_gemm_shape_error(
         )
     ],
 )
-def test_gemm(  # noqa: PLR0913
+def test_gemm(  # noqa: PLR0913, PLR0917
     alpha: float,
     conjugate_a: bool,
     beta: complex,

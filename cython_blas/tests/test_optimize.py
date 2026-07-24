@@ -48,7 +48,7 @@ def test_matrix_create_instance(shape: tuple[int, int], kind: str, itemsize: int
         (Matrix((2, 3), "c", 8), Matrix((3, 5), "c", 8), "c", 8, 2 * 8 * (2 * 3 * 5), Matrix((2, 5), "c", 8)),
     ],
 )
-def test_matrix_calc_weight(  # noqa: PLR0913
+def test_matrix_calc_weight(  # noqa: PLR0913, PLR0917
     matrix1: Matrix, matrix2: Matrix, kind: str, itemsize: int, expected_weight: int, expected_mat: Matrix
 ):
     """Test the Matrix class, calc_weight method."""
@@ -109,7 +109,7 @@ def test_multimatrix_create_instance(mats: list[Matrix], expected_n_mats: int):
         ),
     ],
 )
-def test_multimatrix_calc_weight(  # noqa: PLR0913
+def test_multimatrix_calc_weight(  # noqa: PLR0913, PLR0917
     mats1: list[Matrix],
     mats2: list[Matrix],
     kind: str,

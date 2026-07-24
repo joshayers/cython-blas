@@ -96,7 +96,7 @@ def test_sgemm_strided_error(array: int, axis: int, order: str, match: str):
 
 
 @pytest.mark.parametrize(*_real_params_gemm)
-def test_sgemm(  # noqa: PLR0913
+def test_sgemm(  # noqa: PLR0913, PLR0917
     alpha: float,
     beta: float,
     m: int,
@@ -160,7 +160,7 @@ def test_dgemm_strided_error(array: int, axis: int, order: str, match: str):
 
 
 @pytest.mark.parametrize(*_real_params_gemm)
-def test_dgemm(  # noqa: PLR0913
+def test_dgemm(  # noqa: PLR0913, PLR0917
     alpha: float,
     beta: float,
     m: int,
@@ -225,7 +225,7 @@ def test_cgemm_strided_error(array: int, axis: int, order: str, match: str):
 
 
 @pytest.mark.parametrize(*_complex_params_gemm)
-def test_cgemm(  # noqa: PLR0913
+def test_cgemm(  # noqa: PLR0913, PLR0917
     alpha: complex,
     conjugate_a: bool,
     beta: complex,
@@ -292,7 +292,7 @@ def test_cgemm3m_strided_error(array: int, axis: int, order: str, match: str):
 
 
 @pytest.mark.parametrize(*_complex_params_gemm)
-def test_cgemm3m(  # noqa: PLR0913
+def test_cgemm3m(  # noqa: PLR0913, PLR0917
     alpha: complex,
     conjugate_a: bool,
     beta: complex,
@@ -359,7 +359,7 @@ def test_zgemm_strided_error(array: int, axis: int, order: str, match: str):
 
 
 @pytest.mark.parametrize(*_complex_params_gemm)
-def test_zgemm(  # noqa: PLR0913
+def test_zgemm(  # noqa: PLR0913, PLR0917
     alpha: complex,
     conjugate_a: bool,
     beta: complex,
@@ -426,7 +426,7 @@ def test_zgemm3m_strided_error(array: int, axis: int, order: str, match: str):
 
 
 @pytest.mark.parametrize(*_complex_params_gemm)
-def test_zgemm3m(  # noqa: PLR0913
+def test_zgemm3m(  # noqa: PLR0913, PLR0917
     alpha: complex,
     conjugate_a: bool,
     beta: complex,
@@ -476,7 +476,7 @@ _real_params_symm = (
 
 
 @pytest.mark.parametrize(*_real_params_symm)
-def test_dsymm_ab(  # noqa: PLR0913
+def test_dsymm_ab(  # noqa: PLR0913, PLR0917
     alpha: float,
     beta: float,
     upper: bool,
