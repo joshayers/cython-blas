@@ -1,25 +1,6 @@
 subdir_path = 'cython_blas'
 
-# Generate shared Cython memoryview library
-# https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html#shared-utility-module
-py.extension_module(
-    '_cyutility',
-    custom_target(
-        install: false,
-        output: '_cyutility.cpp',
-        command: [
-            find_program(cython.cmd_array()[0]),
-            '-3',
-            '--fast-fail',
-            '--generate-shared='
-            + meson.current_build_dir() / '_cyutility.cpp',
-        ],
-    ),
-    subdir: subdir_path,
-    limited_api: py_limited_api_version,
-    install: true,
-)
-cython_args = ['--shared=cython_blas._cyutility']
+cython_args = []
 
 openblas_pyx_files = [
     'openblas',

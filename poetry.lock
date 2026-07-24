@@ -752,15 +752,15 @@ files = [
 
 [[package]]
 name = "meson"
-version = "1.10.2"
+version = "1.11.2"
 description = "A high performance build system"
 optional = true
 python-versions = ">=3.7"
 groups = ["main"]
 markers = "extra == \"dev\""
 files = [
-    {file = "meson-1.10.2-py3-none-any.whl", hash = "sha256:5f84ef186e6e788d9154db63620fc61b3ece69f643b94b43c8b9203c43d89b36"},
-    {file = "meson-1.10.2.tar.gz", hash = "sha256:7890287d911dd4ee1ebd0efb61ed0321bfcd87c725df923a837cf90c6508f96b"},
+    {file = "meson-1.11.2-py3-none-any.whl", hash = "sha256:7e4f6e83fec83e3eaac928e058b073c7557b282c35b6a2024cea143a39926a39"},
+    {file = "meson-1.11.2.tar.gz", hash = "sha256:698feae069cef3ecd4d7aaf281d7df359bdfcf555a9a1564383d3b913fa8a736"},
 ]
 
 [package.extras]
@@ -770,15 +770,15 @@ typing = ["mypy", "typing_extensions ; python_version < \"3.8\""]
 
 [[package]]
 name = "meson-python"
-version = "0.19.0"
+version = "0.20.0"
 description = "Meson Python build backend (PEP 517)"
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
 markers = "extra == \"dev\""
 files = [
-    {file = "meson_python-0.19.0-py3-none-any.whl", hash = "sha256:67b5906c37404396d23c195e12c8825506074460d4a2e7083266b845d14f0298"},
-    {file = "meson_python-0.19.0.tar.gz", hash = "sha256:9959d198aa69b57fcfd354a34518c6f795b781a73ed0656f4d01660160cc2553"},
+    {file = "meson_python-0.20.0-py3-none-any.whl", hash = "sha256:6a744cf0c09e76ecbdc58cfa374b48c8902dac1b74479628238634efbf36aec9"},
+    {file = "meson_python-0.20.0.tar.gz", hash = "sha256:6d9726ae6cd37e22f210c74b364b30180a68c20442e97ff09f3c566a414af738"},
 ]
 
 [package.dependencies]
@@ -1672,7 +1672,7 @@ test = ["big-O", "jaraco.functools", "jaraco.itertools", "jaraco.test", "more_it
 type = ["pytest-mypy"]
 
 [extras]
-dev = ["asv", "build", "click", "cython", "cython-lint", "deptry", "isort", "meson-python", "ninja", "pytest", "ruff", "scipy-openblas64", "sphinx", "sphinx-rtd-theme", "spin"]
+dev = ["asv", "build", "click", "cython", "cython-lint", "deptry", "isort", "meson", "meson-python", "ninja", "pytest", "ruff", "scipy-openblas64", "sphinx", "sphinx-rtd-theme", "spin"]
 docs = ["sphinx", "sphinx-rtd-theme"]
 lint = ["cython-lint", "deptry", "isort", "ruff"]
 test = ["pytest"]
@@ -1680,4 +1680,4 @@ test = ["pytest"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11"
-content-hash = "e1fe474d6e9ec5cd306b595c76ebb7835520faba5e23a5247c620c83044d991a"
+content-hash = "90e85cdbfb89eb08ddfb6b6bbad5dfe8e5b331bd966bcbe8f47d6a60834eba05"
