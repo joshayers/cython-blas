@@ -21,12 +21,13 @@ jobs:
           - "3.11"
           - "3.12"
           - "3.13"
+          - "3.14"
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install LLVM and Clang on Windows
@@ -73,9 +74,9 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.13"
       - name: Install Poetry, not Windows
@@ -114,9 +115,9 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.13"
       - name: Install Poetry, not Windows
