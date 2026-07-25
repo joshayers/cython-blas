@@ -7,7 +7,7 @@ license-files = ["LICENSE.txt"]
 description = "Wrappers around OpenBLAS and BLIS."
 readme = "README.rst"
 
-requires-python = ">=3.11"
+requires-python = ">=3.11" # keep up to date with the limited-api-version in top-level meson.build
 dependencies = ["numpy >=2.0"]
 
 classifiers = [
