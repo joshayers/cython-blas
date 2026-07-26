@@ -1,13 +1,13 @@
 [project]
 name = "cython-blas"
-version = "0.1.1"
+version = "0.2.0"
 authors = [{ "name" = "Josh Ayers", "email" = "josh@ayers.pw" }]
 license = "MIT"
 license-files = ["LICENSE.txt"]
 description = "Wrappers around OpenBLAS and BLIS."
 readme = "README.rst"
 
-requires-python = ">=3.11"
+requires-python = ">=3.11" # keep up to date with the limited-api-version in top-level meson.build
 dependencies = ["numpy >=2.0"]
 
 classifiers = [
@@ -17,6 +17,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: Implementation :: CPython",
     "Natural Language :: English",
@@ -46,9 +47,10 @@ dev = [
     # Benchmarks
     "asv",
     # Build environment
-    "scipy-openblas64 ==0.3.30.0.1", # keep up to date with cibuildwheel config, before-build command
+    "scipy-openblas64 ==0.3.34.0.0", # keep up to date with cibuildwheel config, before-build command
     "cython >=3.1.0",
-    "meson-python >=0.17.0",
+    "meson >=1.11",
+    "meson-python >=0.19.0",
     "ninja >=1.11",
     "build",
     "spin",
@@ -62,9 +64,11 @@ Repository = "https://github.com/joshayers/cython-blas/"
 [tool.cibuildwheel]
 build-frontend = "build"
 archs = ["auto64"]
-skip = []
+skip = [
+    "cp3??t-*", # free-threading builds on all platforms
+]
 before-build = [
-    "pip install -q abi3audit scipy_openblas64==0.3.30.0.1", # keep openblas version up to date with dev extra dependency
+    "pip install -q abi3audit scipy_openblas64==0.3.34.0.0", # keep openblas version up to date with dev extra dependency
     "python tools/before_build.py",
 ]
 test-extras = ["test"]
@@ -109,9 +113,12 @@ DEP002 = [ # packages that are not directly imported in the codebase
     "ruff",
     "isort",
     "cython-lint",
+    # Benchmarks
+    "asv",
     # Build environment
     "scipy-openblas64",
     "cython",
+    "meson",
     "meson-python",
     "ninja",
     "build",
@@ -133,7 +140,7 @@ limited-api = true
 
 [tool.ruff]
 line-length = 120
-target-version = "py310"
+target-version = "py311"
 exclude = [ # Patterns are glob expressions
     "examples/*",
     "vendor/*",
@@ -149,6 +156,7 @@ lint.ignore = [
     # https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules
     "COM812", # missing-trailing-comma
     "ISC001", # single-line-implicit-string-concatenation
+    "CPY001", # copyright notices
 ]
 
 lint.unfixable = [
@@ -203,5 +211,5 @@ package = "cyhon_blas"
 
 
 [build-system]
-requires = ["meson-python >=0.17.0", "cython >=3.1.0", "numpy >=2.0"]
+requires = ["meson-python >=0.19.0", "cython >=3.1.0", "numpy >=2.0"]
 build-backend = "mesonpy"

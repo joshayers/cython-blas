@@ -2,7 +2,7 @@ project(
   'cython_blas',
   'cython',
   'cpp',
-  meson_version: '>= 1.8.0',
+  meson_version: '>= 1.11.0',
   default_options: ['cpp_std=c++17'],
 )
 

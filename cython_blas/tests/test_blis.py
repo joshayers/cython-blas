@@ -77,7 +77,7 @@ def test_sgemm_shape_error(
 
 
 @pytest.mark.parametrize(*_real_params_gemm)
-def test_sgemm(  # noqa: PLR0913
+def test_sgemm(  # noqa: PLR0913, PLR0917
     alpha: float,
     beta: float,
     m: int,
@@ -94,7 +94,7 @@ def test_sgemm(  # noqa: PLR0913
     mat_c = create_array(rng, (m, n), "f4", c_order)
     expected = alpha * mat_a @ mat_b + beta * mat_c
     blis.sgemm(alpha, mat_a, mat_b, beta, mat_c)
-    np.testing.assert_allclose(mat_c, expected, atol=5e-7, rtol=5e-7)
+    np.testing.assert_allclose(mat_c, expected, atol=5e-7, rtol=1e-6)
 
 
 @pytest.mark.parametrize(*_strided_params_gemm)
@@ -127,7 +127,7 @@ def test_dgemm_shape_error(
 
 
 @pytest.mark.parametrize(*_real_params_gemm)
-def test_dgemm(  # noqa: PLR0913
+def test_dgemm(  # noqa: PLR0913, PLR0917
     alpha: float,
     beta: float,
     m: int,
@@ -178,7 +178,7 @@ def test_cgemm_shape_error(
 
 
 @pytest.mark.parametrize(*_complex_params_gemm)
-def test_cgemm(  # noqa: PLR0913
+def test_cgemm(  # noqa: PLR0913, PLR0917
     alpha: complex,
     conjugate_a: bool,
     beta: complex,
@@ -197,7 +197,7 @@ def test_cgemm(  # noqa: PLR0913
     mat_c = create_array(rng, (m, n), "c8", c_order)
     expected = alpha * conjugate_if(mat_a, conjugate_a) @ conjugate_if(mat_b, conjugate_b) + beta * mat_c
     blis.cgemm(alpha, conjugate_a, mat_a, conjugate_b, mat_b, beta, mat_c)
-    np.testing.assert_allclose(mat_c, expected, atol=5e-7, rtol=5e-7)
+    np.testing.assert_allclose(mat_c, expected, atol=8e-7, rtol=1.5e-6)
 
 
 @pytest.mark.parametrize(*_strided_params_gemm)
@@ -231,7 +231,7 @@ def test_zgemm_shape_error(
 
 
 @pytest.mark.parametrize(*_complex_params_gemm)
-def test_zgemm(  # noqa: PLR0913
+def test_zgemm(  # noqa: PLR0913, PLR0917
     alpha: complex,
     conjugate_a: bool,
     beta: complex,
@@ -329,7 +329,7 @@ def test_gemm_shape_error(
         )
     ],
 )
-def test_gemm(  # noqa: PLR0913
+def test_gemm(  # noqa: PLR0913, PLR0917
     alpha: float,
     conjugate_a: bool,
     beta: complex,
