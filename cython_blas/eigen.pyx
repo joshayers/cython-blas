@@ -6,10 +6,6 @@ import numpy as np
 
 np.import_array()
 
-# cdef enum Order:
-#     RowMajor
-#     ColMajor
-
 
 @cython.cdivision(True)
 @cython.embedsignature(True)
@@ -57,6 +53,7 @@ cpdef int sgemm(
             eigen_gemm[float, col_maj_t, col_maj_t, row_maj_t](alpha, &A[0, 0], &B[0, 0], beta, &C[0, 0], m, n, k)
         elif order_a == ColMajor and order_b == ColMajor and order_c == ColMajor:
             eigen_gemm[float, col_maj_t, col_maj_t, col_maj_t](alpha, &A[0, 0], &B[0, 0], beta, &C[0, 0], m, n, k)
+    return 0
 
 
 @cython.cdivision(True)
@@ -72,6 +69,7 @@ cpdef int dgemm(
     cdef int64_t m = A.shape[0], n = B.shape[1], k = A.shape[1]
     with nogil, cython.boundscheck(False):
         eigen_gemm[double, row_maj_t, row_maj_t, row_maj_t](alpha, &A[0, 0], &B[0, 0], beta, &C[0, 0], m, n, k)
+    return 0
 
 
 @cython.embedsignature(True)
@@ -94,25 +92,46 @@ def mappp():
     print(A.strides)
     print()
 
-    map_tests(<double*>np.PyArray_DATA(A), A.shape[0], A.shape[1], A.strides[0] // 8, A.strides[1] // 8)
-    print()
     print(A)
+    print(A[1, 1])
+    print()
+    map_tests[double](<double*>np.PyArray_DATA(A), A.shape[0], A.shape[1], A.strides[0] // 8, A.strides[1] // 8)
+    print()
+    print(A[1, 1])
     print('\n\n')
 
+    A = np.arange(24).astype('f8')
+    A.shape = (4, 6)
+    A = np.ascontiguousarray(A)
     B = A[::2, ::2]
-    map_tests(<double*>np.PyArray_DATA(B), B.shape[0], B.shape[1], B.strides[0] // 8, B.strides[1] // 8)
-    print()
     print(B)
+    print(B[1, 1])
+    print()
+    map_tests[double](<double*>np.PyArray_DATA(B), B.shape[0], B.shape[1], B.strides[0] // 8, B.strides[1] // 8)
+    print()
+    print(B[1, 1])
     print('\n\n')
 
+    A = np.arange(24).astype('f8')
+    A.shape = (4, 6)
+    A = np.ascontiguousarray(A)
     C = A[::2, ::3]
-    map_tests(<double*>np.PyArray_DATA(C), C.shape[0], C.shape[1], C.strides[0] // 8, C.strides[1] // 8)
-    print()
     print(C)
+    print(C[1, 1])
+    print()
+    map_tests[double](<double*>np.PyArray_DATA(C), C.shape[0], C.shape[1], C.strides[0] // 8, C.strides[1] // 8)
+    print()
+    print(C[1, 1])
     print('\n\n')
 
+    A = np.arange(24).astype('f8')
+    A.shape = (4, 6)
+    A = np.ascontiguousarray(A)
     D = A.T
-    map_tests(<double*>np.PyArray_DATA(D), D.shape[0], D.shape[1], D.strides[0] // 8, D.strides[1] // 8)
-    print()
     print(D)
+    print(D[1, 1])
+    print()
+    map_tests[double](<double*>np.PyArray_DATA(D), D.shape[0], D.shape[1], D.strides[0] // 8, D.strides[1] // 8)
+    print()
+    print(D[1, 1])
     print('\n\n')

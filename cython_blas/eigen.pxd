@@ -25,4 +25,8 @@ cdef extern from "eigen.hpp" nogil:
 
     int nbThreads()
 
-    void map_tests(double* A_p, int, int, int, int)
+    ctypedef int Not_Contig
+    ctypedef int C_Contig
+    ctypedef int F_Contig
+
+    void map_tests[T](T* A_p, int, int, int, int)

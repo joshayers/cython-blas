@@ -3,7 +3,9 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                // Add the Python installation directory, where Python.h is located
+                "C:\\Python311\\include"
             ],
             "defines": [
                 "_DEBUG",
