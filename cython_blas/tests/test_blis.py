@@ -39,26 +39,51 @@ _strided_params_gemm = (
 _real_params_gemm = (
     ("alpha", "beta", "m", "n", "k", "a_order", "b_order", "c_order"),
     [
-        (alpha, beta, 8, 9, 10, a_order, b_order, c_order)
-        for alpha, beta, a_order, b_order, c_order in itertools.product(
-            [0.0, 1.0, 2.2], [0.0, 1.0, 2.2], ["C", "F"], ["C", "F"], ["C", "F"]
-        )
+        *(
+            [
+                (alpha, beta, 8, 9, 10, a_order, b_order, c_order)
+                for alpha, beta, a_order, b_order, c_order in itertools.product(
+                    [0.0, 1.0, 2.2], [0.0, 1.0, 2.2], ["C", "F"], ["C", "F"], ["C", "F"]
+                )
+            ]
+        ),
+        *(
+            (1.0, 0.0, m, n, k, a_order, b_order, c_order)
+            for m, n, k, a_order, b_order, c_order in itertools.product(
+                [1, 4], [1, 5], [1, 6], ["C", "F"], ["C", "F"], ["C", "F"]
+            )
+        ),
     ],
 )
 
 _complex_params_gemm = (
     ("alpha", "conjugate_a", "beta", "conjugate_b", "m", "n", "k", "a_order", "b_order", "c_order"),
     [
-        (alpha, conjugate_a, beta, conjugate_b, 8, 9, 10, a_order, b_order, c_order)
-        for alpha, conjugate_a, beta, conjugate_b, a_order, b_order, c_order in itertools.product(
-            [0.0 + 0.0j, 1.0 + 1.2j, 2.1 + 1.0j],
-            [True, False],
-            [0.0 + 0.0j, 1.0 + 1.2j, 2.1 + 1.0j],
-            [True, False],
-            ["C", "F"],
-            ["C", "F"],
-            ["C", "F"],
-        )
+        *(
+            (alpha, conjugate_a, beta, conjugate_b, 8, 9, 10, a_order, b_order, c_order)
+            for alpha, conjugate_a, beta, conjugate_b, a_order, b_order, c_order in itertools.product(
+                [0.0 + 0.0j, 1.0 + 1.2j, 2.1 + 1.0j],
+                [True, False],
+                [0.0 + 0.0j, 1.0 + 1.2j, 2.1 + 1.0j],
+                [True, False],
+                ["C", "F"],
+                ["C", "F"],
+                ["C", "F"],
+            )
+        ),
+        *(
+            (1.0 + 1.0j, conjugate_a, 0.0 + 0.0j, conjugate_b, m, n, k, a_order, b_order, c_order)
+            for conjugate_a, conjugate_b, m, n, k, a_order, b_order, c_order in itertools.product(
+                [True, False],
+                [True, False],
+                [1, 4],
+                [1, 5],
+                [1, 6],
+                ["C", "F"],
+                ["C", "F"],
+                ["C", "F"],
+            )
+        ),
     ],
 )
 
