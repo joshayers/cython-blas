@@ -53,9 +53,9 @@ cpdef int sgemm(
         C: The C matrix. This matrix must have the same number of rows as `A` and the same
             number of columns as `B`. The result will be written to this matrix.
     """
-    cdef Order order_a = ColMajor if A.strides[0] == sizeof(float) else RowMajor
-    cdef Order order_b = ColMajor if B.strides[0] == sizeof(float) else RowMajor
-    cdef Order order_c = ColMajor if C.strides[0] == sizeof(float) else RowMajor
+    cdef Order order_a = ColMajor if (A.strides[0] == sizeof(float) and A.shape[1] > 1) else RowMajor
+    cdef Order order_b = ColMajor if (B.strides[0] == sizeof(float) and B.shape[1] > 1) else RowMajor
+    cdef Order order_c = ColMajor if (C.strides[0] == sizeof(float) and C.shape[1] > 1) else RowMajor
     cdef blasint m = A.shape[0], n = B.shape[1], k = A.shape[1]
     if B.shape[0] != k or C.shape[0] != m or C.shape[1] != n:
         msg = (
@@ -112,9 +112,9 @@ cpdef int dgemm(
         C: The C matrix. This matrix must have the same number of rows as `A` and the same
             number of columns as `B`. The result will be written to this matrix.
     """
-    cdef Order order_a = ColMajor if A.strides[0] == sizeof(double) else RowMajor
-    cdef Order order_b = ColMajor if B.strides[0] == sizeof(double) else RowMajor
-    cdef Order order_c = ColMajor if C.strides[0] == sizeof(double) else RowMajor
+    cdef Order order_a = ColMajor if (A.strides[0] == sizeof(double) and A.shape[1] > 1) else RowMajor
+    cdef Order order_b = ColMajor if (B.strides[0] == sizeof(double) and B.shape[1] > 1) else RowMajor
+    cdef Order order_c = ColMajor if (C.strides[0] == sizeof(double) and C.shape[1] > 1) else RowMajor
     cdef blasint m = A.shape[0], n = B.shape[1], k = A.shape[1]
     if B.shape[0] != k or C.shape[0] != m or C.shape[1] != n:
         msg = (
@@ -177,9 +177,9 @@ cpdef int cgemm(
         C: The C matrix. This matrix must have the same number of rows as `A` and the same
             number of columns as `B`. The result will be written to this matrix.
     """
-    cdef Order order_a = ColMajor if A.strides[0] == sizeof(float complex) else RowMajor
-    cdef Order order_b = ColMajor if B.strides[0] == sizeof(float complex) else RowMajor
-    cdef Order order_c = ColMajor if C.strides[0] == sizeof(float complex) else RowMajor
+    cdef Order order_a = ColMajor if (A.strides[0] == sizeof(float complex) and A.shape[1] > 1) else RowMajor
+    cdef Order order_b = ColMajor if (B.strides[0] == sizeof(float complex) and B.shape[1] > 1) else RowMajor
+    cdef Order order_c = ColMajor if (C.strides[0] == sizeof(float complex) and C.shape[1] > 1) else RowMajor
     cdef blasint m = A.shape[0], n = B.shape[1], k = A.shape[1]
     if B.shape[0] != k or C.shape[0] != m or C.shape[1] != n:
         msg = (
@@ -255,9 +255,9 @@ cpdef int cgemm3m(
         C: The C matrix. This matrix must have the same number of rows as `A` and the same
             number of columns as `B`. The result will be written to this matrix.
     """
-    cdef Order order_a = ColMajor if A.strides[0] == sizeof(float complex) else RowMajor
-    cdef Order order_b = ColMajor if B.strides[0] == sizeof(float complex) else RowMajor
-    cdef Order order_c = ColMajor if C.strides[0] == sizeof(float complex) else RowMajor
+    cdef Order order_a = ColMajor if (A.strides[0] == sizeof(float complex) and A.shape[1] > 1) else RowMajor
+    cdef Order order_b = ColMajor if (B.strides[0] == sizeof(float complex) and B.shape[1] > 1) else RowMajor
+    cdef Order order_c = ColMajor if (C.strides[0] == sizeof(float complex) and C.shape[1] > 1) else RowMajor
     cdef blasint m = A.shape[0], n = B.shape[1], k = A.shape[1]
     if B.shape[0] != k or C.shape[0] != m or C.shape[1] != n:
         msg = (
@@ -331,9 +331,9 @@ cpdef int zgemm(
         C: The C matrix. This matrix must have the same number of rows as `A` and the same
             number of columns as `B`. The result will be written to this matrix.
     """
-    cdef Order order_a = ColMajor if A.strides[0] == sizeof(double complex) else RowMajor
-    cdef Order order_b = ColMajor if B.strides[0] == sizeof(double complex) else RowMajor
-    cdef Order order_c = ColMajor if C.strides[0] == sizeof(double complex) else RowMajor
+    cdef Order order_a = ColMajor if (A.strides[0] == sizeof(double complex) and A.shape[1] > 1) else RowMajor
+    cdef Order order_b = ColMajor if (B.strides[0] == sizeof(double complex) and B.shape[1] > 1) else RowMajor
+    cdef Order order_c = ColMajor if (C.strides[0] == sizeof(double complex) and C.shape[1] > 1) else RowMajor
     cdef blasint m = A.shape[0], n = B.shape[1], k = A.shape[1]
     if B.shape[0] != k or C.shape[0] != m or C.shape[1] != n:
         msg = (
@@ -409,9 +409,9 @@ cpdef int zgemm3m(
         C: The C matrix. This matrix must have the same number of rows as `A` and the same
             number of columns as `B`. The result will be written to this matrix.
     """
-    cdef Order order_a = ColMajor if A.strides[0] == sizeof(double complex) else RowMajor
-    cdef Order order_b = ColMajor if B.strides[0] == sizeof(double complex) else RowMajor
-    cdef Order order_c = ColMajor if C.strides[0] == sizeof(double complex) else RowMajor
+    cdef Order order_a = ColMajor if (A.strides[0] == sizeof(double complex) and A.shape[1] > 1) else RowMajor
+    cdef Order order_b = ColMajor if (B.strides[0] == sizeof(double complex) and B.shape[1] > 1) else RowMajor
+    cdef Order order_c = ColMajor if (C.strides[0] == sizeof(double complex) and C.shape[1] > 1) else RowMajor
     cdef blasint m = A.shape[0], n = B.shape[1], k = A.shape[1]
     if B.shape[0] != k or C.shape[0] != m or C.shape[1] != n:
         msg = (
@@ -466,9 +466,9 @@ cpdef int dsymm_ab(
     double [:, :] C
 ) except -1:
     """Symmetric matrix multiplication."""
-    cdef Order order_a = ColMajor if A.strides[0] == sizeof(double) else RowMajor
-    cdef Order order_b = ColMajor if B.strides[0] == sizeof(double) else RowMajor
-    cdef Order order_c = ColMajor if C.strides[0] == sizeof(double) else RowMajor
+    cdef Order order_a = ColMajor if (A.strides[0] == sizeof(double) and A.shape[1] > 1) else RowMajor
+    cdef Order order_b = ColMajor if (B.strides[0] == sizeof(double) and B.shape[1] > 1) else RowMajor
+    cdef Order order_c = ColMajor if (C.strides[0] == sizeof(double) and C.shape[1] > 1) else RowMajor
     cdef blasint m = C.shape[0], n = C.shape[1]
     if A.shape[0] != m or A.shape[1] != m or B.shape[0] != m or B.shape[1] != n:
         msg = (

@@ -44,26 +44,51 @@ _strided_params_gemm = (
 _real_params_gemm = (
     ("alpha", "beta", "m", "n", "k", "a_order", "b_order", "c_order"),
     [
-        (alpha, beta, 8, 9, 10, a_order, b_order, c_order)
-        for alpha, beta, a_order, b_order, c_order in itertools.product(
-            [0.0, 1.0, 2.2], [0.0, 1.0, 2.2], ["C", "F"], ["C", "F"], ["C", "F"]
-        )
+        *(
+            [
+                (alpha, beta, 8, 9, 10, a_order, b_order, c_order)
+                for alpha, beta, a_order, b_order, c_order in itertools.product(
+                    [0.0, 1.0, 2.2], [0.0, 1.0, 2.2], ["C", "F"], ["C", "F"], ["C", "F"]
+                )
+            ]
+        ),
+        *(
+            (1.0, 0.0, m, n, k, a_order, b_order, c_order)
+            for m, n, k, a_order, b_order, c_order in itertools.product(
+                [1, 4], [1, 5], [1, 6], ["C", "F"], ["C", "F"], ["C", "F"]
+            )
+        ),
     ],
 )
 
 _complex_params_gemm = (
     ("alpha", "conjugate_a", "beta", "conjugate_b", "m", "n", "k", "a_order", "b_order", "c_order"),
     [
-        (alpha, conjugate_a, beta, conjugate_b, 8, 9, 10, a_order, b_order, c_order)
-        for alpha, conjugate_a, beta, conjugate_b, a_order, b_order, c_order in itertools.product(
-            [0.0 + 0.0j, 1.0 + 1.2j, 2.1 + 1.0j],
-            [True, False],
-            [0.0 + 0.0j, 1.0 + 1.2j, 2.1 + 1.0j],
-            [True, False],
-            ["C", "F"],
-            ["C", "F"],
-            ["C", "F"],
-        )
+        *(
+            (alpha, conjugate_a, beta, conjugate_b, 8, 9, 10, a_order, b_order, c_order)
+            for alpha, conjugate_a, beta, conjugate_b, a_order, b_order, c_order in itertools.product(
+                [0.0 + 0.0j, 1.0 + 1.2j, 2.1 + 1.0j],
+                [True, False],
+                [0.0 + 0.0j, 1.0 + 1.2j, 2.1 + 1.0j],
+                [True, False],
+                ["C", "F"],
+                ["C", "F"],
+                ["C", "F"],
+            )
+        ),
+        *(
+            (1.0 + 1.0j, conjugate_a, 0.0 + 0.0j, conjugate_b, m, n, k, a_order, b_order, c_order)
+            for conjugate_a, conjugate_b, m, n, k, a_order, b_order, c_order in itertools.product(
+                [True, False],
+                [True, False],
+                [1, 4],
+                [1, 5],
+                [1, 6],
+                ["C", "F"],
+                ["C", "F"],
+                ["C", "F"],
+            )
+        ),
     ],
 )
 
@@ -467,10 +492,18 @@ def test_zgemm3m_strided(array: int, axis: int, order: str):
 _real_params_symm = (
     ("alpha", "beta", "upper", "m", "n", "a_order", "bc_order"),
     [
-        (alpha, beta, upper, 8, 9, a_order, bc_order)
-        for alpha, beta, upper, a_order, bc_order in itertools.product(
-            [0.0, 1.0, 2.2], [0.0, 1.0, 2.2], [True, False], ["C", "F"], ["C", "F"]
-        )
+        *(
+            (alpha, beta, upper, 8, 9, a_order, bc_order)
+            for alpha, beta, upper, a_order, bc_order in itertools.product(
+                [0.0, 1.0, 2.2], [0.0, 1.0, 2.2], [True, False], ["C", "F"], ["C", "F"]
+            )
+        ),
+        *(
+            (1.0, 0.0, upper, m, n, a_order, bc_order)
+            for upper, m, n, a_order, bc_order in itertools.product(
+                [True, False], [1, 5], [1, 6], ["C", "F"], ["C", "F"]
+            )
+        ),
     ],
 )
 
@@ -489,7 +522,7 @@ def test_dsymm_ab(  # noqa: PLR0913, PLR0917
     rng = np.random.default_rng(seed=1)
     upper_lower = openblas.UpperLower.Upper if upper else openblas.UpperLower.Lower
     mat_a, mat_a_full = create_symmetric_array(rng, upper, m, "f8", a_order)
-    assert np.any(np.isnan(mat_a))
+    assert m == 1 or np.any(np.isnan(mat_a))
     mat_b = create_array(rng, (m, n), "f8", bc_order)
     mat_c = create_array(rng, (m, n), "f8", bc_order)
     expected = alpha * mat_a_full @ mat_b + beta * mat_c
