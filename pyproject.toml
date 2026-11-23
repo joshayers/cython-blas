@@ -1,6 +1,6 @@
 [project]
 name = "cython-blas"
-version = "0.4.0-alpha1"
+version = "0.4.0"
 authors = [{ "name" = "Josh Ayers", "email" = "josh@ayers.pw" }]
 license = "MIT"
 license-files = ["LICENSE.txt"]
