@@ -401,7 +401,7 @@ extern "C" {
         defined(__bsdi__) || defined(__DragonFly__) || \
         defined(__FreeBSD_kernel__) || defined(__HAIKU__)
     #define BLIS_OS_BSD 1
-  #elif defined(EMSCRIPTEN)
+  #elif defined(__EMSCRIPTEN__)
     #define BLIS_OS_EMSCRIPTEN
   #else
     #error "Cannot determine operating system"
@@ -872,6 +872,7 @@ extern "C" {
    Copyright (C) 2014, The University of Texas at Austin
    Copyright (C) 2016, Hewlett Packard Enterprise Development LP
    Copyright (C) 2020, Advanced Micro Devices, Inc.
+	 Copyright (C) 2026, IBM Corp.
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -1865,6 +1866,9 @@ typedef enum arch_e
 	BLIS_ARCH_POWER7,
 	BLIS_ARCH_BGQ,
 
+	// IBM/zArch
+	BLIS_ARCH_Z15,
+
 	// RISC-V
 	BLIS_ARCH_RV32I,
 	BLIS_ARCH_RV64I,
@@ -2194,7 +2198,7 @@ int bli_pthread_switch_off
 
 #endif // BLIS_PTHREAD_H
 // end bli_pthread.h
-#line 1031 "./frame/include//bli_type_defs.h"
+#line 1035 "./frame/include//bli_type_defs.h"
 
 
 // -- Pool block type --
@@ -4580,8 +4584,9 @@ GENTPROT3U12( dcomplex, dcomplex, scomplex, dcomplex, z, z, c, z, funcname )
 #define INSERT_GENTCONF_CORTEXA9
 #endif
 
-		// -- IBM architectures ------------------------------------------------
+// -- IBM architectures ------------------------------------------------
 
+// -- IBM/Power --
 #ifdef BLIS_CONFIG_POWER10
 #define INSERT_GENTCONF_POWER10 GENTCONF( POWER10, power10 )
 #else
@@ -4601,6 +4606,13 @@ GENTPROT3U12( dcomplex, dcomplex, scomplex, dcomplex, z, z, c, z, funcname )
 #define INSERT_GENTCONF_BGQ GENTCONF( BGQ, bgq )
 #else
 #define INSERT_GENTCONF_BGQ
+#endif
+
+// -- IBM/zArch --
+#ifdef BLIS_CONFIG_Z15
+#define INSERT_GENTCONF_Z15 GENTCONF( Z15, z15 )
+#else
+#define INSERT_GENTCONF_Z15
 #endif
 
 // -- RISC-V architectures ----------------------------------------------------
@@ -4685,6 +4697,8 @@ INSERT_GENTCONF_POWER10 \
 INSERT_GENTCONF_POWER9 \
 INSERT_GENTCONF_POWER7 \
 INSERT_GENTCONF_BGQ \
+\
+INSERT_GENTCONF_Z15 \
 \
 INSERT_GENTCONF_RV32I \
 INSERT_GENTCONF_RV64I \
@@ -17913,6 +17927,17 @@ INSERT_GENTCONF
 #include "bli_family_power7.h" // skipped
 #endif
 
+// -- IBM zArch families --
+#ifdef BLIS_FAMILY_ZARCH
+#include "bli_family_zarch.h" // skipped
+#endif
+
+// -- IBM zArch architectures --
+
+#ifdef BLIS_FAMILY_Z15
+#include "bli_family_z15.h" // skipped
+#endif
+
 // -- IBM BG/Q --
 
 #ifdef BLIS_FAMILY_BGQ
@@ -17977,7 +18002,7 @@ INSERT_GENTCONF
 //#endif
 
 // end bli_family_generic.h
-#line 194 "./frame/include//bli_arch_config.h"
+#line 205 "./frame/include//bli_arch_config.h"
 
 #endif
 
@@ -18033,7 +18058,7 @@ GEMM_UKR_PROT( double,   d, gemm_skx_asm_16x14 )
 
 
 // end bli_kernels_skx.h
-#line 204 "./frame/include//bli_arch_config.h"
+#line 215 "./frame/include//bli_arch_config.h"
 
 #endif
 #ifdef BLIS_KERNELS_KNL
@@ -18090,7 +18115,7 @@ GEMM_UKR_PROT( double,   d, gemm_knl_asm_8x24 )
 PACKM_KER_PROT( double,   d, packm_knl_asm_30x8 )
 
 // end bli_kernels_knl.h
-#line 207 "./frame/include//bli_arch_config.h"
+#line 218 "./frame/include//bli_arch_config.h"
 
 #endif
 #ifdef BLIS_KERNELS_KNC
@@ -18412,7 +18437,7 @@ GEMMSUP_KER_PROT( double,   d, gemmsup_rd_haswell_asm_2x8n )
 GEMMSUP_KER_PROT( double,   d, gemmsup_rd_haswell_asm_1x8n )
 
 // end bli_kernels_haswell.h
-#line 213 "./frame/include//bli_arch_config.h"
+#line 224 "./frame/include//bli_arch_config.h"
 
 #endif
 #ifdef BLIS_KERNELS_SANDYBRIDGE
@@ -18466,7 +18491,7 @@ GEMM_UKR_PROT( scomplex, c, gemm_sandybridge_int_8x4 )
 GEMM_UKR_PROT( dcomplex, z, gemm_sandybridge_int_4x4 )
 
 // end bli_kernels_sandybridge.h
-#line 216 "./frame/include//bli_arch_config.h"
+#line 227 "./frame/include//bli_arch_config.h"
 
 #endif
 #ifdef BLIS_KERNELS_PENRYN
@@ -18517,7 +18542,7 @@ TRSM_UKR_PROT( double,   d, trsm_l_penryn_asm_4x4 )
 TRSM_UKR_PROT( double,   d, trsm_u_penryn_asm_4x4 )
 
 // end bli_kernels_penryn.h
-#line 219 "./frame/include//bli_arch_config.h"
+#line 230 "./frame/include//bli_arch_config.h"
 
 #endif
 
@@ -18568,7 +18593,7 @@ AXPYF_KER_PROT( float,    s, axpyf_zen_int_5 )
 AXPYF_KER_PROT( double,   d, axpyf_zen_int_5 )
 
 // end bli_kernels_zen2.h
-#line 225 "./frame/include//bli_arch_config.h"
+#line 236 "./frame/include//bli_arch_config.h"
 
 #endif
 #ifdef BLIS_KERNELS_ZEN
@@ -18792,7 +18817,7 @@ GEMMSUP_KER_PROT( float,   s, gemmsup_rd_zen_asm_2x16n)
 GEMMSUP_KER_PROT( float,   s, gemmsup_rd_zen_asm_1x16n)
 
 // end bli_kernels_zen.h
-#line 228 "./frame/include//bli_arch_config.h"
+#line 239 "./frame/include//bli_arch_config.h"
 
 #endif
 //#ifdef BLIS_KERNELS_EXCAVATOR
@@ -18846,7 +18871,7 @@ GEMM_UKR_PROT( scomplex, c, gemm_piledriver_asm_4x2 )
 GEMM_UKR_PROT( dcomplex, z, gemm_piledriver_asm_2x2 )
 
 // end bli_kernels_piledriver.h
-#line 237 "./frame/include//bli_arch_config.h"
+#line 248 "./frame/include//bli_arch_config.h"
 
 #endif
 #ifdef BLIS_KERNELS_BULLDOZER
@@ -18893,7 +18918,7 @@ GEMM_UKR_PROT( scomplex, c, gemm_bulldozer_asm_8x4_fma4 )
 GEMM_UKR_PROT( dcomplex, z, gemm_bulldozer_asm_4x4_fma4 )
 
 // end bli_kernels_bulldozer.h
-#line 240 "./frame/include//bli_arch_config.h"
+#line 251 "./frame/include//bli_arch_config.h"
 
 #endif
 
@@ -18919,6 +18944,12 @@ GEMM_UKR_PROT( dcomplex, z, gemm_bulldozer_asm_4x4_fma4 )
 #endif
 #ifdef BLIS_KERNELS_POWER7
 #include "bli_kernels_power7.h" // skipped
+#endif
+
+// -- IBM zArch --
+
+#ifdef BLIS_KERNELS_Z15
+#include "bli_kernels_z15.h" // skipped
 #endif
 
 // -- IBM BG/Q --
@@ -18947,7 +18978,6 @@ GEMM_UKR_PROT( dcomplex, z, gemm_bulldozer_asm_4x4_fma4 )
 
 
 #endif
-
 // end bli_arch_config.h
 #line 99 "./frame/include/blis.h"
 
@@ -57545,7 +57575,7 @@ BLIS_EXPORT_BLAS void PASTEF77(bli_thread_set_num_threads)
         defined(__bsdi__) || defined(__DragonFly__) || \
         defined(__FreeBSD_kernel__) || defined(__HAIKU__)
     #define BLIS_OS_BSD 1
-  #elif defined(EMSCRIPTEN)
+  #elif defined(__EMSCRIPTEN__)
     #define BLIS_OS_EMSCRIPTEN
   #else
     #error "Cannot determine operating system"
@@ -57888,6 +57918,7 @@ BLIS_EXPORT_BLAS void PASTEF77(bli_thread_set_num_threads)
    Copyright (C) 2014, The University of Texas at Austin
    Copyright (C) 2016, Hewlett Packard Enterprise Development LP
    Copyright (C) 2020, Advanced Micro Devices, Inc.
+	 Copyright (C) 2026, IBM Corp.
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -58881,6 +58912,9 @@ typedef enum arch_e
 	BLIS_ARCH_POWER7,
 	BLIS_ARCH_BGQ,
 
+	// IBM/zArch
+	BLIS_ARCH_Z15,
+
 	// RISC-V
 	BLIS_ARCH_RV32I,
 	BLIS_ARCH_RV64I,
@@ -59210,7 +59244,7 @@ int bli_pthread_switch_off
 
 #endif // BLIS_PTHREAD_H
 // end bli_pthread.h
-#line 1031 "./frame/include//bli_type_defs.h"
+#line 1035 "./frame/include//bli_type_defs.h"
 
 
 // -- Pool block type --
