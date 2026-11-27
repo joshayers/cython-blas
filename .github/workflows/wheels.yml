@@ -36,22 +36,23 @@ jobs:
           rm /c/llvm_new/llvm.tar.xz
           7z x /c/llvm_new/llvm.tar -o/c/llvm_new
           rm /c/llvm_new/llvm.tar
-          find /c/llvm_new/clang+llvm-23.1.6-x86_64-pc-windows-msvc/bin/*.exe -maxdepth 1 -type f -exec ln -s {} /usr/bin \;
+          find /c/llvm_new/clang+llvm-23.1.6-x86_64-pc-windows-msvc/bin/*.exe -maxdepth 1 -type f -exec ln -s {} /usr/local/bin \;
           echo `which clang`
           echo `clang --version`
       - name: Install pkg-config on Windows
         if: ${{ runner.os == 'Windows' }}
         run: |
           choco install pkgconfiglite
-      - name: Build wheels, Linux
+      - name: Build wheels
         # if: ${{ runner.os == 'Linux' }}
         shell: bash
         run: |
           if [ "${{ runner.os }}" = "Windows" ]; then export BIN_DIR="Scripts"; else export BIN_DIR="bin"; fi
-          export VENV_HOME=/tmp/venv
+          export VENV_HOME=`mktemp -d`
           python -m venv $VENV_HOME --upgrade-deps
           export PATH=$VENV_HOME/$BIN_DIR:$PATH
           pip install cibuildwheel
+          echo `which cibuildwheel`
           cibuildwheel
       # - name: Build wheels, Windows
       #   if: ${{ runner.os == 'Windows' }}

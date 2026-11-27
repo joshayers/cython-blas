@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         os:
-          # - "ubuntu-latest"
+          - "ubuntu-latest"
           - "windows-2025"
         python-version:
           # - "3.11"
@@ -49,26 +49,27 @@ jobs:
         if: ${{ runner.os == 'Windows' }}
         run: |
           choco install pkgconfiglite
-      - name: Install Poetry, Windows
-        if: ${{ runner.os == 'Windows' }}
+      - name: Install Poetry
+        # if: ${{ runner.os == 'Windows' }}
         shell: bash
         run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then export BIN_DIR="Scripts"; else export BIN_DIR="bin"; fi
           export POETRY_HOME=`mktemp -d`
           python -m venv $POETRY_HOME --upgrade-deps
-          $POETRY_HOME/Scripts/pip install -q poetry
-          ln $POETRY_HOME/Scripts/poetry /usr/bin/poetry
+          $POETRY_HOME/$BIN_DIR/pip install -q poetry
+          ln $POETRY_HOME/$BIN_DIR/poetry /usr/local/bin/poetry
           poetry --version
           poetry config virtualenvs.in-project true
-      - name: Install Poetry, not Windows
-        if: ${{ runner.os != 'Windows' }}
-        shell: bash
-        run: |
-          export POETRY_HOME=`mktemp -d`
-          python -m venv $POETRY_HOME --upgrade-deps
-          $POETRY_HOME/bin/pip install -q poetry
-          ln $POETRY_HOME/bin/poetry /usr/local/bin/poetry
-          poetry --version
-          poetry config virtualenvs.in-project true
+      # - name: Install Poetry, not Windows
+      #   if: ${{ runner.os != 'Windows' }}
+      #   shell: bash
+      #   run: |
+      #     export POETRY_HOME=`mktemp -d`
+      #     python -m venv $POETRY_HOME --upgrade-deps
+      #     $POETRY_HOME/bin/pip install -q poetry
+      #     ln $POETRY_HOME/bin/poetry /usr/local/bin/poetry
+      #     poetry --version
+      #     poetry config virtualenvs.in-project true
       - name: Install Python dependencies and build package
         shell: bash
         run: |
