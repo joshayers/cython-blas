@@ -36,7 +36,9 @@ jobs:
           rm /c/llvm_new/llvm.tar.xz
           7z x /c/llvm_new/llvm.tar -o/c/llvm_new
           rm /c/llvm_new/llvm.tar
-          find /c/llvm_new/clang+llvm-23.1.6-x86_64-pc-windows-msvc/bin/*.exe -maxdepth 1 -type f -exec ln -s {} /usr/bin \;
+          export CLANG_DIR="/c/llvm_new/clang+llvm-23.1.6-x86_64-pc-windows-msvc/bin"
+          echo $CLANG_DIR >> "$GITHUB_PATH"
+          export PATH=$CLANG_DIR:$PATH
           which clang
           clang --version
       - name: Install pkg-config on Windows
@@ -44,15 +46,7 @@ jobs:
         run: |
           choco install pkgconfiglite
       - name: Build wheels
-        shell: bash
-        run: |
-          export BIN_DIR=$([ "$RUNNER_OS" = "Windows" ] && echo "Scripts" || echo "bin")
-          export VENV_HOME=`mktemp -d`
-          python -m venv $VENV_HOME --upgrade-deps
-          export PATH=$VENV_HOME/$BIN_DIR:$PATH
-          pip install cibuildwheel
-          which cibuildwheel
-          cibuildwheel
+        uses: pypa/cibuildwheel@v4.3.5
       - name: Upload wheels
         uses: actions/upload-artifact@v7
         with:
