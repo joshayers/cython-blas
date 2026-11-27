@@ -19,11 +19,11 @@ jobs:
           - "ubuntu-latest"
           - "windows-2025"
         python-version:
-          # - "3.11"
-          # - "3.12"
-          # - "3.13"
+          - "3.11"
+          - "3.12"
+          - "3.13"
           - "3.14"
-          # - "3.15"
+          - "3.15"
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
@@ -43,34 +43,25 @@ jobs:
           7z x /c/llvm_new/llvm.tar -o/c/llvm_new
           rm /c/llvm_new/llvm.tar
           find /c/llvm_new/clang+llvm-23.1.6-x86_64-pc-windows-msvc/bin/*.exe -maxdepth 1 -type f -exec ln -s {} /usr/bin \;
-          echo `which clang`
-          echo `clang --version`
+          which clang
+          clang --version
       - name: Install pkg-config on Windows
         if: ${{ runner.os == 'Windows' }}
         run: |
           choco install pkgconfiglite
       - name: Install Poetry
-        # if: ${{ runner.os == 'Windows' }}
         shell: bash
+        # /usr/local/bin doesn't exist on a Windows runner
+        # /usr/bin is not writable on a Linux runner
         run: |
-          if [ "${{ runner.os }}" = "Windows" ]; then export BIN_DIR="Scripts"; else export BIN_DIR="bin"; fi
-          if [ "${{ runner.os }}" = "Windows" ]; then export SYMLINK_DIR="/usr/bin"; else export SYMLINK_DIR="/usr/local/bin"; fi
+          export BIN_DIR=$([ "$RUNNER_OS" = "Windows" ] && echo "Scripts" || echo "bin")
+          if [ "$RUNNER_OS" = "Windows" ]; then export SYMLINK_DIR="/usr/bin"; else export SYMLINK_DIR="/usr/local/bin"; fi
           export POETRY_HOME=`mktemp -d`
           python -m venv $POETRY_HOME --upgrade-deps
-          $POETRY_HOME/$BIN_DIR/pip install -q poetry
+          $POETRY_HOME/$BIN_DIR/pip install poetry
           ln $POETRY_HOME/$BIN_DIR/poetry $SYMLINK_DIR/poetry
           poetry --version
           poetry config virtualenvs.in-project true
-      # - name: Install Poetry, not Windows
-      #   if: ${{ runner.os != 'Windows' }}
-      #   shell: bash
-      #   run: |
-      #     export POETRY_HOME=`mktemp -d`
-      #     python -m venv $POETRY_HOME --upgrade-deps
-      #     $POETRY_HOME/bin/pip install -q poetry
-      #     ln $POETRY_HOME/bin/poetry /usr/local/bin/poetry
-      #     poetry --version
-      #     poetry config virtualenvs.in-project true
       - name: Install Python dependencies and build package
         shell: bash
         run: |
@@ -80,7 +71,7 @@ jobs:
       - name: Test with pytest
         shell: bash
         run: |
-          poetry run python -m pytest cython_blas
+          poetry run python -m pytest --doctest-modules cython_blas
 
   lint:
     runs-on: "ubuntu-latest"
@@ -91,13 +82,17 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: "3.14"
-      - name: Install Poetry, not Windows
-        if: ${{ runner.os != 'Windows' }}
+      - name: Install Poetry
+        shell: bash
+        # /usr/local/bin doesn't exist on a Windows runner
+        # /usr/bin is not writable on a Linux runner
         run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then export BIN_DIR="Scripts"; else export BIN_DIR="bin"; fi
+          if [ "$RUNNER_OS" = "Windows" ]; then export SYMLINK_DIR="/usr/bin"; else export SYMLINK_DIR="/usr/local/bin"; fi
           export POETRY_HOME=`mktemp -d`
           python -m venv $POETRY_HOME --upgrade-deps
-          $POETRY_HOME/bin/pip install -q poetry
-          ln $POETRY_HOME/bin/poetry /usr/local/bin/poetry
+          $POETRY_HOME/$BIN_DIR/pip install poetry
+          ln $POETRY_HOME/$BIN_DIR/poetry $SYMLINK_DIR/poetry
           poetry --version
           poetry config virtualenvs.in-project true
       - name: Install Python dependencies
@@ -132,13 +127,17 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: "3.14"
-      - name: Install Poetry, not Windows
-        if: ${{ runner.os != 'Windows' }}
+      - name: Install Poetry
+        shell: bash
+        # /usr/local/bin doesn't exist on a Windows runner
+        # /usr/bin is not writable on a Linux runner
         run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then export BIN_DIR="Scripts"; else export BIN_DIR="bin"; fi
+          if [ "$RUNNER_OS" = "Windows" ]; then export SYMLINK_DIR="/usr/bin"; else export SYMLINK_DIR="/usr/local/bin"; fi
           export POETRY_HOME=`mktemp -d`
           python -m venv $POETRY_HOME --upgrade-deps
-          $POETRY_HOME/bin/pip install -q poetry
-          ln $POETRY_HOME/bin/poetry /usr/local/bin/poetry
+          $POETRY_HOME/$BIN_DIR/pip install poetry
+          ln $POETRY_HOME/$BIN_DIR/poetry $SYMLINK_DIR/poetry
           poetry --version
           poetry config virtualenvs.in-project true
       - name: Install Python dependencies and build package
