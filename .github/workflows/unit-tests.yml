@@ -37,7 +37,7 @@ jobs:
         shell: cmd
         run: |
           mkdir c:\llvm_new
-          powershell "(New-Object Net.WebClient).DownloadFile('https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.6/clang+llvm-23.1.6-x86_64-pc-windows-msvc.tar.xz', 'c:\test\llvm.tar.xz')"
+          powershell "(New-Object Net.WebClient).DownloadFile('https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.6/clang+llvm-23.1.6-x86_64-pc-windows-msvc.tar.xz', 'c:\llvm_new\llvm.tar.xz')"
           7z x "C:\llvm_new\llvm.tar.xz" -o"c:\llvm_new"
           del "c:\llvm_new\llvm.tar.xz"
           7z x "C:\llvm_new\llvm.tar" -o"c:\llvm_new"
@@ -70,7 +70,7 @@ jobs:
       - name: Install Python dependencies and build package
         shell: bash
         run: |
-          export PATH="/c/llvm_new/clang+llvm-23.1.6-x86_64-pc-windows-msvc/bin:$PATH"
+          # export PATH="/c/llvm_new/clang+llvm-23.1.6-x86_64-pc-windows-msvc/bin:$PATH"
           poetry install --extras=dev
           poetry run spin setup-in-place
           poetry run spin in-place
