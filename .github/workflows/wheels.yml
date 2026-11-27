@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
   pull_request:
     branches:
       - main
@@ -27,20 +28,39 @@ jobs:
           python-version: "3.14"
       - name: Install LLVM and Clang on Windows
         if: ${{ runner.os == 'Windows' }}
-        shell: cmd
+        shell: bash
         run: |
-          powershell "(New-Object Net.WebClient).DownloadFile('https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.6/clang+llvm-23.1.6-x86_64-pc-windows-msvc.tar.xz', 'c:\llvm_new\llvm.tar.xz')"
-          7z x "C:\llvm_new\llvm.tar.xz" -o"c:\llvm_new"
-          del "c:\llvm_new\llvm.tar.xz"
-          7z x "C:\llvm_new\llvm.tar" -o"c:\llvm_new"
-          del "c:\llvm_new\llvm.tar"
-          powershell "[Environment]::SetEnvironmentVariable('Path', 'C:\llvm_new\clang+llvm-23.1.6-x86_64-pc-windows-msvc\bin;' + $env:Path, 'User')"
+          mkdir /c/llvm_new
+          curl -L -C - --retry 5 --retry-all-errors -o /c/llvm_new/llvm.tar.xz "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.6/clang+llvm-23.1.6-x86_64-pc-windows-msvc.tar.xz"
+          7z x /c/llvm_new/llvm.tar.xz -o/c/llvm_new
+          rm /c/llvm_new/llvm.tar.xz
+          7z x /c/llvm_new/llvm.tar -o/c/llvm_new
+          rm /c/llvm_new/llvm.tar
+          find /c/llvm_new/clang+llvm-23.1.6-x86_64-pc-windows-msvc/bin/*.exe -maxdepth 1 -type f -exec ln -s {} /usr/bin \;
+          echo `which clang`
+          echo `clang --version`
       - name: Install pkg-config on Windows
         if: ${{ runner.os == 'Windows' }}
         run: |
           choco install pkgconfiglite
-      - name: Build wheels
-        uses: pypa/cibuildwheel@v4.3.5
+      - name: Build wheels, Linux
+        if: ${{ runner.os == 'Linux' }}
+        shell: bash
+        run: |
+          export VENV_HOME=/tmp/venv
+          python -m venv $VENV_HOME --upgrade-deps
+          $VENV_HOME/bin/pip install cibuildwheel
+          ln -s $VENV_HOME/bin/cibuildwheel /usr/bin/cibuildwheel
+          cibuildwheel
+      - name: Build wheels, Windows
+        if: ${{ runner.os == 'Windows' }}
+        shell: bash
+        run: |
+          export VENV_HOME=/tmp/venv
+          python -m venv $VENV_HOME --upgrade-deps
+          $VENV_HOME/Scripts/pip install cibuildwheel
+          ln -s $VENV_HOME/Scripts/cibuildwheel /usr/bin/cibuildwheel
+          cibuildwheel
       - name: Upload wheels
         uses: actions/upload-artifact@v7
         with:
