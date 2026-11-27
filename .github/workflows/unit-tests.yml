@@ -70,7 +70,14 @@ jobs:
       - name: Install Python dependencies and build package
         shell: bash
         run: |
-          # export PATH="/c/llvm_new/clang+llvm-23.1.6-x86_64-pc-windows-msvc/bin:$PATH"
+          echo $PATH
+          echo ""
+          export PATH="/c/llvm_new/clang+llvm-23.1.6-x86_64-pc-windows-msvc/bin:$PATH"
+          echo $PATH
+          echo ""
+          ls /c/llvm_new
+          ls /c/llvm_new/llvm_new/clang+llvm-23.1.6-x86_64-pc-windows-msvc/bin
+          echo ""
           poetry install --extras=dev
           poetry run spin setup-in-place
           poetry run spin in-place
