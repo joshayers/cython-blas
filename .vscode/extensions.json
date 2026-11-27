@@ -6,7 +6,7 @@
         "charliermarsh.ruff",
         "redhat.vscode-yaml",
         "mesonbuild.mesonbuild",
-        "ecostadelle.cython-syntax-fixed",
+        "jeffbaylor.cython-pyx",
         "pucelle.run-on-save",
     ]
 }
