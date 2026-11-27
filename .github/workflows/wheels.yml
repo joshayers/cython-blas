@@ -51,7 +51,8 @@ jobs:
           python -m venv $VENV_HOME --upgrade-deps
           export PATH=$VENV_HOME/$BIN_DIR:$PATH
           pip install cibuildwheel
-          echo `which cibuildwheel`
+          which cibuildwheel
+          cibuildwheel --version
           cibuildwheel
       - name: Upload wheels
         uses: actions/upload-artifact@v7
@@ -75,12 +76,13 @@ jobs:
         # /usr/local/bin doesn't exist on a Windows runner
         # /usr/bin is not writable on a Linux runner
         run: |
-          if [ "$RUNNER_OS" = "Windows" ]; then export BIN_DIR="Scripts"; else export BIN_DIR="bin"; fi
-          if [ "$RUNNER_OS" = "Windows" ]; then export SYMLINK_DIR="/usr/bin"; else export SYMLINK_DIR="/usr/local/bin"; fi
+          export BIN_DIR=$([ "$RUNNER_OS" = "Windows" ] && echo "Scripts" || echo "bin")
+          export SYMLINK_DIR=$([ "$RUNNER_OS" = "Windows" ] && echo "/usr/bin" || echo "/usr/local/bin")
           export POETRY_HOME=`mktemp -d`
           python -m venv $POETRY_HOME --upgrade-deps
           $POETRY_HOME/$BIN_DIR/pip install poetry
           ln $POETRY_HOME/$BIN_DIR/poetry $SYMLINK_DIR/poetry
+          which poetry
           poetry --version
           poetry config virtualenvs.in-project true
       - name: Install Python dependencies
