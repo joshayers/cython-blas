@@ -36,7 +36,7 @@ jobs:
           rm /c/llvm_new/llvm.tar.xz
           7z x /c/llvm_new/llvm.tar -o/c/llvm_new
           rm /c/llvm_new/llvm.tar
-          find /c/llvm_new/clang+llvm-23.1.6-x86_64-pc-windows-msvc/bin/*.exe -maxdepth 1 -type f -exec ln -s {} /usr/local/bin \;
+          find /c/llvm_new/clang+llvm-23.1.6-x86_64-pc-windows-msvc/bin/*.exe -maxdepth 1 -type f -exec ln -s {} /usr/bin \;
           echo `which clang`
           echo `clang --version`
       - name: Install pkg-config on Windows

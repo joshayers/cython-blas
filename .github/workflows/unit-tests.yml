@@ -54,10 +54,11 @@ jobs:
         shell: bash
         run: |
           if [ "${{ runner.os }}" = "Windows" ]; then export BIN_DIR="Scripts"; else export BIN_DIR="bin"; fi
+          if [ "${{ runner.os }}" = "Windows" ]; then export SYMLINK_DIR="/usr/bin"; else export SYMLINK_DIR="/usr/local/bin"; fi
           export POETRY_HOME=`mktemp -d`
           python -m venv $POETRY_HOME --upgrade-deps
           $POETRY_HOME/$BIN_DIR/pip install -q poetry
-          ln $POETRY_HOME/$BIN_DIR/poetry /usr/local/bin/poetry
+          ln $POETRY_HOME/$BIN_DIR/poetry $SYMLINK_DIR/poetry
           poetry --version
           poetry config virtualenvs.in-project true
       # - name: Install Poetry, not Windows
