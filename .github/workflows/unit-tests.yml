@@ -32,17 +32,27 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
+      # - name: Install LLVM and Clang on Windows
+      #   if: ${{ runner.os == 'Windows' }}
+      #   shell: cmd
+      #   run: |
+      #     mkdir c:\llvm_new
+      #     curl.exe -L -C - --retry 5 --retry-all-errors -v -o "c:\llvm_new\llvm.tar.xz" "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.6/clang+llvm-23.1.6-x86_64-pc-windows-msvc.tar.xz"
+      #     dir c:\llvm_new
+      #     7z x "C:\llvm_new\llvm.tar.xz" -o"c:\llvm_new"
+      #     del "c:\llvm_new\llvm.tar.xz"
+      #     7z x "c:\llvm_new\llvm.tar" -o"c:\llvm_new"
+      #     del "c:\llvm_new\llvm.tar"
       - name: Install LLVM and Clang on Windows
         if: ${{ runner.os == 'Windows' }}
-        shell: cmd
+        shell: bash
         run: |
-          mkdir c:\llvm_new
-          curl.exe -L -C - --retry 5 --retry-all-errors -v -o "c:\llvm_new\llvm.tar.xz" "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.6/clang+llvm-23.1.6-x86_64-pc-windows-msvc.tar.xz"
-          dir c:\llvm_new
-          7z x "C:\llvm_new\llvm.tar.xz" -o"c:\llvm_new"
-          del "c:\llvm_new\llvm.tar.xz"
-          7z x "c:\llvm_new\llvm.tar" -o"c:\llvm_new"
-          del "c:\llvm_new\llvm.tar"
+          mkdir /c/llvm_new
+          curl -L -C - --retry 5 --retry-all-errors -o /c/llvm_new/llvm.tar.xz "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.6/clang+llvm-23.1.6-x86_64-pc-windows-msvc.tar.xz"
+          7z x /c/llvm_new/llvm.tar.xz -o/c/llvm_new
+          rm /c/llvm_new/llvm.tar.xz
+          7z x /c/llvm_new/llvm.tar -o/c/llvm_new
+          rm /c/llvm_new/llvm.tar
       - name: Symlink clang to /usr/bin
         if: ${{ runner.os == 'Windows' }}
         shell: bash
@@ -72,12 +82,9 @@ jobs:
           ln $POETRY_HOME/bin/poetry /usr/local/bin/poetry
           poetry --version
           poetry config virtualenvs.in-project true
-      - name: Install Python dependencies and build package, Windows
-        if: ${{ runner.os == 'Windows' }}
+      - name: Install Python dependencies and build package
         shell: bash
         run: |
-          which clang
-          # export PATH="/c/llvm_new/clang+llvm-23.1.6-x86_64-pc-windows-msvc/bin:$PATH"
           poetry install --extras=dev
           poetry run spin setup-in-place
           poetry run spin in-place
