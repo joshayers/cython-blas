@@ -44,23 +44,24 @@ jobs:
         run: |
           choco install pkgconfiglite
       - name: Build wheels, Linux
-        if: ${{ runner.os == 'Linux' }}
+        # if: ${{ runner.os == 'Linux' }}
         shell: bash
         run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then export BIN_DIR="Scripts"; else export BIN_DIR="bin"; fi
           export VENV_HOME=/tmp/venv
           python -m venv $VENV_HOME --upgrade-deps
-          $VENV_HOME/bin/pip install cibuildwheel
-          ln -s $VENV_HOME/bin/cibuildwheel /usr/bin/cibuildwheel
+          export PATH=$VENV_HOME/$BIN_DIR:$PATH
+          pip install cibuildwheel
           cibuildwheel
-      - name: Build wheels, Windows
-        if: ${{ runner.os == 'Windows' }}
-        shell: bash
-        run: |
-          export VENV_HOME=/tmp/venv
-          python -m venv $VENV_HOME --upgrade-deps
-          $VENV_HOME/Scripts/pip install cibuildwheel
-          ln -s $VENV_HOME/Scripts/cibuildwheel /usr/bin/cibuildwheel
-          cibuildwheel
+      # - name: Build wheels, Windows
+      #   if: ${{ runner.os == 'Windows' }}
+      #   shell: bash
+      #   run: |
+      #     export VENV_HOME=/tmp/venv
+      #     python -m venv $VENV_HOME --upgrade-deps
+      #     export PATH=$VENV_HOME/Scripts:$PATH
+      #     pip install cibuildwheel
+      #     cibuildwheel
       - name: Upload wheels
         uses: actions/upload-artifact@v7
         with:
