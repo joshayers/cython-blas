@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
   pull_request:
     branches:
       - main
@@ -16,7 +17,7 @@ jobs:
       matrix:
         os:
           - "ubuntu-latest"
-          - "windows-2022"
+          - "windows-2025"
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
