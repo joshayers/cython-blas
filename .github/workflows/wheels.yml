@@ -52,7 +52,6 @@ jobs:
           export PATH=$VENV_HOME/$BIN_DIR:$PATH
           pip install cibuildwheel
           which cibuildwheel
-          cibuildwheel --version
           cibuildwheel
       - name: Upload wheels
         uses: actions/upload-artifact@v7
