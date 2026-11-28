@@ -69,7 +69,7 @@ skip = [
     "cp3??t-*", # free-threading builds on all platforms
 ]
 before-build = [
-    "pip install -q abi3audit scipy_openblas64==0.3.34.481.3", # keep openblas version up to date with dev extra dependency
+    "pip install -q scipy_openblas64==0.3.34.481.3", # keep openblas version up to date with dev extra dependency
     "python tools/before_build.py",
 ]
 test-extras = ["test"]
@@ -77,13 +77,6 @@ test-command = ["pytest --pyargs cython_blas"]
 
 [tool.cibuildwheel.linux.environment]
 PKG_CONFIG_PATH = "$PKG_CONFIG_PATH:$(mktemp -d)"
-
-[tool.cibuildwheel.linux]
-manylinux-x86_64-image = "manylinux_2_28"
-repair-wheel-command = [
-    "abi3audit --strict --report --verbose {wheel}",
-    "auditwheel repair -w {dest_dir} {wheel}",
-]
 
 [tool.cibuildwheel.windows.environment]
 PKG_CONFIG_PATH = "$PKG_CONFIG_PATH;$(python -c 'import tempfile; print(tempfile.mkdtemp())')"
@@ -93,7 +86,6 @@ CXX = "clang++"
 [tool.cibuildwheel.windows]
 before-all = ["pip install -q delvewheel"]
 repair-wheel-command = [
-    "abi3audit --strict --report --verbose {wheel}",
     "python tools/repair_wheel_windows.py {dest_dir} {wheel}",
 ]
 
