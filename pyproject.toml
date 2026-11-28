@@ -84,7 +84,6 @@ CC = "clang"
 CXX = "clang++"
 
 [tool.cibuildwheel.windows]
-before-all = ["pip install -q delvewheel"]
 repair-wheel-command = [
     "python tools/repair_wheel_windows.py {dest_dir} {wheel}",
 ]
