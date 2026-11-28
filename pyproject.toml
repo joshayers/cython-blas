@@ -76,17 +76,22 @@ test-extras = ["test"]
 test-command = ["pytest --pyargs cython_blas"]
 
 [tool.cibuildwheel.linux.environment]
+# Create a new temporary directory for the pkg_config files. They are written to this directory
+# before each build by the tools/before_build.py script. It is run by the before-build command.
 PKG_CONFIG_PATH = "$PKG_CONFIG_PATH:$(mktemp -d)"
-
-[tool.cibuildwheel.windows.environment]
-PKG_CONFIG_PATH = "$PKG_CONFIG_PATH;$(python -c 'import tempfile; print(tempfile.mkdtemp())')"
-CC = "clang"
-CXX = "clang++"
 
 [tool.cibuildwheel.windows]
 repair-wheel-command = [
     "python tools/repair_wheel_windows.py {dest_dir} {wheel}",
 ]
+
+[tool.cibuildwheel.windows.environment]
+# Create a new temporary directory for the pkg_config files. They are written to this directory
+# before each build by the tools/before_build.py script. It is run by the before-build command.
+PKG_CONFIG_PATH = "$PKG_CONFIG_PATH;$(python -c 'import tempfile; print(tempfile.mkdtemp())')"
+CC = "clang"
+CXX = "clang++"
+
 
 [tool.cython-lint]
 max-line-length = 120
