@@ -16,7 +16,7 @@ jobs:
       matrix:
         os:
           - "ubuntu-latest"
-          - "windows-2022"
+          - "windows-2025"
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
@@ -27,15 +27,32 @@ jobs:
           python-version: "3.14"
       - name: Install LLVM and Clang on Windows
         if: ${{ runner.os == 'Windows' }}
-        uses: KyleMayes/install-llvm-action@v2
-        with:
-          version: "20.1"
+        shell: bash
+        run: |
+          mkdir /c/llvm_new
+          curl -L -C - --retry 5 --retry-all-errors -o /c/llvm_new/llvm.tar.xz "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.6/clang+llvm-23.1.6-x86_64-pc-windows-msvc.tar.xz"
+          7z x /c/llvm_new/llvm.tar.xz -o/c/llvm_new
+          rm /c/llvm_new/llvm.tar.xz
+          7z x /c/llvm_new/llvm.tar -o/c/llvm_new
+          rm /c/llvm_new/llvm.tar
+          export SYMLINK_DIR=$([ "$RUNNER_OS" = "Windows" ] && echo "/usr/bin" || echo "/usr/local/bin")
+          find /c/llvm_new/clang+llvm-23.1.6-x86_64-pc-windows-msvc/bin/*.exe -maxdepth 1 -type f -exec ln -s {} $SYMLINK_DIR \;
+          which clang
+          clang --version
       - name: Install pkg-config on Windows
         if: ${{ runner.os == 'Windows' }}
         run: |
           choco install pkgconfiglite
       - name: Build wheels
-        uses: pypa/cibuildwheel@v4.3.5
+        shell: bash
+        run: |
+          export BIN_DIR=$([ "$RUNNER_OS" = "Windows" ] && echo "Scripts" || echo "bin")
+          export VENV_HOME=`mktemp -d`
+          python -m venv $VENV_HOME --upgrade-deps
+          export PATH=$VENV_HOME/$BIN_DIR:$PATH
+          pip install cibuildwheel
+          which cibuildwheel
+          cibuildwheel
       - name: Upload wheels
         uses: actions/upload-artifact@v7
         with:
@@ -53,13 +70,18 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: "3.14"
-      - name: Install Poetry, not Windows
+      - name: Install Poetry
         shell: bash
+        # /usr/local/bin doesn't exist on a Windows runner
+        # /usr/bin is not writable on a Linux runner
         run: |
+          export BIN_DIR=$([ "$RUNNER_OS" = "Windows" ] && echo "Scripts" || echo "bin")
+          export SYMLINK_DIR=$([ "$RUNNER_OS" = "Windows" ] && echo "/usr/bin" || echo "/usr/local/bin")
           export POETRY_HOME=`mktemp -d`
           python -m venv $POETRY_HOME --upgrade-deps
-          $POETRY_HOME/bin/pip install -q poetry
-          ln $POETRY_HOME/bin/poetry /usr/local/bin/poetry
+          $POETRY_HOME/$BIN_DIR/pip install poetry
+          ln $POETRY_HOME/$BIN_DIR/poetry $SYMLINK_DIR/poetry
+          which poetry
           poetry --version
           poetry config virtualenvs.in-project true
       - name: Install Python dependencies

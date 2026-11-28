@@ -28,6 +28,10 @@
     },
     "python.languageServer": "Pylance",
     "python.analysis.autoImportCompletions": false,
+    //
+    // Python environments
+    "python-envs.defaultEnvManager": "ms-python.python:poetry",
+    "python-envs.defaultPackageManager": "ms-python.python:poetry",
     // Linting
     "ruff.importStrategy": "fromEnvironment",
     "ruff.configuration": "pyproject.toml",
@@ -48,6 +52,4 @@
     "mesonbuild.linting.enabled": true,
     "mesonbuild.downloadLanguageServer": true,
     "mesonbuild.configureOnOpen": false,
-    "python-envs.defaultEnvManager": "ms-python.python:poetry",
-    "python-envs.defaultPackageManager": "ms-python.python:poetry",
 }
